@@ -1,0 +1,27 @@
+version: 1
+disable_existing_loggers: false
+raise_exceptions: true
+formatters:
+  detailed:
+    class: logging.Formatter
+    format: '%(asctime)s %(name)-15s %(levelname)-8s %(processName)-10s %(message)s'
+  simple:
+    class: logging.Formatter
+    format: '%(name)-15s %(levelname)-8s %(processName)-10s %(message)s'
+handlers:
+  console_worker:
+    class: logging.StreamHandler
+    formatter: simple
+    level: WARNING
+loggers:
+  asz:
+    handlers: [console_worker]
+    propagate: true
+    level: INFO
+  asyncio:
+    handlers: [console_worker]
+    propagate: true
+    level: ERROR
+root:
+  handlers: [console_worker]
+  level: ERROR

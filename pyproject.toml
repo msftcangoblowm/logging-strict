@@ -1,0 +1,182 @@
+[build-system]
+requires = ["setuptools>=69.0.2", "wheel", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "logging-strict"
+dynamic = [
+    "optional-dependencies",
+    "dependencies",
+    "version",
+]
+license = {file = "LICENSE.txt"}
+description = "logging.config yaml strict typing and editable"
+keywords = [
+    "strictyaml",
+    "pre-commit",
+    "yaml",
+    "logging.config",
+]
+readme = "README.rst"
+requires-python = ">=3.9"
+classifiers = [
+  "Intended Audience :: Developers",
+  "Operating System :: POSIX",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: System :: Logging",
+  "Topic :: Software Development :: Testing",
+  "Topic :: Software Development :: Quality Assurance",
+  "Natural Language :: English",
+  "Development Status :: 4 - Beta",
+  "Typing :: Typed",
+]
+authors = [
+    { name = "Dave Faulkmore", email = "faulkmore@telegram.org" },
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["logging_strict*"]
+exclude = [
+    "junk",
+    "retired",
+]
+
+# https://setuptools.pypa.io/en/latest/userguide/datafiles.html#subdirectory-for-data-files
+# https://github.com/abravalheri/experiment-setuptools-package-data
+[tool.setuptools.package-data]
+"*" = [
+    "*.app.logging.config.yaml",
+    "*.worker.logging.config.yaml",
+]
+
+[tool.setuptools.dynamic]
+optional-dependencies.pip = { file = ["requirements/pip.pip"] }
+optional-dependencies.pip_tools = { file = ["requirements/pip-tools.pip"] }
+dependencies = { file = ["requirements/prod.pip"] }
+optional-dependencies.dev = { file = ["requirements/dev.pip"] }
+optional-dependencies.manage = { file = ["requirements/manage.pip"] }
+version = {attr = "logging_strict._version.__version__"}
+
+[project.scripts]
+logging_strict_validate_yaml = "logging_strict.ep_validate_yaml:main"
+
+[tool.pip-tools]
+no_header = true
+resolver = "backtracking"
+no_allow_unsafe = true
+generate_hashes = false  # From setuptools 69.0.2, parsing dependencies with hashes is broken
+
+[tool.setuptools_scm]
+# can be empty if no extra settings are needed, presence enables setuptools_scm
+# SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.0.1" python -m setuptools_scm
+fallback_version = "0.0.1"
+version_file = "src/logging_strict/_version.py"
+
+[tool.mypy]
+mypy_path = "src"
+strict = true
+namespace_packages = true
+check_untyped_defs = true
+warn_unused_ignores = true
+no_implicit_optional = true
+show_error_codes = true
+
+# These packages do not have stubs
+[[tool.mypy.overrides]]
+module = [
+    "strictyaml.*"
+]
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source_pkgs = ["logging_strict"] # **REQUIRED** to be set correctly. Your package name
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "@abc.abstractmethod",
+    "@abc.abstractproperty",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
+]
+precision = 2
+ignore_errors = true
+skip_covered = true
+skip_empty = true
+fail_under = 90
+show_missing = true
+
+[tool.black]
+target_version = [
+    "py39",
+    "py310",
+    "py311",
+    "py312",
+]
+include = '\.pyi?$'
+
+[tool.blackdoc]
+skip_string_normalization = true
+color = false  # affects diffs only
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+force_grid_wrap = 2
+use_parentheses = true
+include_trailing_comma = true
+ensure_newline_before_comments = true
+line_length = 88
+supported_extensions = ["py", "pyi"]
+
+[tool.flake8]
+max_line_length = 88
+extend_ignore = [
+    "E203",
+    "W503",
+    "W605",
+    "W293",
+    "W291",
+    "E501",
+]
+
+[tool.twine]
+sign = true
+
+[tool.asz.unittest]
+"test_util_root.py" = 1
+"test_xdg_folders.py" = 2
+"tech_niques/test_context_locals" = 3
+"test_check_type.py" = 11
+"tech_niques/test_logging_capture" = 12
+"test_versioning.py" = 31
+"test_check_logging" = 32
+"test_logging_api.py" = 33
+"test_abc.py" = 41
+"test_uncategorized_underappreciated.py" = 42
+"test_validate" = 43
+"test_ep.py" = 44
+
+[tool.asz.recipe]
+"util/util_root" = [1]
+"util/xdg_folders" = [2]
+"tech_niques/context_locals" = [3]
+"util/check_type" = [11]
+"constants" = [31]
+"_version" = [31]
+"util/check_logging" = [32]
+"logging_api" = [33]
+"logging_yaml_abc" = [33, 41]
+"tech_niques/__init__" = [42]
+"logging_yaml_validate" = [43]
+"ep_validate_yaml" = [44]
+"tech_niques/logging_capture" = [12, 30, 32]

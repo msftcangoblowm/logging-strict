@@ -1,0 +1,15 @@
+# Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
+# For details: https://github.com/msftcangoblowm/logging_strict/blob/master/NOTICE.txt
+
+# For *asz a package* and *with the ui*, `pip install -r requirements/ui.pip` asz
+# Also needed is distro dependences for optional clipboard support
+
+# Install *as a package*
+# excludes: coverage
+
+-c pins.pip
+
+typing-extensions  # backporting latest greatest typing features
+strictyaml         # yaml spec subset validate and parse
+appdirs            # Adhere to XDG spec
+attrs

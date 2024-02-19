@@ -1,0 +1,59 @@
+black==23.12.1
+    # via
+    #   -r requirements/dev.in
+    #   blackdoc
+blackdoc==0.3.9
+    # via -r requirements/dev.in
+click==8.1.7
+    # via black
+coverage==7.4.1
+    # via -r requirements/dev.in
+flake8==7.0.0
+    # via
+    #   -r requirements/dev.in
+    #   flake8-pyproject
+flake8-pyproject==1.2.3
+    # via -r requirements/dev.in
+isort==5.13.2
+    # via -r requirements/dev.in
+markdown-it-py==3.0.0
+    # via rich
+mccabe==0.7.0
+    # via flake8
+mdurl==0.1.2
+    # via markdown-it-py
+more-itertools==10.2.0
+    # via blackdoc
+mypy==1.8.0
+    # via -r requirements/dev.in
+mypy-extensions==1.0.0
+    # via
+    #   black
+    #   mypy
+packaging==23.2
+    # via black
+pathspec==0.12.1
+    # via
+    #   black
+    #   blackdoc
+platformdirs==4.1.0
+    # via black
+pycodestyle==2.11.1
+    # via flake8
+pyflakes==3.2.0
+    # via flake8
+pygments==2.17.2
+    # via rich
+rich==13.7.0
+    # via blackdoc
+tomli==2.0.1
+    # via
+    #   black
+    #   blackdoc
+    #   flake8-pyproject
+    #   mypy
+typing-extensions==4.9.0
+    # via
+    #   -c requirements/prod.pip
+    #   black
+    #   mypy

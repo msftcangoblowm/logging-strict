@@ -1,0 +1,13 @@
+- id: validate-logging-config-yaml
+  name: validate-logging-config-yaml
+  entry: logging_strict_validate_yaml
+  language: python
+  stages:
+    - commit
+    - merge-commit
+    - push
+    - manual
+  require_serial: true
+  description: >
+    Validate logging.config yaml files
+  pass_filenames: false

@@ -1,0 +1,14 @@
+# Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
+# For details: https://github.com/msftcangoblowm/asz/blob/master/NOTICE.txt
+
+-c ../requirements/pins.pip
+-c ../requirements/prod.pip  # currently same venv
+
+sphinx
+sphinx-pyproject
+sphinx-autobuild
+sphinxcontrib-asyncio
+sphinxcontrib-fulltoc
+sphinx-paramlinks
+sphinx-licenseinfo
+aiologger  # this is a testing dependency?!

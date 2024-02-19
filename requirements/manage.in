@@ -1,0 +1,12 @@
+# Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
+# For details: https://github.com/msftcangoblowm/logging_strict/blob/master/NOTICE.txt
+
+# packaging and kitting
+
+-c pins.pip
+-c prod.pip
+-c tox.pip
+
+twine           # pypi.org
+pre-commit
+restview        # viewer for vanilla ReStructuredText files (README.rst)

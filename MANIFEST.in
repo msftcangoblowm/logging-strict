@@ -1,0 +1,28 @@
+#Package data
+#    [Include in package](https://jwodder.github.io/kbits/posts/pypkg-data/)
+#    [manifest.in guide](https://packaging.python.org/en/latest/guides/using-manifest-in/)
+# legal. Missing: CITATION.cff, "COPYING*", "AUTHORS*", "CONTRIBUTORS*"
+#
+# Explains setuptools_scm has own file finder, MANIFEST.in is still needed for excluding
+#
+# https://github.com/endlessm/kolibri-explore-plugin/pull/662/commits/bf95c0021f55262c6196c052fcba78e9e945f567
+#
+
+# mypy
+prune .mypy_cache
+
+# coverage
+exclude coverage.json
+exclude coverage.xml
+exclude .coverage
+
+# git
+graft .git
+
+# asz
+exclude .coverage-recipe-*
+exclude .coverage-combine-*
+
+prune build
+prune dist
+prune junk

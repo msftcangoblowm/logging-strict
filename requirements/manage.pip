@@ -1,0 +1,99 @@
+certifi==2023.7.22
+    # via requests
+cffi==1.15.1
+    # via cryptography
+cfgv==3.4.0
+    # via pre-commit
+charset-normalizer==3.2.0
+    # via requests
+cryptography==41.0.4
+    # via secretstorage
+distlib==0.3.8
+    # via
+    #   -c requirements/tox.pip
+    #   virtualenv
+docutils==0.20.1
+    # via
+    #   readme-renderer
+    #   restview
+filelock==3.13.1
+    # via
+    #   -c requirements/tox.pip
+    #   virtualenv
+identify==2.5.33
+    # via pre-commit
+idna==3.4
+    # via requests
+importlib-metadata==7.0.0
+    # via
+    #   keyring
+    #   twine
+jaraco-classes==3.3.0
+    # via keyring
+jeepney==0.8.0
+    # via
+    #   keyring
+    #   secretstorage
+keyring==24.2.0
+    # via twine
+markdown-it-py==3.0.0
+    # via rich
+mdurl==0.1.2
+    # via markdown-it-py
+more-itertools==10.1.0
+    # via jaraco-classes
+nh3==0.2.14
+    # via readme-renderer
+nodeenv==1.8.0
+    # via pre-commit
+pkginfo==1.9.6
+    # via twine
+platformdirs==4.1.0
+    # via
+    #   -c requirements/tox.pip
+    #   virtualenv
+pre-commit==3.6.0
+    # via -r requirements/manage.in
+pycparser==2.21
+    # via cffi
+pygments==2.17.2
+    # via
+    #   readme-renderer
+    #   restview
+    #   rich
+pyyaml==6.0.1
+    # via pre-commit
+readme-renderer==42.0
+    # via
+    #   restview
+    #   twine
+requests==2.31.0
+    # via
+    #   requests-toolbelt
+    #   twine
+requests-toolbelt==1.0.0
+    # via twine
+restview==3.0.0
+    # via -r requirements/manage.in
+rfc3986==2.0.0
+    # via twine
+rich==13.7.0
+    # via twine
+secretstorage==3.3.3
+    # via keyring
+twine==4.0.2
+    # via -r requirements/manage.in
+urllib3==2.0.5
+    # via
+    #   requests
+    #   twine
+virtualenv==20.25.0
+    # via
+    #   -c requirements/tox.pip
+    #   pre-commit
+zipp==3.17.0
+    # via importlib-metadata
+
+# The following packages are considered to be unsafe in a requirements file:
+setuptools==69.0.3
+    # via nodeenv

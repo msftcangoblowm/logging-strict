@@ -1,0 +1,24 @@
+version: 1
+disable_existing_loggers: false
+raise_exceptions: true
+formatters:
+  simple:
+    class: logging.Formatter
+    format: '%(levelname)s %(module)s %(funcName)s: %(lineno)d: %(message)s'
+handlers:
+  console_ui:
+    '()': ext://textual.logging.TextualHandler
+    formatter: simple
+    level: WARNING
+loggers:
+  asz:
+    handlers: [console_ui]
+    propagate: true
+    level: INFO
+  asyncio:
+    handlers: [console_ui]
+    propagate: true
+    level: ERROR
+root:
+  handlers: [console_ui]
+  level: ERROR
