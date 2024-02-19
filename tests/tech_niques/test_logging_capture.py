@@ -14,7 +14,9 @@ from __future__ import annotations
 
 import logging
 import sys
+import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from typing import (
     Any,
@@ -104,14 +106,26 @@ class AppLoggingStateSafe(unittest.TestCase):
         self.is_state_app = log_state.is_state_app  # get the saved state
         if not self.is_state_app:
             # UI never been initiated. Default logging levels have not been set
-            setup_worker(
-                package,
-                package_data_folder_start,
-                "mp",
-                "asz",
-                version_no="1",
-                package_start_relative_folder="configs",
-            )
+            with (
+                tempfile.TemporaryDirectory() as fp,
+                patch(  # extract use temp folder
+                    f"{g_app_name}.logging_api._get_path_config",
+                    return_value=Path(fp),
+                ),
+                patch(  # as_str use temp folder
+                    f"{g_app_name}.logging_yaml_abc._get_path_config",
+                    return_value=Path(fp),
+                ),
+            ):
+                setup_worker(
+                    package,
+                    package_data_folder_start,
+                    "mp",
+                    "asz",
+                    version_no="1",
+                    package_start_relative_folder="configs",
+                )
+
         LoggerRedirector.redirect_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,

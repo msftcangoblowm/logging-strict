@@ -279,8 +279,7 @@ def sanitize_tag(ver: str) -> str:
             v = Version(ver_try)
         except InvalidVersion:
             is_still_issue = True
-
-        else:
+        else:  # pragma: no cover Do nothing
             is_still_issue = False
     else:  # pragma: no cover Do nothing
         is_still_issue = False

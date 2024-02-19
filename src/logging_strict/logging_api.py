@@ -432,7 +432,9 @@ class LoggingConfigYaml(LoggingYamlType):
                 as_user=True,
             )
         )
-        return str(path_ret.relative_to(self.dest_folder))
+        str_ret = str(path_ret.relative_to(self.dest_folder))
+
+        return str_ret
 
 
 def setup_ui(

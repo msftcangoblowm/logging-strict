@@ -22,6 +22,17 @@ Changelog
 
 .. scriv-insert-here
 
+.. _changes_0-1-1:
+
+Version 0.1.1 — 2024-02-19
+------------------------------------------------
+
+In unittests, track down export of `*.worker.logging.config.yaml` to xdg user data dir, 
+rather than to a temp folder. To test, monitor ~/.local/share/[prog name] unlink 
+anything in that folder. Run, make coverage. The folder should remain empty
+
+- test: prevent/redirect export of *.worker.logging.config.yaml to temp folder
+
 .. _changes_0-1-0:
 
 Version 0.1.0 — 2024-02-19

@@ -308,6 +308,10 @@ if __name__ == "__main__":  # pragma: no cover
        python -m unittest tests.test_ep \
        -k EntrypointStrictYAMLValidate.test_process_args --locals --verbose
 
+       python -m unittest tests.test_ep \
+       -k EntrypointStrictYAMLValidate.test_thru_api --locals --verbose
+
+
     With coverage
 
     .. code-block: shell

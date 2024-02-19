@@ -534,10 +534,26 @@ class SharedResourceLogger(unittest.TestCase):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    """
+    """Without coverage
     .. code-block:: shell
 
        python -m tests.test_logging_api --locals
+       
+       python -m unittest tests.test_logging_api \
+       -k LoggingApi.test_setup_x --locals --verbose
+
+       python -m unittest tests.test_logging_api \
+       -k LoggingApi.test_api_interface --locals --verbose
+
+       python -m unittest tests.test_logging_api \
+       -k LoggingApi.test_fcn_iter_yamls --locals --verbose
+
+       python -m unittest tests.test_logging_api \
+       -k LoggingApi.test_file_name --locals --verbose
+
+    With coverage
+
+    .. code-block:: shell
 
        coverage run --data-file=".coverage-combine-33" \
        -m unittest discover -t. -s tests -p "test_logging_api*.py" --locals
