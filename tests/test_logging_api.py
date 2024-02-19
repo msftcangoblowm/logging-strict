@@ -538,7 +538,7 @@ if __name__ == "__main__":  # pragma: no cover
     .. code-block:: shell
 
        python -m tests.test_logging_api --locals
-       
+
        python -m unittest tests.test_logging_api \
        -k LoggingApi.test_setup_x --locals --verbose
 

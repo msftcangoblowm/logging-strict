@@ -396,7 +396,7 @@ if __name__ == "__main__":  # pragma: no cover
     .. code-block:: shell
 
        python -m tests.test_abc --locals
-       
+
        python -m unittest tests.test_abc \
        -k LoggingWorker.test_setup_yaml --locals --verbose
 
@@ -407,7 +407,7 @@ if __name__ == "__main__":  # pragma: no cover
        -k LoggingWorker.test_as_str --locals --verbose
 
     With coverage
-    
+
     .. code-block:: shell
 
        coverage run --data-file=".coverage-combine-41" \

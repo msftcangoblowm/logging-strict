@@ -16,12 +16,12 @@ import logging
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
 from pathlib import Path
 from typing import (
     Any,
     Optional,
 )
+from unittest.mock import patch
 
 from logging_strict.constants import (
     LOG_FORMAT,
