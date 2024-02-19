@@ -1,5 +1,5 @@
 """
-.. module:: asz.util.worker.ep_validate_yaml
+.. module:: logging_strict.ep_validate_yaml
    :platform: Unix
    :synopsis: Entrypoint to check yaml logging.config file
 

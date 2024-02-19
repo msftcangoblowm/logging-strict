@@ -1,5 +1,5 @@
 """
-.. py:module:: asz.logging_yaml_abc
+.. py:module:: logging_strict.logging_yaml_abc
    :platform: Unix
    :synopsis: Refresh or reload logging state of worker
 

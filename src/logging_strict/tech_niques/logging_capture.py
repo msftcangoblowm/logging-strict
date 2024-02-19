@@ -1,5 +1,5 @@
 """
-.. module:: asz.tech_niques.logging_capture
+.. module:: logging_strict.tech_niques.logging_capture
    :platform: Unix
    :synopsis: Within a context manager capture both stdout and stderr
 

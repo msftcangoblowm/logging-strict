@@ -1,3 +1,28 @@
+"""
+.. module:: logging_strict.coverage.misbehaves
+   :platform: Unix
+   :synopsis: Detect runner to adjust logging level inconsistencies
+
+.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+
+..
+
+Detect runner to adjust logging level inconsistencies
+
+
+Module private variables
+----------------------------
+
+.. py:data:: __all__
+   :type: tuple[str]
+   :value: ("detect_coverage",)
+
+   This modules exports
+
+Module objects
+----------------------------
+
+"""
 import os
 
 __all__ = ("detect_coverage",)

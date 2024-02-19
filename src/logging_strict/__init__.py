@@ -1,5 +1,5 @@
 """
-.. py:module:: asz
+.. py:module:: logging_strict
    :platform: Unix
    :synopsis: Public interface
 

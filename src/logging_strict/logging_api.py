@@ -1,5 +1,5 @@
 """
-.. py:module:: asz.logging_api
+.. py:module:: logging_strict.logging_api
    :platform: Unix
    :synopsis: Extract and load logging.config
 

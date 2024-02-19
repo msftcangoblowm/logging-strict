@@ -1,5 +1,5 @@
 """
-.. module:: asz.util.check_logging
+.. module:: logging_strict.util.check_logging
    :platform: Unix
    :synopsis: Checks dealing with logging module
 
@@ -9,11 +9,18 @@
 
 Checks dealing with logging module
 
+Module private variables
+-------------------------
+
 .. py:data:: __all__
-   :type: tuple[str]
-   :value: ("is_assume_root",)
+   :type: tuple[str, str, str, str, str, str]
+   :value: ("is_assume_root", "check_logger", "check_level_name", \
+   "check_level", "check_formatter", "str2int")
 
    Exported objects from this module
+
+Module objects
+---------------
 
 """
 from __future__ import annotations

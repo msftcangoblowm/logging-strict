@@ -20,6 +20,10 @@ Changelog
    Commit items for NEXT VERSION
    .................................
 
+   - style: isort and whitespace removal
+   - docs: correct module header dotted path
+   - docs: module exports update
+
 .. scriv-insert-here
 
 .. _changes_0-1-1:

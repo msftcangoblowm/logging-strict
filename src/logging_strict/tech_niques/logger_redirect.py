@@ -1,5 +1,5 @@
 """
-.. module:: asz.tech_niques.logger_redirect
+.. module:: logging_strict.tech_niques.logger_redirect
    :platform: Unix
    :synopsis: In unittest class, redirect stdout/stderr. synchronous logging
 
@@ -9,9 +9,9 @@
 
 In unittest class, redirect stdout/stderr. Essential for synchronous logging
 
-````````````````````````````````````````
+
 Module private variables
-````````````````````````````````````````
+--------------------------
 
 .. py:data: __all__
    :type: tuple[str]
@@ -19,10 +19,8 @@ Module private variables
 
    This module exports
 
-
-````````````````````````````````````````
 Module objects
-````````````````````````````````````````
+--------------------------
 
 """
 import logging

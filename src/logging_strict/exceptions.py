@@ -1,3 +1,29 @@
+"""
+.. module:: logging_strict.exceptions
+   :platform: Unix
+   :synopsis: Custom exceptions
+
+.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+
+..
+
+Custom exceptions
+
+Module private variables
+-------------------------
+
+.. py:data:: __all__
+   :type: tuple[str, str]
+   :value: ("LoggingStrictError", "LoggingStrictPackageNameRequired", \
+   "LoggingStrictPackageStartFolderNameRequired", \
+   "LoggingStrictProcessCategoryRequired", "LoggingStrictGenreRequired")
+
+   Module exports
+
+Module objects
+---------------
+
+"""
 __all__ = (
     "LoggingStrictError",
     "LoggingStrictPackageNameRequired",

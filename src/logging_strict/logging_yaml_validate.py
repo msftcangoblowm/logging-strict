@@ -1,5 +1,5 @@
 """
-.. module:: asz.util.worker.logging_yaml_validate
+.. module:: logging_strict.logging_yaml_validate
    :platform: Unix
    :synopsis: Validate, QA Tester accessible, logging.config yaml
 

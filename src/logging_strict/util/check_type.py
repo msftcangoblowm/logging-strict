@@ -1,5 +1,5 @@
 """
-.. module:: asz.util.check_type
+.. module:: logging_strict.util.check_type
    :platform: Unix
    :synopsis: Check utility functions
 
