@@ -23,13 +23,14 @@ from typing import (
 )
 from unittest.mock import patch
 
+from logging_strict import (
+    LoggingState,
+    setup_logging_yaml,
+    worker_yaml_curated,
+)
 from logging_strict.constants import (
     LOG_FORMAT,
     g_app_name,
-)
-from logging_strict.logging_api import (
-    LoggingState,
-    setup_worker,
 )
 from logging_strict.tech_niques import (
     LoggerRedirector,
@@ -100,8 +101,6 @@ class AppLoggingStateSafe(unittest.TestCase):
 
         Provide enough info to find it within whichever package it's in.
         """
-        package = g_app_name  # using the logging.config yaml within this package
-        package_data_folder_start = "configs"
         log_state = LoggingState()  # Singleton
         self.is_state_app = log_state.is_state_app  # get the saved state
         if not self.is_state_app:
@@ -117,14 +116,15 @@ class AppLoggingStateSafe(unittest.TestCase):
                     return_value=Path(fp),
                 ),
             ):
-                setup_worker(
-                    package,
-                    package_data_folder_start,
-                    "mp",
-                    "asz",
+                # Step 1 -- in (worker) entrypoint
+                str_yaml = worker_yaml_curated(
+                    genre="mp",
+                    flavor="asz",
                     version_no="1",
-                    package_start_relative_folder="configs",
+                    package_start_relative_folder="",
                 )
+                # Step 2 -- in worker
+                setup_logging_yaml(str_yaml)
 
         LoggerRedirector.redirect_loggers(
             fake_stdout=sys.stdout,
@@ -196,7 +196,11 @@ class AppLoggingStateSafe(unittest.TestCase):
         self.assertTrue(logger_app.isEnabledFor(logging.CRITICAL))
 
     def test_normalize_level(self):
-        """From level, normalize logging level name"""
+        """From level, normalize logging level name
+
+        The logging.config yaml file has root level logging.ERROR (40),
+        not default, logging.WARNING (30)
+        """
         # logging.Logger
         # ##################
         root = logging.getLogger("root")

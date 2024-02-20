@@ -20,11 +20,22 @@ Changelog
    Commit items for NEXT VERSION
    .................................
 
-   - style: isort and whitespace removal
-   - docs: correct module header dotted path
-   - docs: module exports update
 
 .. scriv-insert-here
+
+.. _changes_1-0-0:
+
+Version 1.0.0 — 2024-02-20
+------------------------------------------------
+
+- style: isort and whitespace removal
+- docs: correct module header dotted path
+- docs: module exports update
+- feat!: API contains public methods, enum, and exceptions
+- docs: public API
+- docs: example code for both UI and worker
+- fix!: retire public API function, setup_worker
+- fix: split setup_worker into two seperate steps. extract+validate and setup
 
 .. _changes_0-1-1:
 

@@ -12,12 +12,17 @@ from __future__ import annotations
 import sys
 import tempfile
 import unittest
+from functools import partial
 from pathlib import Path
 from typing import Optional
 from unittest.mock import patch
 
 import strictyaml as s
 
+from logging_strict import (
+    LoggingYamlType,
+    setup_logging_yaml,
+)
 from logging_strict.constants import g_app_name
 from logging_strict.exceptions import LoggingStrictGenreRequired
 from logging_strict.logging_api_test import (
@@ -25,11 +30,7 @@ from logging_strict.logging_api_test import (
     file_name,
     g_package_second_party,
 )
-from logging_strict.logging_yaml_abc import (
-    VERSION_FALLBACK,
-    LoggingYamlType,
-    _setup_yaml,
-)
+from logging_strict.logging_yaml_abc import VERSION_FALLBACK
 from logging_strict.tech_niques import (
     ClassAttribTypes,
     get_locals,
@@ -40,6 +41,10 @@ if sys.version_info >= (3, 9):  # pragma: no cover
     from collections.abc import Iterator
 else:  # pragma: no cover
     from typing import Iterator
+
+
+def cb_joinpath(fp: Path, x: str) -> Path:
+    return Path(fp).joinpath(x)
 
 
 class LoggingWorker(unittest.TestCase):
@@ -91,7 +96,7 @@ class LoggingWorker(unittest.TestCase):
 
         return path_dest
 
-    def test_setup_yaml(self):
+    def test_setup_logging_yaml(self):
         """defang then test"""
         with (
             tempfile.TemporaryDirectory() as fp,
@@ -116,16 +121,16 @@ class LoggingWorker(unittest.TestCase):
                 path_yaml,
                 self.yaml_worker,
             )
-            func_path = f"{g_app_name}.logging_yaml_abc._setup_yaml"
+            func_path = f"{g_app_name}.logging_yaml_abc.setup_logging_yaml"
             kwargs = {}
             for arg0 in valids:
-                t_ret = get_locals(func_path, _setup_yaml, *(arg0,), **kwargs)
+                t_ret = get_locals(func_path, setup_logging_yaml, *(arg0,), **kwargs)
                 self.assertIsInstance(t_ret, tuple)
                 ret, d_locals = t_ret
                 self.assertIsInstance(d_locals["yaml_config"], s.YAML)
                 self.assertIsInstance(d_locals["path_yaml"], type(arg0))
                 #    Run w/o inspection
-                _setup_yaml(arg0)
+                setup_logging_yaml(arg0)
 
             # None or unsupported type. Does nothing
             invalids = (
@@ -133,7 +138,7 @@ class LoggingWorker(unittest.TestCase):
                 0.12345,
             )
             for invalid in invalids:
-                _setup_yaml(invalid)
+                setup_logging_yaml(invalid)
 
     def test_setup_public(self):
         """Setup worker by feeding it logging.config yaml"""
@@ -148,13 +153,13 @@ class LoggingWorker(unittest.TestCase):
                 return_value=Path(fp),
             ),
             patch(  # replace with mock
-                f"{g_app_name}.logging_yaml_abc._setup_yaml",
+                f"{g_app_name}.logging_yaml_abc.setup_logging_yaml",
                 return_value=True,
             ) as mock_setup,
         ):
             my_logger = MyLogger(
                 self.g_package_second_party,
-                lambda x: Path(fp).joinpath(x),
+                partial(cb_joinpath, fp),
             )
             my_logger.setup(self.yaml_worker)
             mock_setup.assert_called_once()
@@ -179,7 +184,7 @@ class LoggingWorker(unittest.TestCase):
             # Not extracted
             my_logger = MyLogger(
                 package_dest_c,
-                lambda x: Path(fp).joinpath(x),  # this gets ignored cuz overridden
+                partial(cb_joinpath, fp),  # this gets ignored cuz overridden
             )
             with self.assertRaises(FileNotFoundError):
                 str_yaml = my_logger.as_str()
@@ -398,7 +403,7 @@ if __name__ == "__main__":  # pragma: no cover
        python -m tests.test_abc --locals
 
        python -m unittest tests.test_abc \
-       -k LoggingWorker.test_setup_yaml --locals --verbose
+       -k LoggingWorker.test_setup_logging_yaml --locals --verbose
 
        python -m unittest tests.test_abc \
        -k LoggingWorker.test_setup_public --locals --verbose

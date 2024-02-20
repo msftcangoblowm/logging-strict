@@ -5,4 +5,4 @@ if sys.version_info >= (3, 8):
 else:
     from typing_extensions import Final
 
-__all__: Final[tuple[str, str, str]]
+__all__: Final[tuple[str, str, str, str, str, str, str, str, str, str, str, str]]

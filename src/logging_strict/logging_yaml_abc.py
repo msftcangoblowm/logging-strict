@@ -59,13 +59,13 @@ if sys.version_info >= (3, 9):  # pragma: no cover
 else:  # pragma: no cover
     from typing import Iterator
 
-__all__ = ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX")
+__all__ = ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", "setup_logging_yaml")
 
 YAML_LOGGING_CONFIG_SUFFIX = ".logging.config.yaml"
 VERSION_FALLBACK = "1"
 
 
-def _setup_yaml(path_yaml: Any) -> None:
+def setup_logging_yaml(path_yaml: Any) -> None:
     """Loads :py:mod:`logging.config` configuration.
     yaml config files are exported into :code:`$HOME/.config/[app name]`.
 
@@ -377,7 +377,6 @@ class LoggingYamlType(abc.ABC):
     @abc.abstractmethod
     def extract(
         self,
-        package_name: str,
         path_relative_package_dir: Path | str | None = "",
     ) -> str:
         ...
@@ -417,10 +416,12 @@ class LoggingYamlType(abc.ABC):
 
         During testing call LoggingConfigYaml.extract()
 
+        Only called by app, not worker. For worker, is a 2 step process, not 1.
+
         :param str_yaml: logging.config yaml str
         :type str_yaml: str
         """
         if is_ok(str_yaml):
-            _setup_yaml(str_yaml)
+            setup_logging_yaml(str_yaml)
         else:  # pragma: no cover
             pass

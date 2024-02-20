@@ -7,22 +7,21 @@ from unittest.mock import (
     patch,
 )
 
-from logging_strict.constants import (
+from logging_strict import (
     LoggingConfigCategory,
-    g_app_name,
+    LoggingState,
+    setup_ui,
+    setup_worker_other,
+    worker_yaml_curated,
 )
+from logging_strict.constants import g_app_name
 from logging_strict.exceptions import (
     LoggingStrictGenreRequired,
     LoggingStrictPackageNameRequired,
     LoggingStrictPackageStartFolderNameRequired,
     LoggingStrictProcessCategoryRequired,
 )
-from logging_strict.logging_api import (
-    LoggingConfigYaml,
-    LoggingState,
-    setup_ui,
-    setup_worker,
-)
+from logging_strict.logging_api import LoggingConfigYaml
 
 if sys.version_info >= (3, 9):  # pragma: no cover
     from collections.abc import Iterator
@@ -54,9 +53,35 @@ class LoggingApi(unittest.TestCase):
         m_extract = Mock(spec_set=dummy)
         m_setup = Mock(spec=dummy_setup)
 
+        # worker_yaml_curated
+        valids = ((worker_yaml_curated, "mp", "bob"),)
+        for func, genre, flavor in valids:
+            with (
+                tempfile.TemporaryDirectory() as fp,
+                patch(  # defang (redundant). extract_to_config
+                    f"{g_app_name}.util.xdg_folder._get_path_config",
+                    return_value=Path(fp),
+                ),
+                patch(  # temp folder rather than :code:`$HOME/.local/share/[app]`
+                    f"{g_app_name}.logging_yaml_abc._get_path_config",
+                    return_value=Path(fp).joinpath(package_dest_c),
+                ),
+                patch(  # temp folder rather than :code:`$HOME/.local/share/[app]`
+                    f"{g_app_name}.logging_api._get_path_config",
+                    return_value=Path(fp).joinpath(package_dest_c),
+                ),
+            ):
+                # path_dest = Path(fp).joinpath(g_app_name, LoggingConfigYaml.file_name)
+                with self.assertRaises(FileNotFoundError):
+                    func(
+                        genre,
+                        flavor,
+                    )
+
+        # setup_ui and setup_worker_other
         valids = (
             (setup_ui, "textual", "asz"),
-            (setup_worker, "mp", "asz"),
+            (setup_worker_other, "mp", "asz"),
         )
         for func, genre, flavor in valids:
             with (
@@ -115,6 +140,10 @@ class LoggingApi(unittest.TestCase):
             # Extract file
             #    Will actual extract file, so package must be real
             #    Normally 2nd party, not 1st party package
+            valids = (
+                (setup_ui, "textual", "asz"),
+                (setup_worker_other, "mp", "asz"),
+            )
             package_dest_c = self.package_dest_c
             with (
                 tempfile.TemporaryDirectory() as fp,
@@ -135,42 +164,43 @@ class LoggingApi(unittest.TestCase):
                     return_value=Path(fp).joinpath(self.package_dest_c),
                 ),
                 patch(  # defang setup
-                    f"{g_app_name}.logging_yaml_abc._setup_yaml",
+                    f"{g_app_name}.logging_yaml_abc.setup_logging_yaml",
                     new_callable=m_setup,
                 ) as mock_setup2,
             ):
-                func(
-                    self.package_dest_c,
-                    self.fallback_package_base_folder,
-                    genre,
-                    flavor,
-                    package_start_relative_folder=self.fallback_package_base_folder,  # non-empty start dir
-                )
-                mock_setup2.assert_called()
+                for func, genre, flavor in valids:
+                    func(
+                        self.package_dest_c,
+                        self.fallback_package_base_folder,
+                        genre,
+                        flavor,
+                        package_start_relative_folder=self.fallback_package_base_folder,  # non-empty start dir
+                    )
+                    mock_setup2.assert_called()
 
-                # category not provided so file_stem is cause problems
-                api = LoggingConfigYaml(
-                    self.package_dest_c,
-                    self.fallback_package_base_folder,
-                    category=LoggingConfigCategory.UI,
-                    genre=None,
-                    flavor=flavor,
-                )
-                api.extract(
-                    path_relative_package_dir="",
-                )
+                    # category not provided so file_stem is cause problems
+                    api = LoggingConfigYaml(
+                        self.package_dest_c,
+                        self.fallback_package_base_folder,
+                        category=LoggingConfigCategory.UI,
+                        genre=None,
+                        flavor=flavor,
+                    )
+                    api.extract(
+                        path_relative_package_dir="",
+                    )
 
-                # category not provided so file_suffix is cause problems
-                api = LoggingConfigYaml(
-                    self.package_dest_c,
-                    self.fallback_package_base_folder,
-                    None,
-                    genre=genre,
-                    flavor=flavor,
-                )
-                api.extract(
-                    path_relative_package_dir="",
-                )
+                    # category not provided so file_suffix is cause problems
+                    api = LoggingConfigYaml(
+                        self.package_dest_c,
+                        self.fallback_package_base_folder,
+                        None,
+                        genre=genre,
+                        flavor=flavor,
+                    )
+                    api.extract(
+                        path_relative_package_dir="",
+                    )
 
         # Package data issues: not found or not unique match
         valids = (
@@ -183,7 +213,7 @@ class LoggingApi(unittest.TestCase):
                 FileNotFoundError,
             ),
             (  # not found in package
-                setup_worker,
+                setup_worker_other,
                 self.fallback_package_base_folder,
                 "mp",
                 "godzilla-vs-mothra-in-funny-face-no-laugh-contest",
@@ -191,7 +221,7 @@ class LoggingApi(unittest.TestCase):
                 FileNotFoundError,
             ),
             (  # not found in package. Start search at base folder
-                setup_worker,
+                setup_worker_other,
                 self.fallback_package_base_folder,
                 "mp",
                 "godzilla-vs-mothra-in-funny-face-no-laugh-contest",
@@ -199,7 +229,7 @@ class LoggingApi(unittest.TestCase):
                 FileNotFoundError,
             ),
             (  # multiple found
-                setup_worker,
+                setup_worker_other,
                 "bad_idea",
                 "mp",
                 "shared",
@@ -227,7 +257,7 @@ class LoggingApi(unittest.TestCase):
                     return_value=Path(fp).joinpath(package_dest_c),
                 ),
                 patch(  # defang setup
-                    f"{g_app_name}.logging_yaml_abc._setup_yaml",
+                    f"{g_app_name}.logging_yaml_abc.setup_logging_yaml",
                     new_callable=m_setup,
                 ),
             ):

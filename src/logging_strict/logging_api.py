@@ -32,8 +32,9 @@ Module private variables
 -------------------------
 
 .. py:data:: __all__
-   :type: tuple[str, str, str]
-   :value: ("LoggingConfigYaml", "setup_ui", "setup_worker")
+   :type: tuple[str, str, str, str, str]
+   :value: ("LoggingConfigYaml", "setup_ui", \
+   "worker_yaml_curated", "setup_worker_other", "LoggingState")
 
    Module exports
 
@@ -56,7 +57,10 @@ from typing import (
 
 import strictyaml as s
 
-from .constants import LoggingConfigCategory
+from .constants import (
+    LoggingConfigCategory,
+    g_app_name,
+)
 from .exceptions import (
     LoggingStrictGenreRequired,
     LoggingStrictPackageNameRequired,
@@ -98,7 +102,8 @@ else:  # pragma: no cover
 __all__ = (
     "LoggingConfigYaml",
     "setup_ui",
-    "setup_worker",
+    "worker_yaml_curated",
+    "setup_worker_other",
     "LoggingState",
 )
 
@@ -350,7 +355,7 @@ class LoggingConfigYaml(LoggingYamlType):
            Specifying a start folder narrows the search
 
         :type path_relative_package_dir: :py:class:`~pathlib.Path` or str or None
-        :returns: Relative path, within package, to ``app.logging.config.yaml``
+        :returns: Relative path, within package, to ``*.*.logging.config.yaml``
         :rtype: str
 
         :raises:
@@ -462,25 +467,178 @@ def setup_ui(
     ):
         raise
 
+    # extract and validate
     try:
         ui_yaml.extract(path_relative_package_dir=package_start_relative_folder)
         str_yaml = ui_yaml.as_str()
     except (FileNotFoundError, s.YAMLValidationError, AssertionError):
         raise
-    else:
-        ui_yaml.setup(str_yaml)
+
+    # LoggingConfigYaml.setup is a wrapper of setup_logging_yaml
+    # Checks: is_ok
+    ui_yaml.setup(str_yaml)
 
 
-def setup_worker(
+def worker_yaml_curated(
+    genre: Optional[Any] = "mp",
+    flavor: Optional[Any] = "asz",
+    version_no: Optional[Any] = "1",
+    package_start_relative_folder="",
+) -> str:
+    """For multiprocessing workers, retrieve the yaml in this order:
+
+    - xdg user data dir folder
+
+    - logging_strict package
+
+    If QA tester, modifies the exported logging.config yaml, those
+    changes are not overwritten
+
+    Process 2nd step is calling:
+    :py:func:`logging_strict.logging_yaml_abc.setup_logging_yaml`
+
+    :param genre:
+
+       Default "mp". If UI: "textual" or "rich". If worker: "mp". Then can have
+       a library of yaml files that can be used with a particular
+       UI framework or worker type
+
+    :type genre: str or None
+    :param flavor:
+
+       Default "asz". Unique identifier name given to a particular
+       :py:mod:`logging.config` yaml. Should be one word w/o special characters
+
+       Flavor is a very terse description, for a :paramref:`genre`, how
+       this yaml differs from others. If completely generic, call it
+       ``generic``. If different handlers or formatters or filters are
+       used, what is the yaml's purpose?
+
+    :type flavor: str or None
+    :param version_no:
+
+       Default 1. Version of this particular
+       :paramref:`logging_config_yaml_co`. **Not** the version of the
+       yaml spec. Don't confuse the two.
+
+    :type version_no: :py:class:`~typing.Any` or None
+    :param package_start_relative_folder:
+
+       Default empty string which means search the entire package.
+       Further narrows down search, so as to differentiate between folders
+       which contain file with the same file name
+
+    :type package_start_relative_folder: :py:class:`~pathlib.Path` or str or None
+    :returns: yaml file contents
+    :rtype: str
+    :raises:
+
+       - :py:exc:`FileNotFoundError` -- yaml file not found within package
+
+       - :py:exc:`strictyaml.exceptions.YAMLValidationError` -- yaml file
+         validation failed
+
+       - :py:exc:`AssertionError` -- Expecting one yaml file, many found
+
+
+    """
+    package_name = g_app_name
+    package_data_folder_start = "configs"
+
+    ui_yaml = LoggingConfigYaml(
+        package_name,
+        package_data_folder_start,
+        LoggingConfigCategory.WORKER,
+        genre=genre,
+        flavor=flavor,
+        version_no=version_no,
+    )
+
+    try:
+        ui_yaml.extract(path_relative_package_dir=package_start_relative_folder)
+        str_yaml = ui_yaml.as_str()
+    except (FileNotFoundError, s.YAMLValidationError, AssertionError):
+        raise
+
+    return str_yaml
+
+
+def setup_worker_other(
     package_name: str,
     package_data_folder_start: str,
     genre: str,
     flavor: str,
     version_no: Optional[Any] = "1",
     package_start_relative_folder="",
-) -> None:
-    """Before creating an App instance, extract logging.config yaml
-    for app, but not workers"""
+) -> str:
+    """worker_yaml_curated grabs the logging.config yaml from logging-strict.
+    Use this if located in another package
+
+    Process 2nd step is calling:
+    :py:func:`logging_strict.logging_yaml_abc.setup_logging_yaml`
+
+    :param package_name:
+
+       If logging_strict, use method worker_yaml_curated instead. Otherwise
+       package name which contains the logging.config yaml files
+
+    :type package_name: str
+    :param package_data_folder_start:
+
+       Within :paramref:`package_name`, base data folder name. Not a
+       relative path. Does not assume ``data``
+
+    :type package_data_folder_start: str
+    :param genre:
+
+       Default "mp". If UI: "textual" or "rich". If worker: "mp". Then can have
+       a library of yaml files that can be used with a particular
+       UI framework or worker type
+
+    :type genre: str
+    :param flavor:
+
+       Default "asz". Unique identifier name given to a particular
+       :py:mod:`logging.config` yaml. Should be one word w/o special characters
+
+       Flavor is a very terse description, for a :paramref:`genre`, how
+       this yaml differs from others. If completely generic, call it
+       ``generic``. If different handlers or formatters or filters are
+       used, what is the yaml's purpose?
+
+    :type flavor: str
+    :param version_no:
+
+       Default 1. Version of this particular
+       :paramref:`logging_config_yaml_co`. **Not** the version of the
+       yaml spec. Don't confuse the two.
+
+    :type version_no: :py:class:`~typing.Any` or None
+    :param package_start_relative_folder:
+
+       Default empty string which means search the entire package.
+       Further narrows down search, so as to differentiate between folders
+       which contain file with the same file name
+
+    :type package_start_relative_folder: :py:class:`~pathlib.Path` or str or None
+    :returns: yaml file contents
+    :rtype: str
+    :raises:
+
+       - :py:exc:`FileNotFoundError` -- yaml file not found within package
+
+       - :py:exc:`strictyaml.exceptions.YAMLValidationError` -- yaml file
+         validation failed
+
+       - :py:exc:`AssertionError` -- Expecting one yaml file, many found
+
+       - :py:exc:`LoggingStrictPackageNameRequired` -- Which package
+         are the logging.config yaml in?
+
+       - :py:exc:`LoggingStrictPackageStartFolderNameRequired` -- Within the
+         provided package, the package base data folder name
+
+    """
     try:
         ui_yaml = LoggingConfigYaml(
             package_name,
@@ -501,8 +659,8 @@ def setup_worker(
         str_yaml = ui_yaml.as_str()
     except (FileNotFoundError, s.YAMLValidationError, AssertionError):
         raise
-    else:
-        ui_yaml.setup(str_yaml)
+
+    return str_yaml
 
 
 class LoggingState:

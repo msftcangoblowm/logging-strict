@@ -25,7 +25,7 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import Self
 
-__all__: Final[tuple[str, str, str]]
+__all__: Final[tuple[str, str, str, str, str]]
 
 class LoggingConfigYaml(LoggingYamlType):
     suffixes: str = YAML_LOGGING_CONFIG_SUFFIX
@@ -70,13 +70,20 @@ def setup_ui(
     version_no: Optional[Any] = VERSION_FALLBACK,
     package_start_relative_folder: Path | str | None = "",
 ) -> None: ...
-def setup_worker(
+def worker_yaml_curated(
+    genre: Optional[Any] = "mp",
+    flavor: Optional[Any] = "asz",
+    version_no: Optional[Any] = "1",
+    package_start_relative_folder: Path | str | None = "",
+) -> str: ...
+def setup_worker_other(
     package_name: str,
+    package_data_folder_start: str,
     genre: str,
     flavor: str,
-    version_no: Optional[Any] = VERSION_FALLBACK,
+    version_no: Optional[Any] = "1",
     package_start_relative_folder: Path | str | None = "",
-) -> None: ...
+) -> str: ...
 
 class LoggingState:
     __instance: Optional["LoggingState"] = None

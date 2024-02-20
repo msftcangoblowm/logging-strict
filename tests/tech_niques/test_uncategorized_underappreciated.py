@@ -1,7 +1,7 @@
 import unittest
 
+from logging_strict import LoggingYamlType
 from logging_strict.logging_api import LoggingConfigYaml
-from logging_strict.logging_yaml_abc import LoggingYamlType
 from logging_strict.tech_niques import (
     ClassAttribTypes,
     is_class_attrib_kind,

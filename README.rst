@@ -47,6 +47,10 @@ For logging.config yaml files, logging-strict does the following:
 
 * Python 3.9 through 3.12, and 3.13.0a3 and up.
 
+**New in 0.2.x:**
+
+Public API changed. function setup_worker retired. Split into two steps;
+
 **New in 0.1.x:**
 
 techniques relavent to logging;
@@ -430,6 +434,115 @@ particular code module is unknown.
 **Give a brother a clue!**
 
 A clear easily maintainable verifiable guide is necessary.
+
+Within worker
+--------------
+
+This is a 2 step process.
+
+- Step 1 -- entrypoint
+
+  Extracts yaml from package, validates, then passes as str to the worker process
+
+- Step 2 -- worker
+
+  yaml str --> logging.config.dictConfig
+
+within entrypoint
+""""""""""""""""""
+
+The ProcessPool (not ThreadPool) worker is isolated within it's own
+process. So the dirty nature of logging configuration has no effect
+on other processes.
+
+logging.config yaml file within package, logging_strict
+
+.. code:: text
+
+   from logging_strict import worker_yaml_curated
+
+   genre = "mp"
+   flavor = "asz"
+
+   str_yaml = worker_yaml_curated(genre, flavor)
+
+logging.config yaml file within another package
+
+.. code:: text
+
+   from logging_strict import worker_yaml_curated
+
+   package = "someotherpackage"
+   package_data_folder_start = "data"  # differs so need to check this folder name
+
+   genre = "mp"
+   flavor = "asz"
+
+   str_yaml = setup_worker_other(package, package_data_folder_start, genre, flavor)
+
+
+within worker
+""""""""""""""""""
+
+entrypoint passes str_yaml to the (ProcessPool) worker. A worker calls
+`setup_logging_yaml` with the yaml str
+
+.. code:: text
+
+   from logging_strict import setup_logging_yaml
+
+   setup_logging_yaml(str_yaml)
+
+
+To learn more about building UI apps that have `multiprocessing.pool.ProcessPool`
+workers, check out the `asz` source code
+
+Public API
+-----------
+
+.. code:: text
+
+   from logging_strict import (
+      LoggingConfigCategory,
+      LoggingState,
+      LoggingYamlType,
+      setup_ui,
+      worker_yaml_curated,
+      setup_worker_other,
+      setup_logging_yaml,
+      LoggingStrictError,
+      LoggingStrictPackageNameRequired,
+      LoggingStrictPackageStartFolderNameRequired,
+      LoggingStrictProcessCategoryRequired,
+      LoggingStrictGenreRequired,
+   )
+
+- LoggingConfigCategory
+
+  tl;dr; ^^ won't need this ^^
+
+  Process categories Enum. Iterate over the Enum values, using class
+  method, `categories`.
+
+  `strict_logging` public methods are convenience functions for class,
+  `strict_logging.logging_api.LoggingConfigYaml`. If LoggingConfigYaml
+  used directly, choose one of the LoggingConfigCategory values to
+  pass as param, category.
+
+- LoggingYamlType
+
+  tl;dr; ^^ won't need this ^^
+
+  Useful only during strict type checking. class LoggingConfigYaml
+  implements LoggingYamlType interface and is a direct subclass
+
+- LoggingStrictError
+
+  logging_strict catch all Exception. Base type of other exceptions.
+  Implements ValueError
+
+  The other exceptions are self explanatory. When creating worker
+  entrypoints, can set exit codes based on which exception occurred.
 
 Whats strictyaml?
 ------------------

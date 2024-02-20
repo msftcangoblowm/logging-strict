@@ -10,10 +10,8 @@ from unittest.mock import (
     patch,
 )
 
-from logging_strict.constants import (
-    LoggingConfigCategory,
-    g_app_name,
-)
+from logging_strict import LoggingConfigCategory
+from logging_strict.constants import g_app_name
 from logging_strict.ep_validate_yaml import (
     _process_args,
     main,

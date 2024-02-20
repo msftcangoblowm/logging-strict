@@ -1,11 +1,11 @@
 import unittest
 
+from logging_strict import LoggingConfigCategory
 from logging_strict._version import (
     __version__,
     __version_tuple__,
 )
 from logging_strict.constants import (
-    LoggingConfigCategory,
     Version,
     _make_url_from_version,
     _map_release,
