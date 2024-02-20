@@ -47,7 +47,7 @@ For logging.config yaml files, logging-strict does the following:
 
 * Python 3.9 through 3.12, and 3.13.0a3 and up.
 
-**New in 0.2.x:**
+**New in 1.0.x:**
 
 Public API changed. function setup_worker retired. Split into two steps;
 
