@@ -47,9 +47,9 @@ For logging.config yaml files, logging-strict does the following:
 
 * Python 3.9 through 3.12, and 3.13.0a3 and up.
 
-**New in 1.0.x:**
+**New in 1.0.1+:**
 
-Public API changed. function setup_worker retired. Split into two steps;
+Public API changed. retired functions setup_worker and setup_ui. Split each into 2 or 3
 
 **New in 0.1.x:**
 
@@ -299,22 +299,19 @@ logging.config yaml -- within logging_strict
 
 .. code:: text
 
-   from logging_strict.constants import g_app_name  # g_ means app wide aka global
-   from logging_strict import setup_ui, LoggingState
+   from logging_strict.constants import
+   from logging_strict import ui_yaml_curated, LoggingState
 
-   package_data_folder_start = "configs"
    genre = "textual"
-   version = "1"
+   version_no = "1"
    flavor = "asz"  # < -- Yet unpublished testing UI package
    package_start_relative_folder = ""
 
    LoggingState().is_state_app = True
-   setup_ui(
-       g_app_name,  # curated within logging_strict
-       package_data_folder_start,  # <-- search starts here
+   ui_yaml_curated(
        genre,
        flavor,
-       version_no=version,
+       version_no=version_no,
        package_start_relative_folder=package_start_relative_folder,  # <-- narrows the search
    )
 
@@ -324,19 +321,20 @@ logging.config yaml -- within another package
 .. code:: text
 
    from mypackage.constants import urpackagename, package_data_folder_start
-   from logging_strict import setup_ui, LoggingState
+   from logging_strict import setup_ui_other, LoggingState
 
    genre = "textual"
    flavor = "asz"  # < -- Yet unpublished testing UI package
+   version_no = "1"
    package_start_relative_folder = ""
 
    LoggingState().is_state_app = True
-   setup_ui(
+   setup_ui_other(
        urpackagename,  # <-- Would have been better to curate within logging_strict
        package_data_folder_start,
        genre,
        flavor,
-       version_no="1",
+       version_no=version_no,
        package_start_relative_folder=package_start_relative_folder,
    )
 
@@ -380,6 +378,8 @@ logging.config yaml -- within another package
 
   When changes have to be made either: Increment
   the version by 1 or if purpose is different, fork a new flavor
+
+  If no flavor, version pertains to the genre
 
 - package_start_relative_folder
 
@@ -506,9 +506,10 @@ Public API
       LoggingConfigCategory,
       LoggingState,
       LoggingYamlType,
-      setup_ui,
-      worker_yaml_curated,
+      setup_ui_other,
+      ui_yaml_curated,
       setup_worker_other,
+      worker_yaml_curated,
       setup_logging_yaml,
       LoggingStrictError,
       LoggingStrictPackageNameRequired,

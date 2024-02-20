@@ -33,7 +33,7 @@ Module private variables
 
 .. py:data:: __all__
    :type: tuple[str, str, str, str, str]
-   :value: ("LoggingConfigYaml", "setup_ui", \
+   :value: ("LoggingConfigYaml", "setup_ui_other", "ui_yaml_curated", \
    "worker_yaml_curated", "setup_worker_other", "LoggingState")
 
    Module exports
@@ -101,7 +101,8 @@ else:  # pragma: no cover
 
 __all__ = (
     "LoggingConfigYaml",
-    "setup_ui",
+    "ui_yaml_curated",
+    "setup_ui_other",
     "worker_yaml_curated",
     "setup_worker_other",
     "LoggingState",
@@ -442,12 +443,12 @@ class LoggingConfigYaml(LoggingYamlType):
         return str_ret
 
 
-def setup_ui(
+def setup_ui_other(
     package_name: str,
     package_data_folder_start: str,
     genre: str,
     flavor: str,
-    version_no: Optional[Any] = "1",
+    version_no: Optional[Any] = VERSION_FALLBACK,
     package_start_relative_folder="",
 ) -> None:
     """Before creating an App instance, extract logging.config yaml
@@ -479,10 +480,28 @@ def setup_ui(
     ui_yaml.setup(str_yaml)
 
 
+def ui_yaml_curated(
+    genre: str,
+    flavor: str,
+    version_no: Optional[Any] = VERSION_FALLBACK,
+    package_start_relative_folder="",
+) -> None:
+    package_name = g_app_name
+    package_data_folder_start = "configs"
+    setup_ui_other(
+        package_name,
+        package_data_folder_start,
+        genre,
+        flavor,
+        version_no=version_no,
+        package_start_relative_folder=package_start_relative_folder,
+    )
+
+
 def worker_yaml_curated(
     genre: Optional[Any] = "mp",
     flavor: Optional[Any] = "asz",
-    version_no: Optional[Any] = "1",
+    version_no: Optional[Any] = VERSION_FALLBACK,
     package_start_relative_folder="",
 ) -> str:
     """For multiprocessing workers, retrieve the yaml in this order:
@@ -568,7 +587,7 @@ def setup_worker_other(
     package_data_folder_start: str,
     genre: str,
     flavor: str,
-    version_no: Optional[Any] = "1",
+    version_no: Optional[Any] = VERSION_FALLBACK,
     package_start_relative_folder="",
 ) -> str:
     """worker_yaml_curated grabs the logging.config yaml from logging-strict.

@@ -10,8 +10,9 @@ from unittest.mock import (
 from logging_strict import (
     LoggingConfigCategory,
     LoggingState,
-    setup_ui,
+    setup_ui_other,
     setup_worker_other,
+    ui_yaml_curated,
     worker_yaml_curated,
 )
 from logging_strict.constants import g_app_name
@@ -54,7 +55,18 @@ class LoggingApi(unittest.TestCase):
         m_setup = Mock(spec=dummy_setup)
 
         # worker_yaml_curated
-        valids = ((worker_yaml_curated, "mp", "bob"),)
+        valids = (
+            (
+                worker_yaml_curated,
+                "mp",
+                "bob",
+            ),
+            (
+                ui_yaml_curated,
+                "textual",
+                "bob",
+            ),
+        )
         for func, genre, flavor in valids:
             with (
                 tempfile.TemporaryDirectory() as fp,
@@ -78,9 +90,9 @@ class LoggingApi(unittest.TestCase):
                         flavor,
                     )
 
-        # setup_ui and setup_worker_other
+        # setup_ui_other and setup_worker_other
         valids = (
-            (setup_ui, "textual", "asz"),
+            (setup_ui_other, "textual", "asz"),
             (setup_worker_other, "mp", "asz"),
         )
         for func, genre, flavor in valids:
@@ -141,7 +153,7 @@ class LoggingApi(unittest.TestCase):
             #    Will actual extract file, so package must be real
             #    Normally 2nd party, not 1st party package
             valids = (
-                (setup_ui, "textual", "asz"),
+                (setup_ui_other, "textual", "asz"),
                 (setup_worker_other, "mp", "asz"),
             )
             package_dest_c = self.package_dest_c
@@ -205,7 +217,7 @@ class LoggingApi(unittest.TestCase):
         # Package data issues: not found or not unique match
         valids = (
             (  # not found in package
-                setup_ui,
+                setup_ui_other,
                 self.fallback_package_base_folder,
                 "poor",
                 "asz",

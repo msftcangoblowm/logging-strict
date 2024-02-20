@@ -23,6 +23,14 @@ Changelog
 
 .. scriv-insert-here
 
+.. _changes_1-0-1:
+
+Version 1.0.1 — 2024-02-20
+------------------------------------------------
+
+- fix: retire public API function, setup_ui
+- docs: Example code reflect correct API function calls
+
 .. _changes_1-0-0:
 
 Version 1.0.0 — 2024-02-20

@@ -63,8 +63,14 @@ class LoggingConfigYaml(LoggingYamlType):
         path_relative_package_dir: Path | str | None = "",
     ) -> str: ...
 
-def setup_ui(
+def setup_ui_other(
     package_name: str,
+    genre: str,
+    flavor: str,
+    version_no: Optional[Any] = VERSION_FALLBACK,
+    package_start_relative_folder: Path | str | None = "",
+) -> None: ...
+def ui_yaml_curated(
     genre: str,
     flavor: str,
     version_no: Optional[Any] = VERSION_FALLBACK,
@@ -73,7 +79,7 @@ def setup_ui(
 def worker_yaml_curated(
     genre: Optional[Any] = "mp",
     flavor: Optional[Any] = "asz",
-    version_no: Optional[Any] = "1",
+    version_no: Optional[Any] = VERSION_FALLBACK,
     package_start_relative_folder: Path | str | None = "",
 ) -> str: ...
 def setup_worker_other(
@@ -81,7 +87,7 @@ def setup_worker_other(
     package_data_folder_start: str,
     genre: str,
     flavor: str,
-    version_no: Optional[Any] = "1",
+    version_no: Optional[Any] = VERSION_FALLBACK,
     package_start_relative_folder: Path | str | None = "",
 ) -> str: ...
 

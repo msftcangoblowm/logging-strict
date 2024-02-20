@@ -4,28 +4,24 @@ import sys
 from pathlib import Path
 
 from .logging_yaml_abc import (
+    VERSION_FALLBACK,
     YAML_LOGGING_CONFIG_SUFFIX,
     LoggingYamlType,
 )
-
-if sys.version_info >= (3, 8):
-    from typing import Final
-else:
-    from typing_extensions import Final
 
 if sys.version_info >= (3, 9):  # pragma: no cover
     from collections.abc import Callable
 else:  # pragma: no cover
     from typing import Callable
 
-__all__: Final[tuple[str]] = ("MyLogger",)
+__all__ = ("MyLogger",)
 
-g_package_second_party: Final[str] = "asz"
+g_package_second_party = "asz"
 
 
 def file_stem(
     genre: str | None = "mp",
-    version: str | None = "1",
+    version: str | None = VERSION_FALLBACK,
     flavor: str | None = g_package_second_party,
 ) -> str:
     return f"{genre}_{version}_{flavor}"
@@ -34,7 +30,7 @@ def file_stem(
 def file_name(
     category: str | None = "worker",
     genre: str | None = "mp",
-    version: str | None = "1",
+    version: str | None = VERSION_FALLBACK,
     flavor: str | None = g_package_second_party,
 ) -> str:
     stem = file_stem(genre=genre, version=version, flavor=flavor)
@@ -45,7 +41,7 @@ def file_name(
 class MyLogger(LoggingYamlType):
     """A basic implementation"""
 
-    suffixes: str = ".my_logger"
+    suffixes = ".my_logger"
 
     def __init__(self, package_name: str, func: Callable[[str], Path]) -> None:
         super().__init__()

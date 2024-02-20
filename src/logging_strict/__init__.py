@@ -12,18 +12,14 @@ UI process call
 
 - LoggingState
 
-- setup_ui
+- ui_yaml_curated or setup_ui_other
 
 worker process -- step 1
 -----------------------------------
 
 Within worker entrypoint call either:
 
-- worker_yaml_curated
-
-or
-
-- setup_worker_other
+- worker_yaml_curated or setup_worker_other
 
 Then pass str_yaml to the worker process
 
@@ -38,9 +34,10 @@ Module private variables
 -------------------------
 
 .. py:data:: __all__
-   :type: tuple[str, str, str, str, str, str, str, str, str, str, str, str]
-   :value: ("LoggingConfigCategory", "LoggingState", "LoggingYamlType", "setup_ui", \
-   "worker_yaml_curated", "setup_worker_other", "setup_logging_yaml", \
+   :type: tuple[str, str, str, str, str, str, str, str, str, str, str, str, str]
+   :value: ("LoggingConfigCategory", "LoggingState", "LoggingYamlType", \
+   "setup_ui_other", "ui_yaml_curated", "worker_yaml_curated", "setup_worker_other", \
+   "setup_logging_yaml", \
    "LoggingStrictError", "LoggingStrictPackageNameRequired", \
    "LoggingStrictPackageStartFolderNameRequired", \
    "LoggingStrictProcessCategoryRequired", "LoggingStrictGenreRequired")
@@ -61,8 +58,9 @@ from .exceptions import (
 )
 from .logging_api import (
     LoggingState,
-    setup_ui,
+    setup_ui_other,
     setup_worker_other,
+    ui_yaml_curated,
     worker_yaml_curated,
 )
 from .logging_yaml_abc import (
@@ -74,7 +72,8 @@ __all__ = (
     LoggingConfigCategory,
     LoggingState,
     LoggingYamlType,
-    setup_ui,
+    setup_ui_other,
+    ui_yaml_curated,
     setup_worker_other,
     worker_yaml_curated,
     setup_logging_yaml,
