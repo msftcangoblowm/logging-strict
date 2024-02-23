@@ -58,7 +58,7 @@
     - merge to master
       $ git branch
       $ git switch master
-      $ git merge -m "Your merge commit message" [source_branch]
+      $ git merge -S -m "Your merge commit message" [source_branch]
     - $ git push
 - Start the kits:
     - Update logging_strict/src/_version.py with next version and build (not tagged yet)
@@ -89,7 +89,7 @@
 - Tag the tree
     $ make tag
     or
-    $ git tag -as -m "Version 0.2.0" 0.2.0
+    $ git tag -as -m "Version 1.1.0" 1.1.0
     # git push --follow-tags
 - Version already upgraded to new tag, but can do it again
   $ python igor.py version "tag"

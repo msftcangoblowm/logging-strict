@@ -13,3 +13,4 @@ flake8
 flake8-pyproject
 mypy
 coverage
+validate-pyproject

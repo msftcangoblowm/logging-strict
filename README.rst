@@ -268,8 +268,8 @@ You know how to use pip. This is not that.
 Lets discuss integrating logging-strict into your app and history
 dust binning hardcoded logging configuration.
 
-Within app
-~~~~~~~~~~~
+UI
+~~~
 
 An entrypoint boilerplate should be structured like, or slightly
 differently for an async app
@@ -435,8 +435,8 @@ particular code module is unknown.
 
 A clear easily maintainable verifiable guide is necessary.
 
-Within worker
---------------
+worker
+-------
 
 This is a 2 step process.
 
@@ -449,7 +449,7 @@ This is a 2 step process.
   yaml str --> logging.config.dictConfig
 
 within entrypoint
-""""""""""""""""""
+~~~~~~~~~~~~~~~~~~
 
 The ProcessPool (not ThreadPool) worker is isolated within it's own
 process. So the dirty nature of logging configuration has no effect
@@ -482,7 +482,7 @@ logging.config yaml file within another package
 
 
 within worker
-""""""""""""""""""
+~~~~~~~~~~~~~~
 
 entrypoint passes str_yaml to the (ProcessPool) worker. A worker calls
 `setup_logging_yaml` with the yaml str
