@@ -70,10 +70,10 @@ Module objects
 -----------------
 
 .. py:data:: __all__
-   :type: tuple[str, str, str, str, str, str, str, str, str, str, str]
+   :type: tuple[str, str, str, str, str, str, str, str]
    :value: ("g_app_name", "__version_app", "LoggingConfigCategory", \
-   "PREFIX_DEFAULT", "LOG_FORMAT", "FALLBACK_LEVEL", \
-   "RICH_OVERFLOW_OPTION_DEFAULT", "sanitize_tag", "get_version")
+   "PREFIX_DEFAULT", "LOG_FORMAT", "FALLBACK_LEVEL", "sanitize_tag", \
+   "get_version")
 
    Module exports
 
@@ -128,13 +128,6 @@ Module objects
       - :py:meth:`coverage.control.Coverage.start`
       - :py:mod:`coverage.multiproc`
 
-
-.. py:data:: RICH_OVERFLOW_OPTION_DEFAULT
-   :type: str
-   :value: "fold"
-
-   :py:obj:`Search algo <asz.util.search_algo>` has support for :pypi_org:`rich`.
-   :pypi_org:`rich` overflow option used by textual
 
 .. py:data:: version_info
    :type: tuple[int, int, int, str, int]
@@ -201,7 +194,6 @@ __all__ = (
     "LoggingConfigCategory",
     "LOG_FORMAT",
     "FALLBACK_LEVEL",
-    "RICH_OVERFLOW_OPTION_DEFAULT",
     "sanitize_tag",
     "get_version",
 )
@@ -224,6 +216,16 @@ def enum_map_func_get_value(enum_item: type[Enum]) -> Any:
 
 
 class LoggingConfigCategory(Enum):
+    """logging.config yaml process categories
+
+    Public API
+
+    .. code-block:: text
+
+       from logging_strict import LoggingConfigCategory
+
+    """
+
     WORKER = "worker"
     UI = "app"
 
@@ -247,8 +249,6 @@ LOG_FMT_DETAILED = (
 )
 LOG_FMT_SIMPLE = "%(name)-15s %(levelname)-8s %(processName)-10s %(message)s"
 LOG_LEVEL_WORKER = "INFO"
-
-RICH_OVERFLOW_OPTION_DEFAULT = "fold"
 
 _map_release = types.MappingProxyType({"alpha": "a", "beta": "b", "candidate": "rc"})
 

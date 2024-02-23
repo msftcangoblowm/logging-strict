@@ -232,7 +232,7 @@ g_module = f"{g_app_name}.util.package_resource"
 _LOGGER = logging.getLogger(g_module)
 
 
-def msg_stem(file_name: str) -> str:
+def msg_stem(file_name):
     """:py:attr:`pathlib.Path.stem` is not ideal, actually it's
     misleading, expecting file name without any suffixes.
 
@@ -576,11 +576,13 @@ def filter_by_file_stem(expected_file_name, test_file_name):
     return ret
 
 
-def _extract_folder(package: str) -> str:
+def _extract_folder(package):
     """Mockable to change the destination folder
 
     Use only by :py:func:`cache_extract` so can override destination folder
 
+    :param package: package name
+    :type package: str
     :returns: cache folder
     :rtype: str
     """
@@ -633,7 +635,7 @@ def walk_tree_folders(
     yield from ()
 
 
-def is_package_exists(package_name: str) -> bool:
+def is_package_exists(package_name):
     """Discover whether a python package is installed within
     virtual environment
 
@@ -657,7 +659,7 @@ def is_package_exists(package_name: str) -> bool:
     return ret
 
 
-def _get_package_data_folder(dotted_path: str) -> Optional[Traversable]:
+def _get_package_data_folder(dotted_path):
     """Helper that retrieves the package resource
 
     :param dotted_path: package_name and optionally dotted path to a subfolder
@@ -689,19 +691,34 @@ class PackageResource:
     Do not assume the default start data folder is ``data``. Impose rule
     that data files must not be stored in the package base folder; must be
     placed into a folder
+
+    :ivar package: package name
+    :vartype package: str
+    :ivar package_data_folder_start: package base data folder name. Not relative path
+    :vartype package_data_folder_start: str
     """
 
-    def __init__(self, package: str, package_data_folder_start: str) -> None:
+    def __init__(self, package, package_data_folder_start):
         super().__init__()
         self._package = package
         self._package_data_folder_start = package_data_folder_start
 
     @property
-    def package(self) -> str:
+    def package(self):
+        """Package name
+
+        :returns: package name
+        :rtype: str
+        """
         return self._package
 
     @property
-    def package_data_folder_start(self) -> str:
+    def package_data_folder_start(self):
+        """Package name
+
+        :returns: package base data folder name. Not relative path
+        :rtype: str
+        """
         return self._package_data_folder_start
 
     def path_relative(
@@ -1055,57 +1072,56 @@ class PackageResource:
         cb_suffix=None,
         cb_file_stem=None,
         path_relative_package_dir=None,
-    ) -> Iterator[Traversable]:
+    ):
         """Generic generator for retrieving package data folder paths. Does
-         not do the file extraction.
+        not do the file extraction.
 
-         .. caution:: Generators delayed execution
+        .. caution:: Generators delayed execution
 
-            Creating a generator will always succeed; the code
-            is not immediately executed. If the code, would normally
-            raise an Exception, have to execute the generator for
-            that to occur.
+           Creating a generator will always succeed; the code
+           is not immediately executed. If the code, would normally
+           raise an Exception, have to execute the generator for
+           that to occur.
 
-            This function is used as input to functions:
-            :py:func:`resource_extract` or :py:func:`cache_extract`.
-            So any Exception or logging would be delayed until those calls
+           This function is used as input to functions:
+           :py:func:`resource_extract` or :py:func:`cache_extract`.
+           So any Exception or logging would be delayed until those calls
 
-         :param cb_suffix:
+        :param cb_suffix:
 
-            Function creating using :py:meth:`functools.partial` which
-            filters by suffix
+           Function creating using :py:meth:`functools.partial` which
+           filters by suffix
 
-         :type cb_suffix: Callable[[str],bool]
-         :param cb_file_stem:
+        :type cb_suffix: Callable[[str],bool]
+        :param cb_file_stem:
 
-            Function creating using :py:meth:`functools.partial` which
-            filters by file name stem
+           Function creating using :py:meth:`functools.partial` which
+           filters by file name stem
 
-         :type cb_file_stem: Callable[[str],bool]
-         :param package_name:
+        :type cb_file_stem: Callable[[str],bool]
+        :param package_name:
 
-            Default [app name]. Python3 has namespace. So a
-            Distribution need not contain all packages which will share
-            the same namespace. There maybe multiple gui implementations
-            installed
+           Default [app name]. Python3 has namespace. So a
+           Distribution need not contain all packages which will share
+           the same namespace. There maybe multiple gui implementations
+           installed
 
-         :type package_name: str
-         :param path_relative_package_dir:
+        :type package_name: str
+        :param path_relative_package_dir:
 
-            package base folder to start the search
+           package base folder to start the search
 
-         :type path_relative_package_dir: :py:class:`~pathlib.Path` or str or None
+        :type path_relative_package_dir: :py:class:`~pathlib.Path` or str or None
 
-         :returns:
+        :returns:
 
-            All Traversable paths. Possibly filtered by theme
+           All Traversable paths. Possibly filtered by theme
 
-         :rtype: Iterator[Traversable]
+        :rtype: Iterator[Traversable]
         :raises:
 
-            - :py:exc:`ImportError` -- package not installed. Before
-              introspecting package data, install package
-
+           - :py:exc:`ImportError` -- package not installed. Before
+             introspecting package data, install package
 
         """
         if TYPE_CHECKING:
@@ -1581,7 +1597,7 @@ class PackageResource:
         cb_suffix=None,
         cb_file_stem=None,
         is_overwrite=False,
-    ) -> Iterator[Path]:
+    ):
         """A generic extractor to local cache folder
 
         :menuselection:`package data --> cache folder`

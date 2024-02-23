@@ -63,6 +63,7 @@ optional-dependencies.pip_tools = { file = ["requirements/pip-tools.pip"] }
 dependencies = { file = ["requirements/prod.pip"] }
 optional-dependencies.dev = { file = ["requirements/dev.pip"] }
 optional-dependencies.manage = { file = ["requirements/manage.pip"] }
+optional-dependencies.docs = { file = ["docs/requirements.pip"] }
 version = {attr = "logging_strict._version.__version__"}
 
 [project.scripts]
@@ -115,6 +116,56 @@ skip_empty = true
 fail_under = 90
 show_missing = true
 
+[tool.sphinx-pyproject]
+language = "en"
+needs_sphinx = "1.7"
+templates_path = ["_templates",]
+html_static_path = ["_static",]
+source_suffix = ".rst"
+master_doc = "index"
+pygments_style = "sphinx"
+html_theme = "alabaster"
+numfig = true
+autosectionlabel_prefix_document = true
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosectionlabel",
+    "sphinx.ext.todo",
+    "sphinx.ext.doctest",
+    "sphinx.ext.githubpages",
+    "sphinxcontrib.fulltoc",
+    "sphinx_paramlinks",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.extlinks",
+]
+linkcheck_ignore = [
+    "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/asyncio/base_events.py#L1894",  # asyncio.base_events._run_once
+    "https://github.com/csachs/pyproject-flake8/blob/16b9dd4d2f19dcf0bfb3a3110f98227627cd67fe/pflake8/__init__.py#L86",  # pyproject_flake8 FixFilenames.apply
+    "https://github.com/PyCQA/flake8/blob/fb9a02aaf77b56fcad4320971e7edca0cea93489/src/flake8/options/config.py#L56",  # flake8.options.config.load_config
+    "https://github.com/csachs/pyproject-flake8/blob/16b9dd4d2f19dcf0bfb3a3110f98227627cd67fe/pflake8/__init__.py#L22",  # pyproject_flake8 ConfigParserTomlMixin
+    "https://github.com/psf/black/blob/e11eaf2f44d3db5713fb99bdec966ba974b60c8c/src/black/files.py#L46",  # block.files.find_project_root
+    "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L193",  # unittest.case._BaseTestCaseContext
+    "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L816",  # unittest.case.assertLogs
+]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+]
+doctest_show_successes = false
+doctest_test_doctest_blocks = "Yes please!"
+nitpicky = true
+autodoc_typehints = 'signature'
+
+[tool.sphinx-pyproject.linkcheck_allowed_redirects]
+"https://stackoverflow.com/a/53677481" = "https://stackoverflow.com/questions/45110287/workaround-for-using-name-main-in-python-multiprocessing/53677481#53677481"
+"https://stackoverflow.com/a/72490867" = "https://stackoverflow.com/questions/2046603/is-it-possible-to-run-function-in-a-subprocess-without-threading-or-writing-a-se/72490867#72490867"
+"https://stackoverflow.com/a/56469201" = "https://stackoverflow.com/questions/53223246/local-variable-for-unit-testing-in-python-to-verify-functionality-of-test-functi/56469201#56469201"
+"https://stackoverflow.com/a/69202374" = "https://stackoverflow.com/questions/69200881/how-to-get-python-unittest-to-show-log-messages-only-on-failed-tests/69202374#69202374"
+"https://stackoverflow.com/a/75276342" = "https://stackoverflow.com/questions/75263023/how-can-i-use-pythons-concurrent-futures-to-queue-tasks-across-multiple-process/75276342#75276342"
+"https://stackoverflow.com/q/69200881" = "https://stackoverflow.com/questions/69200881/how-to-get-python-unittest-to-show-log-messages-only-on-failed-tests"
+"https://stackoverflow.com/q/66727458" = "https://stackoverflow.com/questions/66727458/warnings-filterwarningsignore-doesnt-ignore-logging-warning"
+
 [tool.black]
 target_version = [
     "py39",
@@ -155,21 +206,24 @@ sign = true
 [tool.asz.unittest]
 "test_util_root.py" = 1
 "test_xdg_folders.py" = 2
-"tech_niques/test_context_locals" = 3
+"tech_niques/test_context_locals.py" = 3
+"test_util_package_resource.py" = 4
 "test_check_type.py" = 11
-"tech_niques/test_logging_capture" = 12
+"tech_niques/test_logging_capture.py" = 12
+"tech_niques/test_docs_logging_capture.py" = 30
 "test_versioning.py" = 31
-"test_check_logging" = 32
+"test_check_logging.py" = 32
 "test_logging_api.py" = 33
 "test_abc.py" = 41
-"test_uncategorized_underappreciated.py" = 42
-"test_validate" = 43
+"tech_niques/test_uncategorized_underappreciated.py" = 42
+"test_validate.py" = 43
 "test_ep.py" = 44
 
 [tool.asz.recipe]
 "util/util_root" = [1]
 "util/xdg_folders" = [2]
 "tech_niques/context_locals" = [3]
+"util/package_resource" = [4]
 "util/check_type" = [11]
 "constants" = [31]
 "_version" = [31]

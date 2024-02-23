@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import unittest
 
-from asz.util.check_type import is_not_ok
-
 from logging_strict.constants import g_app_name
 from logging_strict.tech_niques.context_locals import (
     _func,
     get_locals,
 )
+from logging_strict.util.check_type import is_not_ok
 
 
 def piggy_back(

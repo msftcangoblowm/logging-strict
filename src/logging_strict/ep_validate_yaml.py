@@ -7,7 +7,7 @@
 
 ..
 
-Entrypoint to check yaml :py:mod:`logging.config` file
+Entrypoint to validate :py:mod:`logging.config` yaml file(s)
 
 Module objects
 ---------------

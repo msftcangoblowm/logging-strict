@@ -25,7 +25,9 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import Self
 
-__all__: Final[tuple[str, str, str, str, str]]
+__all__: Final[tuple[str, str, str, str, str, str]]
+
+def cb_true(x: Any) -> bool: ...
 
 class LoggingConfigYaml(LoggingYamlType):
     suffixes: str = YAML_LOGGING_CONFIG_SUFFIX
@@ -36,16 +38,16 @@ class LoggingConfigYaml(LoggingYamlType):
         category: LoggingConfigCategory | str | Any | None,
         genre: str | None = None,
         flavor: str | None = None,
-        version_no: Optional[Any] = VERSION_FALLBACK,
+        version_no: Any | None = VERSION_FALLBACK,
     ) -> None: ...
     @property
     def file_stem(self) -> str: ...
     @property
     def category(self) -> str: ...
     @property
-    def genre(self) -> Optional[str]: ...
+    def genre(self) -> str | None: ...
     @property
-    def flavor(self) -> str: ...
+    def flavor(self) -> str | None: ...
     @property
     def version(self) -> str: ...
     @version.setter

@@ -19,7 +19,7 @@ logging message format string.
 
     import logging
 
-    from logging_strict.tech_niques.logging_capture import captureLogs
+    from logging_strict.tech_niques import captureLogs
     from logging_strict.constants import LOG_FORMAT
 
     msg0 = 'first msg'
@@ -44,8 +44,8 @@ Can be chained with other context managers. Such as capturing the streams as wel
     import logging
     import sys
 
-    from logging_strict.tech_niques.stream_capture import CaptureOutput
-    from logging_strict.tech_niques.logging_capture import captureLogs
+    from logging_strict.stream_capture import CaptureOutput
+    from logging_strict.logging_capture import captureLogs
 
     msg0 = 'first msg'
     msg1 = 'second msg'
@@ -81,15 +81,6 @@ In addition to the two context managers above, in unittests,
 :py:obj:`unittest.mock.patch` can alter modules behavior and results without
 changes to the modules source code.
 
-CaptureOutput
----------------------------
-
-.. seealso::
-
-   :code:`from logging_strict.tech_niques import CaptureOutput`
-
-   :ref:`CaptureOutput <api/streams/capture_streams:capture streams>`
-
 sync and async logging
 ---------------------------
 
@@ -97,9 +88,9 @@ sync and async logging
   :ref:`synchronous logging <api/logging/api_logging_synchronous:synchronous logging>`,
   a context manager to fix the issue of redirecting stdout/stderr.
 
-  :py:obj:`LoggerRedirector <logging_strict.tech_niques.logger_redirect.LoggerRedirector>`
+  :py:obj:`LoggerRedirector <logging_strict.tech_niques.LoggerRedirector>`
 
-  :code:`from asz.tech_niques import LoggerRedirector`
+  :code:`from logging_strict.tech_niques import LoggerRedirector`
 
 - For asynchronous logging, using package,
   :ref:`aiologger <api/logging/api_logging_asynchronous:asynchronous logging>`
@@ -574,6 +565,9 @@ def captureLogs(
 
     Example::
 
+        import logging
+        from logging_strict.tech_niques import captureLogs
+
         with captureLogs('foo', level='INFO') as cm:
             logging.getLogger('foo').info('first message')
             logging.getLogger('foo.bar').error('second message')
@@ -589,7 +583,7 @@ def captureLogs(
 
 
     :param logger: Default ``None``. logger or logger name
-    :type logger: str or logging.Logger or None
+    :type logger: str or :py:class:`logging.Logger` or None
     :param level: Default ``None``. Logging level
     :type level: str or int or ``None``
     :param format_: Default ``None``. Can override logging format spec
@@ -664,7 +658,7 @@ def captureLogsMany(
     levels=(),
     format_=LOG_FORMAT,
 ):
-    """Behave exactly like :py:class:`.captureLogs` except intended
+    """Behave exactly like :py:func:`.captureLogs` except intended
     for multiple loggers rather than one
 
     :param loggers: Sequence of loggers

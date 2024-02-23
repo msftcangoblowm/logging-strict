@@ -12,7 +12,7 @@ Conveniently exports all technique helpers
 .. py:data:: __all__
    :type: tuple[str, str, str]
    :value: ("get_locals", "is_class_attrib_kind", "ClassAttribTypes", \
-   "LoggerRedirector", "captureLogs")
+   "LoggerRedirector", "captureLogs", "detect_coverage", "CaptureOutput")
 
    This modules exports
 
@@ -25,14 +25,16 @@ from .context_locals import get_locals
 from .coverage_misbehaves import detect_coverage
 from .logger_redirect import LoggerRedirector
 from .logging_capture import captureLogs
+from .stream_capture import CaptureOutput
 
-__all__: tuple[str, str, str, str, str, str] = (
+__all__ = (
     "get_locals",
     "is_class_attrib_kind",
     "ClassAttribTypes",
     "LoggerRedirector",
     "captureLogs",
     "detect_coverage",
+    "CaptureOutput",
 )
 
 

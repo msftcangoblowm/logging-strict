@@ -7,22 +7,28 @@
 
 ..
 
-Validate, QA Tester accessible, :py:mod`:logging.config` yaml
+Validate :py:mod:`logging.config` yaml files.
 
-Custom filters use case
-`[docs] <https://docs.python.org/3/howto/logging-cookbook.html#using-filters-to-impart-contextual-information>`_
+Available as an:
+
+- :abbr:`ep (entrypoint)`
+
+- via pre-commit
 
 .. seealso::
+
+   `Custom filters <https://docs.python.org/3/howto/logging-cookbook.html#using-filters-to-impart-contextual-information>`_
+   use case
 
    logging.config
    `[spec] <https://docs.python.org/3/library/logging.config.html#dictionary-schema-details>`_
 
-   strictyaml `[docs] <https://hitchdev.com/strictyaml/using/alpha/compound/>`_
+   `strictyaml compound types <https://hitchdev.com/strictyaml/using/alpha/compound/>`_
 
 Limitations
 ------------
 
-1. :py:class:`logging.SMTPHandler` arg ``secure`` takes:
+1. :py:class:`logging.handlers.SMTPHandler` arg ``secure`` takes:
 
    - None
 
@@ -64,7 +70,6 @@ from __future__ import annotations
 
 import sys
 from functools import partial
-from typing import Optional
 
 import strictyaml as s
 
@@ -285,20 +290,39 @@ schema_logging_config = s.MapCombined(
 
 
 def validate_yaml_dirty(
-    yaml_snippet: str,
-    schema: s.Validator = schema_logging_config,
-) -> Optional[s.YAML]:
+    yaml_snippet,
+    schema=schema_logging_config,
+):
     """This designed with the intent to verify :py:mod:`logging.config` yaml
 
     In :py:mod:`logging.config` docs, all examples shown contain
-    flow_style. Eventhough it's easy to fix the yaml,
-    logging.config.dictConfig will accept the non-fixed yaml
+    YAML flow_style.
+
+    YAML flow style (incorrect)
+
+    .. code-block:: text
+
+       somelist: [item0, item1]
+
+    Without flow style (Correct)
+
+    .. code-block:: text
+
+       somelist:
+         - item0
+         - item1
+
+
+    Eventhough it's easy to fix the yaml, logging.config.dictConfig will
+    accept the non-fixed yaml
+
+    Reluctantly ... allow flow style
 
     world+dog
 
     - refers to the :py:mod:`logging.config` docs
 
-    - have based their code off the `logging.config` docs
+    - have based their code off the :py:mod:`logging.config` docs
 
     - won't be aware of yaml intricacies and intrigue
 
@@ -307,11 +331,14 @@ def validate_yaml_dirty(
     :param schema: :py:mod:`strictyaml` strict typing schema
     :type schema: :py:class:`strictyaml.Validator` or :py:data:`.schema_logging_config`
     :returns: YAML object. Pass this to each worker
-    :rtype: Optional[strictyaml.YAML]
+    :rtype: :py:class:`strictyaml.YAML` | None
+    :single-line-parameter-list:
+    :single-line-type-parameter-list:
 
     .. seealso::
 
-       https://github.com/python/cpython/pull/102885/files
+       `Modern way <https://github.com/python/cpython/pull/102885/files>`_
+       of dealing with Traceback
 
     """
     # Allow flow style uz used often in logging.config cookbook

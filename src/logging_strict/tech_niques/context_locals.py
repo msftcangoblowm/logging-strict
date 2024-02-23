@@ -53,7 +53,7 @@ Yea!
 One return value example
 -------------------------
 
-Example function found in :py:mod:`asz.tech_niques.context_locals`.
+Example function found in :py:mod:`logging_strict.tech_niques.context_locals`.
 Lets pretend this is the module level function would like to see the locals
 
 .. code-block:: text
@@ -73,12 +73,12 @@ Returns ``"bar"``
 
 .. testcode::
 
-    from asz.tech_niques.context_locals import get_locals, _func
+    from logging_strict.tech_niques.context_locals import get_locals, _func
 
 
     def main():
         # If in same script file try, f"{__name__}._func"
-        func_path = f"asz.tech_niques.context_locals._func"
+        func_path = f"logging_strict.tech_niques.context_locals._func"
 
         args = ("A",)
         kwargs = {}
@@ -210,7 +210,7 @@ class MockFunction:
 
     .. seealso::
 
-       Used by :py:obj:`asz.tech_niques.get_locals`
+       Used by :py:obj:`logging_strict.tech_niques.get_locals`
 
     """
 

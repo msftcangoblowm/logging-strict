@@ -17,6 +17,18 @@ to specify the correct author name
 
 Since the target platform is POSIX, not losing sleep over this issue
 
+Module private variables
+-------------------------
+
+.. py:data:: __all__
+   :type: tuple[str, str, str]
+   :value: ("DestFolderSite", "DestFolderUser", "_get_path_config")
+
+   Module exports
+
+Module objects
+---------------
+
 """
 import email
 import email.policy
@@ -40,7 +52,7 @@ def _get_author(
     no_period=True,
     no_space=True,
     no_underscore=True,
-) -> str:
+):
     """Affects Windows and MacOS platforms. Linux ignores package
     (head) author name.
 
@@ -123,15 +135,51 @@ def _get_author(
 
 
 class DestFolderSite:
+    """XDG Site folders
+
+    :ivar appname: Package name
+    :vartype appname: str
+    :ivar author_no_period:
+
+       Default ``True``. ``True`` if should remove period from author
+       name otherwise ``False``
+
+    :vartype author_no_period: str
+    :ivar author_no_space:
+
+       Default ``True``. ``True`` if should remove whitespace from author
+       name otherwise ``False``
+
+    :vartype author_no_space: str
+    :ivar author_no_underscore:
+
+       Default ``True``. ``True`` if should remove underscore from author
+       name otherwise ``False``
+
+    :vartype author_no_underscore: str
+    :ivar version:
+
+       Default ``None``. Possible to have version specific author
+       information. Can specific version
+
+    :vartype version: str | None
+    :ivar multipath:
+
+       Default ``False``. Could retrieve all possible folders.
+       ``True`` for multipath. ``False`` for first entry in multipath
+
+    :vartype multipath: bool | None
+    """
+
     def __init__(
         self,
-        appname: str,
+        appname,
         author_no_period=True,
         author_no_space=True,
         author_no_underscore=True,
-        version: Optional[str] = None,
-        multipath: Optional[bool] = False,
-    ) -> None:
+        version=None,
+        multipath=False,
+    ):
         self.appname = appname
         self.appauthor = _get_author(
             appname,
@@ -143,7 +191,12 @@ class DestFolderSite:
         self.multipath = multipath
 
     @property
-    def data_dir(self) -> str:
+    def data_dir(self):
+        """Get XDG site data dir
+
+        :returns: XDG site data dir
+        :rtype: str
+        """
         return AppDirs(
             appname=self.appname,
             appauthor=self.appauthor,
@@ -152,7 +205,12 @@ class DestFolderSite:
         ).site_data_dir
 
     @property
-    def config_dir(self) -> str:
+    def config_dir(self):
+        """Get XDG site config dir
+
+        :returns: XDG site config dir
+        :rtype: str
+        """
         return AppDirs(
             appname=self.appname,
             appauthor=self.appauthor,
@@ -162,6 +220,46 @@ class DestFolderSite:
 
 
 class DestFolderUser:
+    """XDG User folders
+
+    :ivar appname: Package name
+    :vartype appname: str
+    :ivar author_no_period:
+
+       Default ``True``. ``True`` if should remove period from author
+       name otherwise ``False``
+
+    :vartype author_no_period: str
+    :ivar author_no_space:
+
+       Default ``True``. ``True`` if should remove whitespace from author
+       name otherwise ``False``
+
+    :vartype author_no_space: str
+    :ivar author_no_underscore:
+
+       Default ``True``. ``True`` if should remove underscore from author
+       name otherwise ``False``
+
+    :vartype author_no_underscore: str
+    :ivar version:
+
+       Default ``None``. Possible to have version specific author
+       information. Can specific version
+
+    :vartype version: str | None
+    :ivar roaming:
+
+       Default ``False``. Only applicable to Windows
+
+    :vartype roaming: bool | None
+    :ivar opinion:
+
+       Default ``True``. ??
+
+    :vartype opinion: bool | None
+    """
+
     def __init__(
         self,
         appname: str,
@@ -184,7 +282,12 @@ class DestFolderUser:
         self.opinion = opinion
 
     @property
-    def data_dir(self) -> str:
+    def data_dir(self):
+        """Get XDG user data dir
+
+        :returns: XDG user data dir
+        :rtype: str
+        """
         return AppDirs(
             appname=self.appname,
             appauthor=self.appauthor,
@@ -193,7 +296,12 @@ class DestFolderUser:
         ).user_data_dir
 
     @property
-    def config_dir(self) -> str:
+    def config_dir(self):
+        """Get XDG user config dir
+
+        :returns: XDG user config dir
+        :rtype: str
+        """
         return AppDirs(
             appname=self.appname,
             appauthor=self.appauthor,
@@ -202,7 +310,12 @@ class DestFolderUser:
         ).user_config_dir
 
     @property
-    def cache_dir(self) -> str:
+    def cache_dir(self):
+        """Get XDG user cache dir
+
+        :returns: XDG user cache dir
+        :rtype: str
+        """
         return user_cache_dir(
             appname=self.appname,
             appauthor=self.appauthor,
@@ -211,7 +324,12 @@ class DestFolderUser:
         )
 
     @property
-    def state_dir(self) -> str:
+    def state_dir(self):
+        """Get XDG user state dir
+
+        :returns: XDG user state dir
+        :rtype: str
+        """
         return AppDirs(
             appname=self.appname,
             appauthor=self.appauthor,
@@ -220,7 +338,12 @@ class DestFolderUser:
         ).user_state_dir
 
     @property
-    def log_dir(self) -> str:
+    def log_dir(self):
+        """Get XDG user log dir
+
+        :returns: XDG user log dir
+        :rtype: str
+        """
         return user_log_dir(
             appname=self.appname,
             appauthor=self.appauthor,
@@ -236,7 +359,7 @@ def _get_path_config(
     author_no_underscore=True,
     version=None,
     roaming=False,
-) -> Path:
+):
     """Mockable module level function. Gets the user
     data folder, not the user config folder
 

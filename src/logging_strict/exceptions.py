@@ -9,6 +9,21 @@
 
 Custom exceptions
 
+Public API
+-----------
+
+Usage
+
+.. code-block:: python
+
+    from logging_strict import (
+        LoggingStrictError,
+        LoggingStrictPackageNameRequired,
+        LoggingStrictPackageStartFolderNameRequired,
+        LoggingStrictProcessCategoryRequired,
+        LoggingStrictGenreRequired,
+    )
+
 Module private variables
 -------------------------
 

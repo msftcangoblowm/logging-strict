@@ -25,14 +25,14 @@ Uses a (logging) handler specific for a particular UI framework
 - worker
 
 (logging) handler is directed at console or files. If log to console
-(:py:class:`logging.handlers.StreamHandler`), capture the worker
+(:py:class:`logging.StreamHandler`), capture the worker
 logging output, including it along with the worker output.
 
 Module private variables
 -------------------------
 
 .. py:data:: __all__
-   :type: tuple[str, str, str, str, str]
+   :type: tuple[str, str, str, str, str, str]
    :value: ("LoggingConfigYaml", "setup_ui_other", "ui_yaml_curated", \
    "worker_yaml_curated", "setup_worker_other", "LoggingState")
 
@@ -48,10 +48,8 @@ from __future__ import annotations
 import sys
 import threading
 from functools import partial
-from pathlib import Path
 from typing import (
     TYPE_CHECKING,
-    Any,
     Optional,
 )
 
@@ -110,6 +108,13 @@ __all__ = (
 
 
 def cb_true(x):
+    """A Callback which always returns ``True``
+
+    Used to retrieve files with either all file stem or all file suffixes
+
+    :returns: Always ``True``
+    :rtype: bool
+    """
     return True
 
 
@@ -126,14 +131,29 @@ class LoggingConfigYaml(LoggingYamlType):
 
        :menuselection:`.logging.config.yaml --> `.worker.logging.config.yaml`
 
+    Class variables
+
     :cvar suffixes:
 
-       :py:mod:`logging.config` yaml file suffixes. A category is prefixed.
-       So e.g. for the UI process, the final file suffixes becomes
-       :menuselection:`.logging.config.yaml --> .app.logging.config.yaml`.
-       For the worker the final suffixes would be `.worker.logging.config.yaml`
+       .. line-block::
+
+          :py:mod:`logging.config` yaml file suffixes
+
+          value: ``.logging.config.yaml``
+
+          A category will be prefix'ed.
+
+          For the UI process, the final file suffixes becomes
+          :menuselection:`.logging.config.yaml --> .app.logging.config.yaml`.
+
+          For the worker, the final suffixes would becomes
+          :menuselection:`.logging.config.yaml --> .worker.logging.config.yaml`
+
 
     :vartype suffixes: str
+
+    Instance variables
+
     :ivar package_name:
 
        The Python package containing the :py:mod:`logging.config` yaml
@@ -153,7 +173,10 @@ class LoggingConfigYaml(LoggingYamlType):
        not merely a thread. This design prevents :py:mod:`logging.config`
        changes from polluting other workers or the main process.
 
-    :vartype category: :py:class:`LoggingConfigCategory`
+    :vartype category:
+
+       :py:class:`LoggingConfigCategory` | str | :py:class:`~typing.Any` | None
+
     :ivar genre:
 
        If UI: "textual" or "rich". If worker: "stream". Then can have
@@ -175,9 +198,12 @@ class LoggingConfigYaml(LoggingYamlType):
     :vartype flavor: str or None
     :ivar version_no:
 
-       Default 1. Version of this particular
-       :paramref:`logging_config_yaml_co`. **Not** the version of the
-       yaml spec. Don't confuse the two.
+       .. line-block::
+
+          Default 1. Version of this particular
+          genre or genre & flavor
+
+          **Not** the version of the yaml spec. Don't confuse the two.
 
     :vartype version_no: :py:class:`~typing.Any` or None
     :raises:
@@ -194,12 +220,12 @@ class LoggingConfigYaml(LoggingYamlType):
 
     def __init__(
         self,
-        package_name: str,
-        package_data_folder_start: str,
-        category: LoggingConfigCategory | str | Any | None,
-        genre: Optional[str] = None,
-        flavor: Optional[str] = None,
-        version_no: Optional[Any] = VERSION_FALLBACK,
+        package_name,
+        package_data_folder_start,
+        category,
+        genre=None,
+        flavor=None,
+        version_no=VERSION_FALLBACK,
     ):
         super().__init__()
 
@@ -252,7 +278,7 @@ class LoggingConfigYaml(LoggingYamlType):
         self.version = version_no
 
     @property
-    def file_stem(self) -> str:
+    def file_stem(self):
         """file stem consists of slugs seperated by underscore
 
         :returns: File name. Which is file stem + suffixes
@@ -282,30 +308,95 @@ class LoggingConfigYaml(LoggingYamlType):
         return ret
 
     @property
-    def category(self) -> str:
+    def category(self):
+        """Category as a str. Category str either: 'app' or 'worker'
+
+        :returns: Category str
+        :rtype: str
+        """
         return self._category
 
     @property
-    def genre(self) -> Optional[str]:
+    def genre(self):
+        """In constructor can neglect to provide genre.
+
+        So can use:
+
+        - :py:meth:`iter_yaml`
+
+        Can't use
+
+        - :py:meth:`extract`
+
+        - :py:meth:`setup`
+
+        Genre is the UI framwork or worker characteristic
+
+        - imply the handler. e.g. textual or rich
+
+        - imply the characteristics of a worker :abbr:`ep (entrypoint)`.
+          e.g. :abbr:`mp (multiprocessing)` or :abbr:`mq (rabbitmq)`
+
+        :returns: Genre str
+        :rtype: str | None
+        """
         return self._genre
 
     @property
-    def flavor(self) -> str:
+    def flavor(self):
+        """Specific implementation of a genre.
+
+        E.g. multiple :py:mod:`logging.config` yaml files for :py:mod:`textual`
+
+        Uses the handler, TextualHandler, but each has some variation.
+        Like custom formaters or filters
+
+        So the flavor may be
+
+        - Package that originally uses it and provided it to be curated
+          within logging_strict e.g. :abbr:`asz (testing console UI)`
+
+        - One word, no hyphen period or underscore, description of the
+          uniqueness of this variation
+
+        :returns: Flavor str
+        :rtype: str | None
+        """
         return self._flavor
 
     @property
-    def version(self) -> str:
+    def version(self):
+        """Applies to the genre or genre & flavor.
+
+        Default "1"
+
+        Do not confuse with yaml spec version
+
+        :returns: :py:mod:`logging.config` yaml file version
+        :rtype: str
+        """
         return self._version
 
     @version.setter
-    def version(self, val: Any) -> None:
-        # version of the flavor or if no flavor then of the yaml file
-        # parent abc staticmethod
+    def version(self, val):
+        """Version setter
+
+        :param val: Default "1". May be an int or str
+        :type val: :py:class:`~typing.Any`
+        """
         self._version = LoggingYamlType.get_version(val)
 
     @property
-    def file_suffix(self) -> str:
-        """Suffixes: ``.[category].logging.config yaml``"""
+    def file_suffix(self):
+        """Suffixes: ``.[category].logging.config yaml``
+
+        :returns: file suffixes
+        :rtype: str
+        :raises:
+
+           - :py:exc:`LoggingStrictProcessCategoryRequired` -- Requires category
+
+        """
         if is_not_ok(self.category):
             msg_exc = (
                 f"Unknown category, {self.category}. Choices: "
@@ -321,7 +412,19 @@ class LoggingConfigYaml(LoggingYamlType):
         return ret
 
     @property
-    def file_name(self) -> str:
+    def file_name(self):
+        """Get the file name. Can raise exceptions if category and/or
+        genre were not provided to the constructor
+
+        :returns: file name
+        :rtype: str
+        :raises:
+
+           - :py:exc:`LoggingStrictProcessCategoryRequired` -- Category required
+
+           - :py:exc:`LoggingStrictGenreRequired` -- Genre required
+
+        """
         try:
             ret = f"{self.file_stem}{self.file_suffix}"
         except LoggingStrictProcessCategoryRequired as e:
@@ -337,17 +440,27 @@ class LoggingConfigYaml(LoggingYamlType):
         return ret
 
     @property
-    def package(self) -> str:
+    def package(self):
+        """Package name (underscores, not hyphens) where the
+        :py:mod:`logging.config` yaml file is located.
+
+        Ideally should be curated in |project_name|
+
+        :returns: Package name
+        :rtype: str
+        """
         return self._package_name
 
     @property
-    def dest_folder(self) -> Path:
+    def dest_folder(self):
+        """Normally xdg user data dir. During testing, temp folder used instead
+
+        :returns: Destination folder
+        :rtype: :py:class:`~pathlib.Path`
+        """
         return _get_path_config(self.package)
 
-    def extract(
-        self,
-        path_relative_package_dir: Path | str | None = "",
-    ) -> str:
+    def extract(self, path_relative_package_dir=""):
         """folder of yaml file is unknown, find the file
 
         :param path_relative_package_dir:
@@ -444,15 +557,54 @@ class LoggingConfigYaml(LoggingYamlType):
 
 
 def setup_ui_other(
-    package_name: str,
-    package_data_folder_start: str,
-    genre: str,
-    flavor: str,
-    version_no: Optional[Any] = VERSION_FALLBACK,
+    package_name,
+    package_data_folder_start,
+    genre,
+    flavor,
+    version_no=VERSION_FALLBACK,
     package_start_relative_folder="",
 ) -> None:
-    """Before creating an App instance, extract logging.config yaml
-    for app, but not workers"""
+    """Before creating an App instance, seemlessly extracts
+    :py:mod:`logging.config` yaml file for app, but not worker(s)
+
+    :param package_name: Package name containing :py:mod:`logging.config` yaml file
+    :type package_name: str
+    :param package_data_folder_start:
+
+       Package base data folder name. Not a relative path. This is the
+       fallback search folder. Use package_start_relative_folder to
+       further narrow the search
+
+    :type package_data_folder_start: str
+    :param genre:
+
+       UI framework or worker implementation characteristic.
+       E.g. textual, rich, :abbr:`mp (multiprocessing)`, or :abbr:`mq (rabbitmq)`
+
+    :type genre: str
+    :param flavor:
+
+       Brand or how variation differs. e.g. :abbr:`asz (testing console UI)`
+
+    :type flavor: str
+    :param version_no: Default "1". Applies to genre or genre & flavor
+    :type version_no: :py:class:`~typing.Any` | None
+    :param package_start_relative_folder:
+
+       .. line-block::
+
+          Default empty string.
+
+          Relative to package_data_folder_start.
+          Relative path to further narrow down which folder contains the
+          :py:mod:`logging.config` yaml file.
+
+          Needed when multiple folders contain :py:mod:`logging.config` yaml file
+          with same file name
+
+
+    :type package_start_relative_folder: str | None
+    """
     try:
         ui_yaml = LoggingConfigYaml(
             package_name,
@@ -481,11 +633,38 @@ def setup_ui_other(
 
 
 def ui_yaml_curated(
-    genre: str,
-    flavor: str,
-    version_no: Optional[Any] = VERSION_FALLBACK,
+    genre,
+    flavor,
+    version_no=VERSION_FALLBACK,
     package_start_relative_folder="",
-) -> None:
+):
+    """Curated within |project_name| So do not have to provide package
+    and package base data folder name
+
+    :param genre:
+
+       UI framework or worker implementation characteristic.
+       E.g. textual, rich, :abbr:`mp (multiprocessing)`, or :abbr:`mq (rabbitmq)`
+
+    :type genre: str
+    :param flavor:
+
+       Brand or how variation differs. e.g. :abbr:`asz (testing console UI)`
+
+    :type flavor: str
+    :param version_no: Default "1". Applies to genre or genre & flavor
+    :type version_no: :py:class:`~typing.Any` | None
+    :param package_start_relative_folder:
+
+       Default empty string. Relative to package_data_folder_start.
+       Relative path to further narrow down which folder contains the
+       :py:mod:`logging.config` yaml file.
+
+       Needed when multiple folders contain :py:mod:`logging.config` yaml file
+       with same file name
+
+    :type package_start_relative_folder: str
+    """
     package_name = g_app_name
     package_data_folder_start = "configs"
     setup_ui_other(
@@ -499,11 +678,11 @@ def ui_yaml_curated(
 
 
 def worker_yaml_curated(
-    genre: Optional[Any] = "mp",
-    flavor: Optional[Any] = "asz",
-    version_no: Optional[Any] = VERSION_FALLBACK,
+    genre="mp",
+    flavor="asz",
+    version_no=VERSION_FALLBACK,
     package_start_relative_folder="",
-) -> str:
+):
     """For multiprocessing workers, retrieve the yaml in this order:
 
     - xdg user data dir folder
@@ -528,7 +707,7 @@ def worker_yaml_curated(
        Default "asz". Unique identifier name given to a particular
        :py:mod:`logging.config` yaml. Should be one word w/o special characters
 
-       Flavor is a very terse description, for a :paramref:`genre`, how
+       Flavor is a very terse description, for a genre, how
        this yaml differs from others. If completely generic, call it
        ``generic``. If different handlers or formatters or filters are
        used, what is the yaml's purpose?
@@ -537,7 +716,7 @@ def worker_yaml_curated(
     :param version_no:
 
        Default 1. Version of this particular
-       :paramref:`logging_config_yaml_co`. **Not** the version of the
+       :paramref:`category`. **Not** the version of the
        yaml spec. Don't confuse the two.
 
     :type version_no: :py:class:`~typing.Any` or None
@@ -583,13 +762,13 @@ def worker_yaml_curated(
 
 
 def setup_worker_other(
-    package_name: str,
-    package_data_folder_start: str,
-    genre: str,
-    flavor: str,
-    version_no: Optional[Any] = VERSION_FALLBACK,
+    package_name,
+    package_data_folder_start,
+    genre,
+    flavor,
+    version_no=VERSION_FALLBACK,
     package_start_relative_folder="",
-) -> str:
+):
     """worker_yaml_curated grabs the logging.config yaml from logging-strict.
     Use this if located in another package
 
@@ -629,7 +808,7 @@ def setup_worker_other(
     :param version_no:
 
        Default 1. Version of this particular
-       :paramref:`logging_config_yaml_co`. **Not** the version of the
+       :paramref:`category`. **Not** the version of the
        yaml spec. Don't confuse the two.
 
     :type version_no: :py:class:`~typing.Any` or None
@@ -686,24 +865,29 @@ class LoggingState:
     """Singleton to hold the current logging state.
     To know whether or not, run by app or from cli
 
-    If run from app, logging is redirected to :py:class:`textual.logging.TextualHandler`
-    If run from cli, logging is redirected to :py:class:`logging.handlers.StreamHandler`
+    If run from app::
+
+       logging is redirected to ``textual.logging.TextualHandler``
+
+       See |textual_api|`logging`
+
+    If run from cli::
+
+       logging is redirected to :py:class:`logging.StreamHandler`
 
     Knowing the logging mode (or state), first step towards restoring logging mode
 
-    :param is_state_app:
+    Class variables
 
-       Default ``False``. Set to ``True`` if called by App. Set to
-       ``False`` if called by cli
-
-    :type is_state_app: :py:class:`~typing.Any` or ``None``
-    :returns: Singleton pattern, so always same instance
-    :rtype: LoggingState
+    :cvar _instance: Default ``None``. Holds Singleton instance
+    :type _instance: ``"LoggingState"`` or ``None``
+    :cvar _lock: Thread lock for Singleton
+    :type _lock: :py:class:`threading.RLock`
 
     .. seealso::
 
        Thread safe Singleton
-       https://medium.com/analytics-vidhya/how-to-create-a-thread-safe-singleton-class-in-python-822e1170a7f6
+       `[blog post] <https://medium.com/analytics-vidhya/how-to-create-a-thread-safe-singleton-class-in-python-822e1170a7f6>`_
 
     """
 
@@ -711,7 +895,11 @@ class LoggingState:
     _lock = threading.RLock()
     # __state: Optional[bool] = None
 
-    def __new__(cls) -> "LoggingState":
+    def __new__(cls):
+        """
+        :returns: Singleton instance
+        :rtype: ``"LoggingState"``
+        """
         if cls._instance is None:
             with cls._lock:
                 if not cls._instance:
@@ -724,7 +912,8 @@ class LoggingState:
         return cls._instance
 
     @classmethod
-    def reset(cls) -> None:
+    def reset(cls):
+        """A cheat to reset the Singleton state. Use only during testing"""
         if cls._instance is not None:
             with cls._lock:
                 if cls._instance:
@@ -735,11 +924,11 @@ class LoggingState:
             pass
 
     @property
-    def is_state_app(self) -> Optional[bool]:
+    def is_state_app(self):
         """Get logging state
 
-        :returns: ``True`` if app logging state otherwise ``False`` cli logging state
-        :rtype: bool
+        :returns: ``True`` if app logging state otherwise ``False``
+        :rtype: bool | None
         """
         cls = type(self)
         with cls._lock:
@@ -751,7 +940,7 @@ class LoggingState:
         return ret
 
     @is_state_app.setter
-    def is_state_app(self, is_state_app: Any) -> None:
+    def is_state_app(self, is_state_app):
         """Would only ever be changed within a unittest or module dealing with logging
 
         - ``True`` app logging state

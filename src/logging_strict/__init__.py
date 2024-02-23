@@ -7,15 +7,24 @@
 
 ..
 
-UI process call
--------------------
+UI
+---
+
+:ref:`getting_started/usage:app`
+
+Within UI process, call both:
 
 - LoggingState
 
 - ui_yaml_curated or setup_ui_other
 
-worker process -- step 1
------------------------------------
+worker process
+---------------
+
+:ref:`getting_started/usage:worker`
+
+Step 1
+~~~~~~~
 
 Within worker entrypoint call either:
 
@@ -23,29 +32,89 @@ Within worker entrypoint call either:
 
 Then pass str_yaml to the worker process
 
-Called by worker process -- step 2
------------------------------------
+Step 2
+~~~~~~~
 
 Within worker process call
 
 - setup_logging_yaml
 
-Module private variables
--------------------------
+Constants
+----------
 
-.. py:data:: __all__
-   :type: tuple[str, str, str, str, str, str, str, str, str, str, str, str, str]
-   :value: ("LoggingConfigCategory", "LoggingState", "LoggingYamlType", \
-   "setup_ui_other", "ui_yaml_curated", "worker_yaml_curated", "setup_worker_other", \
-   "setup_logging_yaml", \
-   "LoggingStrictError", "LoggingStrictPackageNameRequired", \
-   "LoggingStrictPackageStartFolderNameRequired", \
-   "LoggingStrictProcessCategoryRequired", "LoggingStrictGenreRequired")
+- LoggingConfigCategory
+  :ref:`[constant docs] <code/constants/constants_general:module objects>`
 
-   Module exports
+tl;dr; ^^ won't need this ^^
 
-Module objects
----------------
+Process categories Enum. Iterate over the Enum values, using class
+method, `categories`.
+
+`strict_logging` public methods are convenience functions for class,
+`strict_logging.logging_api.LoggingConfigYaml`. If LoggingConfigYaml
+used directly, choose one of the LoggingConfigCategory values to
+pass as param, category.
+
+Values: LoggingConfigCategory.UI or LoggingConfigCategory.WORKER
+
+Corresponds to 'app' and 'worker'
+
+Types
+------
+
+- LoggingYamlType
+  :ref:`[type docs] <code/yaml/logging_yaml_abc:module objects>`
+
+tl;dr; ^^ won't need this ^^
+
+Useful only during strict type checking. class LoggingConfigYaml
+implements LoggingYamlType interface and is a direct subclass
+
+e.g. ``type[LoggingYamlType]``
+
+Exceptions
+-----------
+
+:ref:`[exc docs] <code/constants/exceptions:public api>`
+
+- LoggingStrictError
+
+logging_strict catch all Exception. Base type of other exceptions.
+Implements ValueError
+
+Provided just for completeness. Not intended for use
+
+- LoggingStrictPackageNameRequired
+
+:abbr:`ep (entrypoint)` requires package name
+
+Corresponding exit code -- 6
+
+- LoggingStrictPackageStartFolderNameRequired
+
+:abbr:`ep (entrypoint)` requires package start folder name
+
+In logging-strict this is ``configs``. Normally its ``data``. But it can be anything
+
+Corresponding exit code -- 7
+
+- LoggingStrictProcessCategoryRequired
+
+Applicable only during extract or setup, not during validation
+
+Category required. Either:
+
+LoggingConfigCategory.UI.value or LoggingConfigCategory.WORKER.value
+
+Which corresponds to "app" or "worker"
+
+- LoggingStrictGenreRequired
+
+Applicable only during extract or setup, not during validation
+
+UI framework terse name or worker implementation characteristic
+
+e.g. textual, rich, :abbr:`mp (multiprocessing)` or :abbr:`mq (rabbitmq)`
 
 """
 from .constants import LoggingConfigCategory
@@ -69,17 +138,17 @@ from .logging_yaml_abc import (
 )
 
 __all__ = (
-    LoggingConfigCategory,
-    LoggingState,
-    LoggingYamlType,
-    setup_ui_other,
-    ui_yaml_curated,
-    setup_worker_other,
-    worker_yaml_curated,
-    setup_logging_yaml,
-    LoggingStrictError,
-    LoggingStrictPackageNameRequired,
-    LoggingStrictPackageStartFolderNameRequired,
-    LoggingStrictProcessCategoryRequired,
-    LoggingStrictGenreRequired,
+    "LoggingConfigCategory",
+    "LoggingState",
+    "LoggingYamlType",
+    "setup_ui_other",
+    "ui_yaml_curated",
+    "setup_worker_other",
+    "worker_yaml_curated",
+    "setup_logging_yaml",
+    "LoggingStrictError",
+    "LoggingStrictPackageNameRequired",
+    "LoggingStrictPackageStartFolderNameRequired",
+    "LoggingStrictProcessCategoryRequired",
+    "LoggingStrictGenreRequired",
 )

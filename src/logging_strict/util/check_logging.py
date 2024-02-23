@@ -27,10 +27,6 @@ from __future__ import annotations
 
 import logging
 import sys
-from typing import (
-    Any,
-    Optional,
-)
 
 from ..constants import LOG_FORMAT
 from .check_type import (
@@ -61,13 +57,14 @@ else:  # pragma: no cover
     pass
 
 
-def str2int(level: Optional[Any] = None) -> bool | int:
+def str2int(level=None):
     """Support both integer levels as int or as a str. Try to convert.
     If possible to convert str -> int. Otherwise ``False``
+
     :param level: Can be
-    :type level: :py:class:`~typing.Any` or None
+    :type level: :py:class:`~typing.Any` | None
     :returns: ``False`` if cannot convert str -> int otherwise the int
-    :rtype: int or bool
+    :rtype: int | bool
     """
     try:
         int_ret = int(level)
@@ -79,7 +76,7 @@ def str2int(level: Optional[Any] = None) -> bool | int:
     return ret
 
 
-def is_assume_root(logger_name: Optional[Any]) -> bool:
+def is_assume_root(logger_name):
     """Consider all these to be root:
 
     - None
@@ -88,7 +85,7 @@ def is_assume_root(logger_name: Optional[Any]) -> bool:
     - "root"
 
     :param logger_name: A logger name
-    :type logger_name: :py:class:`~typing.Any` or ``None``
+    :type logger_name: :py:class:`~typing.Any` | ``None``
     :returns: ``True`` if should assume is root loger name otherwise ``False``
     :rtype: bool
     """
@@ -109,14 +106,14 @@ def is_assume_root(logger_name: Optional[Any]) -> bool:
     return ret
 
 
-def check_logger(logger: logging.Logger | str | None) -> bool:
+def check_logger(logger):
     """Check working with a :py:class:`logger.Logger`
 
     :param logger:
 
        Logger name can be a :py:class:`logging.Logger` or str
 
-    :type logger: :py:class:`~typing.Any` or ``None``
+    :type logger: :py:class:`~typing.Any` | str | ``None``
     :returns: Would produce a normalized logger
     :rtype: bool
     """
@@ -135,16 +132,14 @@ def check_logger(logger: logging.Logger | str | None) -> bool:
     return ret
 
 
-def check_level_name(
-    logger_name: Optional[Any],
-) -> bool:
+def check_level_name(logger_name):
     """Check logger level name
 
     :param logger_name:
 
        Logger name can be a :py:class:`logging.Logger`, str
 
-    :type logger_name: :py:class:`~typing.Any` or ``None``
+    :type logger_name: :py:class:`~typing.Any` | ``None``
     :returns: ``True`` check pass otherwise ``False``
     :rtype: bool
     """
@@ -164,15 +159,15 @@ def check_level_name(
     return ret
 
 
-def check_level(
-    level: Optional[Any],
-) -> bool:
+def check_level(level):
     """Check whether or not :paramref:`level` can be normalized into
     a logging level name
 
-    :param level: str or int or :py:data:`logging.INFO` (, etc) or
-    :py:class:`~typing.Any`
-    :type level: :py:class:`~typing.Any` or ``None``
+    :param level:
+
+       str or int or :py:data:`logging.INFO` (, etc) or :py:class:`~typing.Any`
+
+    :type level: :py:class:`~typing.Any` | ``None``
     :returns: ``True`` level can be normalized otherwise ``False``
     :rtype: bool
     """
@@ -228,14 +223,14 @@ def check_level(
     return ret
 
 
-def check_formatter(format_: Optional[Any] = LOG_FORMAT) -> bool:
+def check_formatter(format_=LOG_FORMAT):
     """Check logging format str
 
     :param format_: Default ``LOG_FORMAT``
 
        Can pass in anything. Intended to be a logging format str
 
-    :type format_: :py:class:`~typing.Any` or ``None``
+    :type format_: :py:class:`~typing.Any` | ``None``
     :returns: ``True`` if a valid logging formatter str otherwise ``False``
     :rtype: bool
     """

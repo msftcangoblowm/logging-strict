@@ -1,3 +1,4 @@
+import logging
 import sys
 from pathlib import Path
 from typing import (
@@ -6,23 +7,28 @@ from typing import (
     Optional,
 )
 
-# py39
+if sys.version_info >= (3, 8):
+    from typing import Final
+else:
+    from typing_extensions import Final
+
 if sys.version_info >= (3, 9):
     from collections.abc import Callable
 else:
     from typing import Callable
 
-__all__: tuple[str, str]
+__all__: Final[tuple[str, str]]
 
-g_is_root: bool
-is_python_old: bool
+g_module: Final[str]
+_LOGGER: Final[logging.Logger]
+g_is_root: Final[bool]
+is_python_old: Final[bool]
 
 def get_logname() -> str: ...
 def ungraceful_app_exit() -> None: ...
 
 class IsRoot:
     __slots__: ClassVar[tuple[()]]
-    _is_root: ClassVar[bool]
 
     @staticmethod
     def is_root() -> bool: ...
@@ -31,26 +37,26 @@ class IsRoot:
     @classmethod
     def check_root(
         cls,
-        callback: Optional[Callable[[], str]] = None,
-        is_app_exit: Optional[bool] = False,
-        is_raise_exc: Optional[bool] = False,
+        callback: Callable[[], str] | None = None,
+        is_app_exit: bool | None = False,
+        is_raise_exc: bool | None = False,
     ) -> None: ...
     @classmethod
     def check_not_root(
         cls,
-        callback: Optional[Callable[[], str]] = None,
-        is_app_exit: Optional[bool] = False,
-        is_raise_exc: Optional[bool] = False,
+        callback: Callable[[], str] | None = None,
+        is_app_exit: bool | None = False,
+        is_raise_exc: bool | None = False,
     ) -> None: ...
     @classmethod
     def set_owner_as_user(
         cls,
         path_file: Any,
-        is_as_user: Optional[Any] = False,
+        is_as_user: Any | None = False,
     ) -> None: ...
 
 def check_python_not_old(
-    callback: Optional[Callable[[], str]] = None,
-    is_app_exit: Optional[bool] = False,
-    is_raise_exc: Optional[bool] = False,
+    callback: Callable[[], str] | None = None,
+    is_app_exit: bool | None = False,
+    is_raise_exc: bool | None = False,
 ) -> None: ...

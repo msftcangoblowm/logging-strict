@@ -20,6 +20,10 @@ Changelog
    Commit items for NEXT VERSION
    .................................
 
+   - docs: sphinx docs. user and code manual
+   - docs: Versioning explanation and howto
+   - feat: add tech_niques.stream_capture.CaptureOutput
+   - refactor: remove constants.RICH_OVERFLOW_OPTION_DEFAULT
 
 .. scriv-insert-here
 

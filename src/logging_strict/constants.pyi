@@ -18,7 +18,7 @@ else:  # pragma: no cover
 # import logging.config._DictConfigArgs
 # from typing import Any
 
-__all__: Final[tuple[str, str, str, str, str, str, str, str, str]]
+__all__: Final[tuple[str, str, str, str, str, str, str, str]]
 
 g_app_name: Final[str]
 PREFIX_DEFAULT: Final[str]
@@ -34,7 +34,6 @@ class LoggingConfigCategory(Enum):
 
 LOG_FORMAT: Final[str]
 FALLBACK_LEVEL: Final[str]
-RICH_OVERFLOW_OPTION_DEFAULT: Final[str]
 
 LOG_FMT_DETAILED: Final[str]
 LOG_FMT_SIMPLE: Final[str]

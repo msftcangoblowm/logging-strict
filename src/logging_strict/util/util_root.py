@@ -20,8 +20,30 @@ Module private variables
 
    Module object exports
 
-Class
-------
+.. py:data:: g_module
+   :type: str
+   :value: "logging_strict.util.util_root"
+
+   This module's dotted path
+
+.. py:data:: _LOGGER
+   :type: :py:class:`logging.Logger`
+
+   Module level logger
+
+.. py:data:: g_is_root
+   :type: bool
+
+   ``True`` if app run as a service with root privledges. ``False`` if
+   run normally and sanely
+
+.. py:data:: is_python_old
+   :type: bool
+
+    ``True`` if py38- otherwise ``False``
+
+Module objects
+---------------
 
 """
 import getpass
@@ -37,17 +59,10 @@ from pathlib import (
 from pwd import getpwnam
 from typing import (
     TYPE_CHECKING,
-    Any,
     ClassVar,
-    Optional,
 )
 
 from ..constants import g_app_name
-
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Callable
-else:  # pragma: no cover
-    from typing import Callable
 
 __all__ = (
     "IsRoot",
@@ -60,6 +75,12 @@ _LOGGER = logging.getLogger(g_module)
 g_is_root = os.geteuid() == 0
 
 is_python_old = sys.version_info < (3, 9)
+
+if TYPE_CHECKING:
+    if sys.version_info >= (3, 9):  # pragma: no cover
+        from collections.abc import Callable  # noqa: F401 Used by sphinx
+    else:  # pragma: no cover
+        from typing import Callable  # noqa: F401 Used by sphinx
 
 
 def get_logname():
@@ -119,11 +140,10 @@ class IsRoot:
     """Checks whether or not root
     DRY principle; don't repeat yourself; which became tiresome
 
-    .. py:attribute:: _is_root
-       :type: bool
+    Class variables
 
-       ``True``, if EUID is 0, otherwise ``False``
-
+    :cvar __slots__: Turns off dynamic instance variables
+    :vartype: ClassVar[tuple[()]]
 
     """
 
@@ -133,7 +153,7 @@ class IsRoot:
     __slots__ = ()
 
     @staticmethod
-    def is_root() -> bool:
+    def is_root():
         """Whether or not root.
 
         :returns: ``True`` is root otherwise ``False``
@@ -142,13 +162,13 @@ class IsRoot:
         return g_is_root
 
     @classmethod
-    def path_home_root(cls) -> Path:
-        """Replacement for :py:func:`util_path.get_logname`
+    def path_home_root(cls):
+        """Replacement for get_logname
 
         Intended to be run only by root, but not necessarily
 
         :returns: root home folder
-        :rtype: Path
+        :rtype: :py:class:`~pathlib.Path`
         """
         if TYPE_CHECKING:
             is_not_root: bool
@@ -161,24 +181,24 @@ class IsRoot:
     @classmethod
     def check_root(
         cls,
-        callback: Optional[Callable[[], str]] = None,
-        is_app_exit: Optional[bool] = False,
-        is_raise_exc: Optional[bool] = False,
-    ) -> None:
+        callback=None,
+        is_app_exit=False,
+        is_raise_exc=False,
+    ):
         """What to do if app executed as root
 
         :param callback:
 
            If provided passes error message for handling
 
-        :type callback: Optional[Callable[[], str]]
+        :type callback: Callable[[], str] | None
         :param is_app_exit: True and not root, should exit app
-        :type is_app_exit: bool or None
+        :type is_app_exit: bool | None
         :param is_raise_exc:
 
            True and not root, should raise an Exception
 
-        :type is_raise_exc: bool or None
+        :type is_raise_exc: bool | None
 
         :raises:
 
@@ -219,27 +239,27 @@ class IsRoot:
     @classmethod
     def check_not_root(
         cls,
-        callback: Optional[Callable[[], str]] = None,
-        is_app_exit: Optional[bool] = False,
-        is_raise_exc: Optional[bool] = False,
-    ) -> None:
+        callback=None,
+        is_app_exit=False,
+        is_raise_exc=False,
+    ):
         """What to do if app executed as normal user
 
         :param callback:
 
            If provided passes error message for handling
 
-        :type callback: Optional[Callable[[], str]]
+        :type callback: Callable[[], str] | None
         :param is_app_exit:
 
            True and not normal user, should exit app
 
-        :type is_app_exit: bool or None
+        :type is_app_exit: bool | None
         :param is_raise_exc:
 
            True and not normal user, should raise an Exception
 
-        :type is_raise_exc: bool or None
+        :type is_raise_exc: bool | None
 
         :raises:
 
@@ -283,9 +303,18 @@ class IsRoot:
     @classmethod
     def set_owner_as_user(
         cls,
-        path_file: Any,
-        is_as_user: Optional[Any] = False,
-    ) -> None:
+        path_file,
+        is_as_user=False,
+    ):
+        """
+        :param path_file: Path to the file
+        :type path_file: :py:class:`~typing.Any`
+        :param is_as_user:
+
+           Flag. ``True`` if file permissions should be as a user otherwise ``False``
+
+        :type is_as_user: :py:class:`~typing.Any` | None
+        """
         if TYPE_CHECKING:
             session_user_name: str
             session_uid: int
@@ -327,10 +356,10 @@ class IsRoot:
 
 
 def check_python_not_old(
-    callback: Optional[Callable[[], str]] = None,
-    is_app_exit: Optional[bool] = False,
-    is_raise_exc: Optional[bool] = False,
-) -> None:
+    callback=None,
+    is_app_exit=False,
+    is_raise_exc=False,
+):
     """Warn raising error if python interpretor version is an
     unsupported version
 
@@ -338,13 +367,13 @@ def check_python_not_old(
 
        If provided passes error message for handling
 
-    :type callback: Optional[Callable[[], str]]
+    :type callback: Callable[[], str] | None
     :param is_app_exit: True and before py39, should exit app
-    :type is_app_exit: bool or None
+    :type is_app_exit: bool | None
     :param is_raise_exc:
        True and before py39, should raise an Exception
 
-    :type is_raise_exc: bool or None
+    :type is_raise_exc: bool | None
 
     :raises:
 
