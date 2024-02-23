@@ -41,15 +41,25 @@ current_aliases = (
     "current",
     "now",
 )
+g_kinds = ("tag", "current", "now")
 
 
 def sanitize_kind(kind: Optional[str] = None) -> str:
+    """Allow kind to be a version str, 'current', 'tag'
+    """
     if kind is None:
         # Fallback
         kind_ = "tag"
     else:
         if isinstance(kind, str):
-            kind_ = current_alias_default if kind in current_aliases else "tag"
+            if kind in g_kinds:
+                if kind in current_aliases:
+                    kind_ = current_alias_default
+                else:
+                    kind_ = "tag"
+            else:
+                # Override version str
+                kind_ = kind
         else:
             # Fallback
             kind_ = "tag"
@@ -154,31 +164,29 @@ def _update_file(fname, pattern, replacement):
             fobj.write(new_text)
 
 
-def get_release_facts(
-    kind: str, override: Optional[str] = None
-) -> types.SimpleNamespace:
+def get_release_facts(kind: str) -> types.SimpleNamespace:
     """Return an object with facts about the current release."""
     facts = types.SimpleNamespace()
     # sanitize again just in case
     kind_: str = sanitize_kind(kind)
-
-    # Don't sanitize. Affects src/[project name]/_version.py
-    if override is None:
+    if kind_ in g_kinds:
+        # Don't sanitize. Affects src/[project name]/_version.py
         # Automagically written by setuptools-scm. Version -- git
         func = _current_version if kind_ == current_alias_default else _tag_version
         git_ver = func()
+        print(f"func {func.__name__} git_ver: {git_ver}")
         clean_ver = sanitize_tag(git_ver)
     else:
         # Will become next version
-        git_ver = override
+        git_ver = kind_
         clean_ver = sanitize_tag(git_ver)
     facts.ver = clean_ver  # w/o final
 
     # lazy load
-    from asz.constants import get_version
+    from logging_strict.constants import get_version
 
-    # mjr, mnr, mcr, rel, ser = facts.vi = asz.constants.version_info
-    # facts.dev = asz.constants._dev
+    # mjr, mnr, mcr, rel, ser = facts.vi = logging_strict.constants.version_info
+    # facts.dev = logging_strict.constants._dev
     t_ver = get_version(
         git_ver,
         is_use_final=True,  # allow ``final``
@@ -208,10 +216,10 @@ def get_release_facts(
     return facts
 
 
-def do_edit_for_release(kind: str, next_version: str):
+def do_edit_for_release(kind: str):
     """Edit a few files in preparation for a release."""
     kind_: str = sanitize_kind(kind)
-    facts = get_release_facts(kind_, override=next_version)
+    facts = get_release_facts(kind_)
 
     if facts.dev:
         print(f"**\n** This is a dev release: {facts.ver}\n**\n\nNo edits")
@@ -260,7 +268,7 @@ def do_bump_version(kind: str) -> None:
     )
 
     """
-    file_path = "src/asz/constants.py"
+    file_path = f"src/{g_app_name}/constants.py"
     next_version = f"version_info = {facts.next_vi}\n_dev = 1".replace("'", '"')
     _update_file(
         file_path,
@@ -276,7 +284,7 @@ def do_cheats(kind: str):
     kind_: str = sanitize_kind(kind)
     facts = get_release_facts(kind_)
     pprint.pprint(facts.__dict__)
-    print(f"\nasz version is {facts.ver}")
+    print(f"\n{g_app_name} version is {facts.ver}")
 
     proj_name = g_app_name
     repo = f"msftcangoblowm/{proj_name}"
@@ -415,8 +423,13 @@ def _arbritary_version(next_version: str) -> Optional[str]:
     return str_out
 
 
-def _tag_version() -> Optional[str]:
-    return _arbritary_version("")  # empty str means take current tag version
+def _tag_version(next_version="") -> Optional[str]:
+    """Get version potentially overriding it
+    """
+    # empty str means take current tag version
+    ret = _arbritary_version(next_version)
+
+    return ret
 
 
 def do_tag_version() -> None:
@@ -443,8 +456,11 @@ def do_tag_version() -> None:
 def do_version(kind: str) -> None:
     """Updates version based on kind: ``current`` or ``tag``"""
     kind_: str = sanitize_kind(kind)
-    func = _current_version if kind_ == current_alias_default else _tag_version
-    print(func())
+    if kind is not None and kind in g_kinds:
+        func = _current_version if kind_ == current_alias_default else _tag_version
+        print(func())
+    else:
+        print(kind)
 
 
 def do_build_next(next_version: str) -> None:

@@ -19,8 +19,13 @@
     - README.rst
     - docs/index.rst
 - Update sphinx conf.py CHANGES.rst, and NOTICE.txt with release facts. Supply "next version":
-    # python igor.py bump_version "tag"
-    $ python igor.py edit_for_release "tag" "0.2.0"
+    $ python igor.py bump_version "1.1.0"
+    or
+    $ python igor.py bump_version "current"
+
+    $ python igor.py edit_for_release "1.1.0"
+    or
+    $ python igor.py edit_for_release "current"
 - Look over CHANGES.rst
   Takes time. Rewrite commit messages to be accessible by normies. Rewrite it again.
 - Update README.rst

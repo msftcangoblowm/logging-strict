@@ -46,9 +46,10 @@ For logging.config yaml files, logging-strict does the following:
 
 * Python 3.9 through 3.12, and 3.13.0a3 and up.
 
-**New in 1.0.1+:**
+**New in 1.1.x:**
 
-Public API changed. retired functions setup_worker and setup_ui. Split each into 2 or 3
+Sphinx documentation;
+Public API changed. retired functions setup_worker and setup_ui. Split each into 2 or 3;
 
 **New in 0.1.x:**
 

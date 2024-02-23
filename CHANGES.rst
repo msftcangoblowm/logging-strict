@@ -20,12 +20,19 @@ Changelog
    Commit items for NEXT VERSION
    .................................
 
-   - docs: sphinx docs. user and code manual
-   - docs: Versioning explanation and howto
-   - feat: add tech_niques.stream_capture.CaptureOutput
-   - refactor: remove constants.RICH_OVERFLOW_OPTION_DEFAULT
 
-.. scriv-insert-here
+.. scriv-start-here
+
+.. _changes_1-1-0:
+
+Version 1.1.0 — 2024-02-23
+--------------------------
+
+- docs: sphinx docs. user and code manual
+- docs: Versioning explanation and howto
+- feat: add tech_niques.stream_capture.CaptureOutput
+- refactor: remove constants.RICH_OVERFLOW_OPTION_DEFAULT
+- chore(igor.py): kind can now be a version str
 
 .. _changes_1-0-1:
 
