@@ -107,7 +107,7 @@ def is_assume_root(logger_name):
 
 
 def check_logger(logger):
-    """Check working with a :py:class:`logger.Logger`
+    """Check working with a :py:class:`logging.Logger`
 
     :param logger:
 
@@ -160,8 +160,9 @@ def check_level_name(logger_name):
 
 
 def check_level(level):
-    """Check whether or not :paramref:`level` can be normalized into
-    a logging level name
+    """Check whether or not
+    :paramref:`~logging_strict.util.check_logging.check_level.params.level`
+    can be normalized into a logging level name
 
     :param level:
 

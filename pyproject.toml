@@ -146,6 +146,7 @@ linkcheck_ignore = [
     "https://github.com/psf/black/blob/e11eaf2f44d3db5713fb99bdec966ba974b60c8c/src/black/files.py#L46",  # block.files.find_project_root
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L193",  # unittest.case._BaseTestCaseContext
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L816",  # unittest.case.assertLogs
+    "https://stackoverflow.com/a/69994813",  # redirect
 ]
 exclude_patterns = [
     "_build",
@@ -210,6 +211,7 @@ sign = true
 "test_util_package_resource.py" = 4
 "test_check_type.py" = 11
 "tech_niques/test_logging_capture.py" = 12
+"test_pep518_read" = 14  # Required by docs/conf.py
 "tech_niques/test_docs_logging_capture.py" = 30
 "test_versioning.py" = 31
 "test_check_logging.py" = 32

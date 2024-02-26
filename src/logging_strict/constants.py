@@ -125,8 +125,9 @@ Module objects
 
    .. seealso::
 
-      - :py:meth:`coverage.control.Coverage.start`
-      - :py:mod:`coverage.multiproc`
+      - external:coverage+ref:`coverage.control.Coverage.start`
+
+      - external:coverage+ref:`coverage.multiproc`
 
 
 .. py:data:: version_info
@@ -144,7 +145,7 @@ Module objects
 
    Semantic versioning.
 
-   setuptools-scm semantic versioning in: asz._version.__version__
+   setuptools-scm semantic versioning in: logging_strict._version.__version__
 
    .. code-block:: shell
 

@@ -45,8 +45,7 @@ g_kinds = ("tag", "current", "now")
 
 
 def sanitize_kind(kind: Optional[str] = None) -> str:
-    """Allow kind to be a version str, 'current', 'tag'
-    """
+    """Allow kind to be a version str, 'current', 'tag'"""
     if kind is None:
         # Fallback
         kind_ = "tag"
@@ -112,6 +111,18 @@ def sanitize_tag(ver: str) -> str:
         str_v = str_v[:idx]
 
     return str_v
+
+
+def do_quietly(command):
+    """Run a noisy command in a shell to suppress the output"""
+    proc = subprocess.run(
+        command,
+        shell=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+    return proc.returncode
 
 
 def do_show_env() -> None:
@@ -424,8 +435,7 @@ def _arbritary_version(next_version: str) -> Optional[str]:
 
 
 def _tag_version(next_version="") -> Optional[str]:
-    """Get version potentially overriding it
-    """
+    """Get version potentially overriding it"""
     # empty str means take current tag version
     ret = _arbritary_version(next_version)
 

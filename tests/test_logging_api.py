@@ -470,7 +470,8 @@ class SharedResourceLogger(unittest.TestCase):
     """The unittest features are implemented as a ThreadPool, so the
     logging state is shared. This is not ideal.
 
-    The best solution is to refactor and implement as a ProcessPool.
+    The best solution is to refactor and implement as a
+    :py:class:`multiprocessing.pool.Pool`.
     In the meantime, stuck with the less than ideal situation
     (ThreadPool implementation), not the situation would like to have.
 
@@ -478,7 +479,7 @@ class SharedResourceLogger(unittest.TestCase):
 
     - cli
     - ui (unittest module, class, or function screens). ThreadPool
-    - ui (recipe screen). ProcessPool
+    - ui (recipe screen). :py:class:`multiprocessing.pool.Pool`
 
     Messing with logging is a bad idea and dirty, each
     :py:class:`logger.Logger` is a Singleton so hangs around forever

@@ -38,7 +38,8 @@ Limitations
 
 2. :py:class:`logging.handlers.TimedRotatingFileHandler` arg ``asTime``
 
-  :py:mod:`strictyaml` has no support for :py:class:`datetime.time`
+  `strictyaml <https://hitchdev.com/strictyaml/>` has no support for
+  :py:class:`datetime.time`
 
 Module private variables
 -------------------------
@@ -50,7 +51,7 @@ Module private variables
    Module exports
 
 .. py:data:: schema_logging_config
-   :type: strictyaml.Validator
+   :type: external:strictyaml+ref:`strictyaml.validators.Validator`
 
    strictyaml schema to compare the yaml against
 
@@ -76,8 +77,8 @@ Module private variables
         - item1
 
 
-   Eventhough it's easy to fix the yaml, logging.config.dictConfig will
-   accept the non-fixed yaml
+   Eventhough it's easy to fix the yaml,
+   external:python+ref:`logging.config.dictConfig` will accept the non-fixed yaml
 
    Reluctantly ... allow flow style
 
@@ -91,10 +92,13 @@ Module private variables
 
    :param yaml_snippet: :py:mod:`logging.config` YAML str
    :type yaml_snippet: str
-   :param schema: :py:mod:`strictyaml` strict typing schema
-   :type schema: :py:class:`strictyaml.Validator` or :py:data:`.schema_logging_config`
+   :param schema: `strictyaml <https://hitchdev.com/strictyaml/>` strict typing schema
+   :type schema:
+
+      strictyaml.validators.Validator | :py:data:`.schema_logging_config`
+
    :returns: YAML object. Pass this to each worker
-   :rtype: :py:class:`strictyaml.YAML` | None
+   :rtype: external:strictyaml+ref:`~strictyaml.representation.YAML` | None
 
    .. seealso::
 

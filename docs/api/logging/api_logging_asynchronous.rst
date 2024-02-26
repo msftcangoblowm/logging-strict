@@ -19,7 +19,7 @@ Package :pypi_org:`aiologger` docs are authoritative, but sparse/terse.
 >>> from aiologger.levels import LogLevel
 >>> from aiologger.logger import Logger
 >>>
->>> from asz.constants import LOG_FORMAT
+>>> from logging_strict.constants import LOG_FORMAT
 >>>
 >>> g_app_name = "asz"  # your package
 >>>

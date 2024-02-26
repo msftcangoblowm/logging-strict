@@ -8,8 +8,6 @@ Changelog
    Feature request
    .................
 
-   - integrate with asz
-
    Known regressions
    ..................
 
@@ -20,8 +18,27 @@ Changelog
    Commit items for NEXT VERSION
    .................................
 
-
 .. scriv-start-here
+
+.. _changes_1-2-0:
+
+Version 1.2.0 — 2024-02-26
+--------------------------
+
+- feat: util.pep518_read for reading pyproject.toml sections
+- docs(fix): util.pep518_read missing dependency of docs/conf.py
+- fix: remove, as much as possible, mentions of package asz beside pyproject.toml sections
+- chore(tox.ini): add test target
+- chore(tox.ini): suppress noisy package build output
+- chore(igor.py): add function do_quietly. suppress a commands noisy output
+- docs: add scriv as a dependency
+- docs: add logo logging-strict-logo.svg Cleaning svg breaks it. Remove systray-udisk2 logo
+- docs: create sphinx object inventories to minimize sphinx build warnings
+- docs: query sphinx object inventory using sphobjinv rather than sphinx.ext.intersphinx
+- chore(ci): add .readthedocs.yml config file
+- chore: add tox/ and cheats.txt to .gitignore
+- chore(ci): add many .github/workflows
+- chore(ci): add Makefile ci targets. add clean and sterile targets
 
 .. _changes_1-1-0:
 

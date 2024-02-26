@@ -11,7 +11,7 @@ Context manager to capture streams stdout/stderr
 
 Intuitive interface. Use within :code:`with` block
 
-:py:class:`multiprocessing.pool.ProcessPool` workers have to capture 
+:py:class:`multiprocessing.pool.Pool` workers have to capture
 both streams and logging output
 
 Module private variables
@@ -26,6 +26,8 @@ Module objects
 ---------------
 
 """
+from __future__ import annotations
+
 import io
 import sys
 
@@ -46,7 +48,9 @@ class CaptureOutput:
            class instance stores :py:data:`sys.stdout` and
            :py:data:`sys.stderr` initial state
 
-        :rtype: :py:class:`CaptureOutput`
+        :rtype:
+
+           external:logging-strict+ref:`~logging_strict.tech_niques.stream_capture.CaptureOutput`
 
         .. seealso::
 
@@ -68,11 +72,11 @@ class CaptureOutput:
         """Context Manager teardown. Restores sys.stdout and sys.stderr previous state
 
         :param exc_type: Exception type
-        :type exc_type: Optional[type[Exception]]
+        :type exc_type: type[Exception] | None
         :param exc_value: Exception value
-        :type exc_value: Optional[Any]
-        :param exc_value: Exception traceback if an Exception occurred
-        :type exc_value: Optional[ :py:obj:`types.TracebackType` ]
+        :type exc_value: :py:class:`~typing.Any` | None
+        :param exc_tb: Exception traceback if an Exception occurred
+        :type exc_tb: :py:obj:`types.TracebackType` | None
         """
         self._stdout_output = sys.stdout.getvalue()
         sys.stdout = self._stdout

@@ -2,6 +2,7 @@
 .. py:module:: logging_strict
    :platform: Unix
    :synopsis: Public interface
+   :noindex:
 
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 

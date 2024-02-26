@@ -13,10 +13,11 @@ import re
 import sys
 from pathlib import Path
 
-from asz.constants import __version__ as proj_version
-from asz.util.pep518_read import find_project_root
 from packaging.version import parse
 from sphinx_pyproject import SphinxConfig
+
+from logging_strict.constants import __version__ as proj_version
+from logging_strict.util.pep518_read import find_project_root
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -59,11 +60,11 @@ proj_master_doc = config.get("master_doc")
 # @@@ editable
 copyright = "2023–2024, Dave Faulkmore"
 # The short X.Y.Z version.
-version = "1.1.0"
+version = "1.2.0"
 # The full version, including alpha/beta/rc tags.
-release = "1.1.0"
+release = "1.2.0"
 # The date of release, in "monthname day, year" format.
-release_date = "February 23, 2024"
+release_date = "February 26, 2024"
 # @@@ end
 
 # release = config.version
@@ -77,10 +78,10 @@ project = f"{proj_project} {version}"
 # Dynamic
 ###############
 htmlhelp_basename = f"{slug}doc"
+# .. |doc-url| replace:: https://logging_strict.readthedocs.io/en/{release}
 rst_epilog = """
 .. |project_name| replace:: {slug}
 .. |package-equals-release| replace:: logging_strict=={release}
-.. |doc-url| replace:: https://logging_strict.readthedocs.io/en/{release}
 """.format(
     release=release, slug=slug
 )
@@ -88,8 +89,8 @@ rst_epilog = """
 html_theme_options = {
     "description": proj_description,
     "show_relbars": True,
-    "logo_name": True,
-    "logo": "detective-woman-folder-with-cat-bookmark.svg",
+    "logo_name": False,
+    "logo": "logging-strict-logo.svg",
     "show_powered_by": False,
 }
 
@@ -146,15 +147,40 @@ html_sidebars = {
 }
 
 # Creating ``objects.inv`` files for third party packages that lack them
+# https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html
 # `sphobjinv pypi <https://pypi.org/project/sphobjinv/>`_
 # `sphobjinv docs <https://sphobjinv.readthedocs.io/en/v2.3.1/customfile.html>`_
+# https://sphobjinv.readthedocs.io/en/v2.3.1/api_usage.html#exporting-an-inventory
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", None),
+    "python": (
+        "https://docs.python.org/3",
+        ("objects-python.inv", None),
+    ),
+    "logging-strict": (
+        "",
+        ("objects-logging-strict.inv", "objects-logging-strict.txt"),
+    ),
+    "strictyaml": (
+        "",
+        ("objects-strictyaml.inv", "objects-strictyaml.txt"),
+    ),
+    "textual": (
+        "",
+        ("objects-textual.inv", "objects-textual.txt"),
+    ),
+    "black": (
+        "",
+        ("objects-black.inv", "objects-black.txt"),
+    ),
+    "coverage": (
+        "",
+        ("objects-coverage.inv", "objects-coverage.txt"),
+    ),
 }
 intersphinx_disabled_reftypes = ["std:doc"]
 
 # https://www.sphinx-doc.org/en/master/usage/extensions/extlinks.html
-extlinks_detect_hardcoded_links = True
+# extlinks_detect_hardcoded_links = True
 
 
 def strip_anchor(widget_name: str) -> str:

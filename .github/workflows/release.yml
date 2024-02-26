@@ -1,0 +1,45 @@
+name: release
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*.*.*'
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v4
+
+    - name: Install py39
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.9
+        cache: pip
+        cache-dependency-path: 'requirements/*.pip'
+
+    - name: build
+      shell: bash
+      run: |
+        python -m pip install --upgrade -r requirements/pip-tools.pip
+        python -m build .
+    - name: Release PyPI
+      shell: bash
+      env:
+        TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+      run: |
+        pip install --upgrade twine
+        twine upload dist/*
+    - name: Release GitHub
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "dist/*"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

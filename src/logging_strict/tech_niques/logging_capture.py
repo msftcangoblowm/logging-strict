@@ -44,8 +44,7 @@ Can be chained with other context managers. Such as capturing the streams as wel
     import logging
     import sys
 
-    from logging_strict.stream_capture import CaptureOutput
-    from logging_strict.logging_capture import captureLogs
+    from logging_strict.tech_niques import CaptureOutput, captureLogs
 
     msg0 = 'first msg'
     msg1 = 'second msg'
@@ -78,8 +77,8 @@ using parentheses is the preferred style.
 When when chaining context managers together, it's a one liner
 
 In addition to the two context managers above, in unittests,
-:py:obj:`unittest.mock.patch` can alter modules behavior and results without
-changes to the modules source code.
+exteral:python+ref:`unittest.mock.patch` can alter modules behavior
+and results without changes to the modules source code.
 
 sync and async logging
 ---------------------------
@@ -88,7 +87,7 @@ sync and async logging
   :ref:`synchronous logging <api/logging/api_logging_synchronous:synchronous logging>`,
   a context manager to fix the issue of redirecting stdout/stderr.
 
-  :py:obj:`LoggerRedirector <logging_strict.tech_niques.LoggerRedirector>`
+  external:logging-strict+ref:`LoggerRedirector <logging_strict.tech_niques.LoggerRedirector>`
 
   :code:`from logging_strict.tech_niques import LoggerRedirector`
 
@@ -101,13 +100,13 @@ unittest assertLogs/assertNoLogs
 tl;dr;
 ^^^^^^^
 
-:py:obj:`unittest.TestCase.assertLogs` assertion makes it ill-suited for
-general use, besides within unittests
+external:python+ref:`unittest.TestCase.assertLogs` assertion makes it
+ill-suited for general use, besides within unittests
 
 The details
 ^^^^^^^^^^^^
 
-:py:obj:`unittest.TestCase.assertLogs` does log capturing
+external:python+ref:`unittest.TestCase.assertLogs` does log capturing
 
     **Tests** that **at least one message is logged** on the logger or
     one of its children, with at least the given level.
@@ -142,9 +141,10 @@ Code snippet
 
 .. seealso::
 
-   assertLogs :py:meth:`[docs] <unittest.TestCase.assertLogs>` `[source] <https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L816>`_
+   assertLogs external:python+ref:`[docs] <unittest.TestCase.assertLogs>`
+   `[source] <https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L816>`_
 
-   assertNoLogs (py310+) :py:meth:`[docs] <unittest.TestCase.assertNoLogs>`
+   assertNoLogs (py310+) external:python+ref:`[docs] <unittest.TestCase.assertNoLogs>`
 
 Into the rabbit hole
 ---------------------------
@@ -185,10 +185,6 @@ from __future__ import annotations
 import contextlib
 import logging
 import sys
-from typing import (
-    Any,
-    Optional,
-)
 
 import attrs
 
@@ -287,14 +283,14 @@ else:  # pragma: no cover
     pass
 
 
-def _normalize_level(
-    level: Optional[Any],
-) -> str:
-    """For captureLogs, normalize level
+def _normalize_level(level):
+    """For
+    external:logging-strict+ref:`logging_strict.tech_niques.logging_capture.captureLogs`,
+    normalize level
 
     :param level: str or int or logging.INFO (, etc) or
     :py:class:`~typing.Any`
-    :type level: :py:class:`~typing.Any` or ``None``
+    :type level: :py:class:`~typing.Any` | None
     :returns: Normalized logger level name
     :rtype: str
     :raise:
@@ -375,16 +371,16 @@ def _normalize_level(
     return level_name
 
 
-def _normalize_level_name(
-    logger_name: Optional[Any],
-) -> str:
-    """For captureLogs, normalize level names
+def _normalize_level_name(logger_name):
+    """For
+    external:logging-strict+ref:`logging_strict.tech_niques.logging_capture.captureLogs`,
+    normalize level names
 
     :param logger_name:
 
-       Logger name can be a :py:class:`logging.Logger`, str
+       Logger name can be a external:python+ref:`logging.Logger`, str
 
-    :type logger_name: :py:class:`~typing.Any` or ``None``
+    :type logger_name: :py:class:`~typing.Any` | None
     :returns: Normalized logger level name
     :rtype: str
     :raises:
@@ -411,16 +407,16 @@ def _normalize_level_name(
     return level_name
 
 
-def _normalize_logger(logger: logging.Logger | str | None) -> logging.Logger:
+def _normalize_logger(logger):
     """Ensure working with a :py:class:`logger.Logger`
 
     :param logger:
 
-       Logger name can be a :py:class:`logging.Logger` or str
+       Logger name can be a external:python+ref:`logging.Logger` or str
 
-    :type logger: :py:class:`~typing.Any` or ``None``
+    :type logger: external:python+ref:`~logging.Logger` | str | ``None``
     :returns: Normalized logger
-    :rtype: :py:class:`logging.Logger`
+    :rtype: external:python+ref:`logging.Logger`
 
     :raises:
 
@@ -428,8 +424,8 @@ def _normalize_logger(logger: logging.Logger | str | None) -> logging.Logger:
 
     .. note::
 
-       logging.Manager.getLogger requires logger name to be a str or
-       :py:exc:`TypeError` occurs
+       external:python+ref:`logging.Manager.getLogger` requires logger
+       name to be a str or :py:exc:`TypeError` occurs
 
     """
     _logger_name = logger
@@ -448,16 +444,18 @@ def _normalize_logger(logger: logging.Logger | str | None) -> logging.Logger:
     return _logger
 
 
-def _normalize_formatter(format_: Optional[Any] = LOG_FORMAT) -> logging.Formatter:
+def _normalize_formatter(format_=LOG_FORMAT):
     """Retrieve logging.Formatter from user input
 
-    :param format_: Default ``LOG_FORMAT``
+    :param format_:
+
+       Default external:logging-strict+ref:`logging_strict.constants.LOG_FORMAT`
 
        Can pass in anything. Intended to be a logging format str
 
-    :type format_: :py:class:`~typing.Any` or ``None``
+    :type format_: :py:class:`~typing.Any` | None
     :returns: Valid logging formatter to be added to a logging.Handler
-    :rtype: :py:class:`logging.Formatter`
+    :rtype: external:python+ref:`logging.Formatter`
     """
     if format_ is None or is_not_ok(format_):
         format_str = LOG_FORMAT
@@ -496,20 +494,33 @@ class _LoggingWatcher:
         ),
     )
 
-    def getHandlerByName(self, name: str) -> type[logging.Handler]:
-        """
-        Get a handler with the specified *name*, or None if there isn't one with
-        that name.
+    def getHandlerByName(self, name):
+        """Get a handler with the specified *name*, or None if there
+        isn't one with that name.
+
+        :param name: handler function name
+        :type name: str
+        :returns: A logging handler func
+        :rtype: type[logging.Handler]
         """
         return logging.getHandlerByName(name)
 
-    def getHandlerNames(self) -> frozenset[str]:
-        """
-        Return all known handler names as an immutable set.
+    def getHandlerNames(self):
+        """Return all known handler names as an immutable set
+
+        :returns: Handler function names
+        :rtype: frozenset[str]
         """
         return logging.getHandlerNames()
 
-    def getLevelNo(self, level_name: str) -> Optional[int]:
+    def getLevelNo(self, level_name):
+        """Get Logging level number, given a logging level name
+
+        :param level_name: logging level name
+        :type level_name: str
+        :returns: Logging level integer
+        :rtype: int | None
+        """
         mapping = logging.getLevelNamesMapping()
         if level_name in mapping.keys():
             ret = mapping[level_name]
@@ -527,6 +538,7 @@ class _CapturingHandler(logging.Handler):
         self.watcher = _LoggingWatcher([], [])
 
     def flush(self):  # pragma: no cover No way to test this. No side effect(s)
+        """Flush records"""
         self.watcher.records.clear()
         self.watcher.output.clear()
 
@@ -534,7 +546,7 @@ class _CapturingHandler(logging.Handler):
         """Save record. Format/Save message
 
         :param record: logging record. Save as record and as str message
-        :type record: :py:class:`logging.LogRecord`
+        :type record: external:python+ref:`logging.LogRecord`
         """
         self.watcher.records.append(record)
         msg = self.format(record)
@@ -573,7 +585,9 @@ def captureLogs(
             logging.getLogger('foo.bar').error('second message')
         print(cm.output)
 
-    The watcher (:py:class:`._LoggingWatcher`) has attributes:
+    The watcher (
+    external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`
+    ) has attributes:
 
     - output
 
@@ -583,17 +597,18 @@ def captureLogs(
 
 
     :param logger: Default ``None``. logger or logger name
-    :type logger: str or :py:class:`logging.Logger` or None
+    :type logger: str | external:python+ref:`logging.Logger` | None
     :param level: Default ``None``. Logging level
-    :type level: str or int or ``None``
+    :type level: str | int | ``None``
     :param format_: Default ``None``. Can override logging format spec
-    :type format_: str or ``None``
+    :type format_: str | ``None``
     :returns:
 
-       Context manager yields one :py:class:`_LoggingWatcher`. Which
-       stores the log records/messages
+       Context manager yields one
+       external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.
+       Which stores the log records/messages
 
-    :rtype: Iterator[_LoggingWatcher]
+    :rtype: Iterator[ external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.  ]
 
     .. seealso::
 
@@ -658,21 +673,23 @@ def captureLogsMany(
     levels=(),
     format_=LOG_FORMAT,
 ):
-    """Behave exactly like :py:func:`.captureLogs` except intended
-    for multiple loggers rather than one
+    """Behave exactly like
+    external:logging-strict+ref:`~logging_strict.tech_niques.logging_capture.captureLogs`
+    except intended for multiple loggers rather than one
 
     :param loggers: Sequence of loggers
     :type loggers: Sequence[str | logging.Logger]
     :param levels: Sequence of levels corresponding to each loggers in order
-    :type levels: Sequence[str or int or ``None``]
+    :type levels: Sequence[str | int | ``None``]
     :param format_: Default ``None``. Can override logging format spec
-    :type format_: str or ``None``
+    :type format_: str | ``None``
     :returns:
 
-       Context manager yields all :py:class:`_LoggingWatcher` in a tuple.
-       Order maintained
+       Context manager yields all
+       external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.
+       in a tuple. Order maintained
 
-    :rtype: Iterator[tuple[_LoggingWatcher]]
+    :rtype: Iterator[tuple[ external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.  ]]
     :raises:
 
        - :py:exc:`AssertionError` -- Loggers and levels count mismatch

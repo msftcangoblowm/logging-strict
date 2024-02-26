@@ -1,9 +1,11 @@
 # Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
-# For details: https://github.com/msftcangoblowm/asz/blob/master/NOTICE.txt
+# For details: https://github.com/msftcangoblowm/logging_strict/blob/master/NOTICE.txt
 
 -c ../requirements/pins.pip
 -c ../requirements/prod.pip  # currently same venv
 
+scriv       # for writing GitHub releases
+sphobjinv   # cross-references inventories, objects.inv
 sphinx
 sphinx-pyproject
 sphinx-autobuild

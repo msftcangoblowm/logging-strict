@@ -15,8 +15,8 @@ to simply turn off these warnings.
 
 It's freak'n annoying!
 
-The :py:mod:`asyncio` warnings are :py:obj:`logging.warning`, not
-warning.warn
+The :py:mod:`asyncio` warnings are :py:func:`logging.warning`, not
+external:python+ref:`warning.warn <warning.warn>`
 
 How to handle :ref:`warning.warn messages <api_logging_warning_warn>`
 
@@ -43,10 +43,9 @@ The downside of this technique is has to be applied to all asyncio code.
 
 .. seealso::
 
-   :py:obj:`logging_strict.tech_niques.captureLogs`
+   external:logging-strict+ref:`logging_strict.tech_niques.captureLogs`
 
-   :py:obj:`logging_strict.tests.util.test_logging_capture.TestsLoggingCapture`
-
+   tests.util.test_logging_capture.TestsLoggingCapture
 
 .. _asyncio_logging_warnings_suppress:
 
@@ -69,12 +68,13 @@ see these warnings. At least on screens and widgets where this technique
 has been applied
 
 After applying this technique, in affected unittests, can remove the
-mitigation technique, captureLogs
+mitigation technique,
+external:logging-strict+ref:`~logging_strict.tech_niques.captureLogs`
 
 .. _api_logging_warning_warn:
 
-warning.warn
--------------
+warning.warn almost forgot
+---------------------------
 
 :py:mod:`warnings` are typically used for depreciation warnings.
 
@@ -89,11 +89,12 @@ warning.warn
 The above should suppress :py:func:`warnings.warn` messages, not
 :py:func:`logging.warning` messages.
 
-Less common  to see :py:obj:`warning.warn` messages.
+Less common  to see external:python+ref:`warning.warn <warning.warn>` messages.
 
 Indicates the package dependency is from a mature project that has gone
 thru (major version) API breaking changes or usage depreciation.
 
 Once a coder sees these warning messages, more likely than not would
 quickly update code to use the newer usage syntax. Afterwards no warning
-messages and therefore no need to suppress :py:obj:`warnings.warn` messages
+messages and therefore no need to suppress
+external:python+ref:`warning.warn <warning.warn>` messages

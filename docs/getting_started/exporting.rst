@@ -9,7 +9,8 @@ are two process types: worker and app
 
 When an app is run, it exports the app logging configuration.
 
-Right before a ProcessPool runs, it exports the worker logging configuration.
+Right before a :py:class:`multiprocessing.pool.Pool` runs, it exports
+the worker logging configuration.
 
 Right before a thread or ThreadPool runs, G'd and Darwin sit down to decide
 which calamity will befall you. Best to avoid that cuz Python logging module is

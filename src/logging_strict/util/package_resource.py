@@ -28,21 +28,10 @@ This module is for those who want the UX of extracting package data
 to be easy. Enough that they'll go back and remove all those ugly
 hacks and bash scripts.
 
-.. note:: :func:`.package_data_folders` yields data folders
+.. note:: external:logging-strict+ref:`PackageResource.package_data_folders <logging_strict.util.package_resource.PackageResource.package_data_folders>` yields data folders
 
    First step to extracting package data is to narrow down the
    (package) folders. The Second step is extracting the data files.
-
-
-.. note:: Complements module :py:mod:`.package_paths`
-
-   :py:mod:`.package_paths` contains one class :py:class:`Locations`.
-   This contains many property returning paths needed by a package.
-
-   In one and only one place!
-
-   :py:mod:`.util_package_resource` and :py:mod:`.package_paths` go
-   well together
 
 Example
 ---------
@@ -111,20 +100,22 @@ extracted into folder :code:`$HOME/.cache/[package name]/data/currency`
 For more fine control, options are:
 
 - move it within the cache_extract for loop
-- :py:func:`.resource_extract`
+
+- external:logging-strict+ref:`PackageResource.resource_extract <logging_strict.util.package_resource.PackageResource.resource_extract>`
 
 .. note:: DIY
 
-   Especially :func:`.filter_by_file_stem`, but this might apply to
-   :func:`.filter_by_suffix` as well, these are for the
-   simplest scenerio. They are both just a normal function.
-   If/when necessary, roll your own
+   Especially
+   external:logging-strict+ref:`~logging_strict.util.package_resource.filter_by_file_stem`,
+   but this might apply to
+   external:logging-strict+ref:`~logging_strict.util.package_resource.filter_by_suffix`
+   as well, these are for the simplest scenerio. They are both just a
+   normal function. If/when necessary, roll your own
 
-.. note:: :func:`.generator_folders` kwarg :paramref:`package_name`
+.. note:: package_data_folders param :py:obj:`~logging_strict.util.package_resource.PackageResource.package_data_folders.params.package_name`
 
-   Change :paramref:`package_name` to whichever package
-   contains the data files you are interested in, probably
-   not ``decimals``
+   Change to whichever package contains the data files you are interested
+   in. Not the package in this example
 
 
 Module private variables
@@ -254,13 +245,13 @@ def msg_stem(file_name):
 
 
     :param file_name: A file name or file path
-    :type file_name: str or Path
+    :type file_name: str | :py:class:`~pathlib.Path`
     :returns: file name without any file extensions
     :rtype: str
 
     .. warning:: No Optional[str]
 
-       Use with either :py:class:`pathlib.Path` or :py:class:`str`,
+       Use with either :py:class:`~pathlib.Path` or :py:class:`str`,
        not ``None``
 
 
@@ -314,8 +305,8 @@ class PartSuffix(Protocol):
 
         from typing import TYPE_CHECKING
         from functools import partial
-        from decimals.util_package_resource import filter_by_suffix
-        from decimals.util_package_resource import PartSuffix
+        from logging_strict.package_resource import filter_by_suffix
+        from logging_strict.package_resource import PartSuffix
 
         if TYPE_CHECKING:
             cb_suffix: PartSuffix
@@ -349,8 +340,8 @@ class PartStem(Protocol):
 
         from typing import TYPE_CHECKING
         from functools import partial
-        from decimals.util_package_resource import filter_by_file_stem
-        from decimals.util_package_resource import PartStem
+        from logging_strict.util.package_resource import filter_by_file_stem
+        from logging_strict.util.package_resource import PartStem
 
         if TYPE_CHECKING:
             cb_file_stem: PartStem
@@ -384,16 +375,16 @@ def match_file(y, /, *, cb_suffix=None, cb_file_stem=None):
     Terminology is :menuselection:`x, y --> folder, file`
 
     :param y: A traversable file
-    :type y: Traversible
+    :type y: external:python+ref:`~importlib.resources.abc.Traversable`
     :param cb_suffix:
 
-       Function creating using :py:meth:`functools.partial` which
+       Function creating using :py:func:`functools.partial` which
        filters by suffix
 
     :type cb_suffix: Callable[[str],bool] or None
     :param cb_file_stem:
 
-       Function creating using :py:meth:`functools.partial` which
+       Function creating using :py:func:`functools.partial` which
        filters by file name stem
 
     :type cb_file_stem: Callable[[str],bool] or None
@@ -432,21 +423,25 @@ def check_folder(x, cb_suffix=None, cb_file_stem=None):
     Terminology is :menuselection:`x, y --> folder, file`
 
     :param x: A traversable folder
-    :type x: Traversible
+    :type x: external:python+ref:`~importlib.resources.abc.Traversable`
     :param cb_suffix:
 
-       Function creating using :py:meth:`functools.partial` which
+       Function creating using :py:func:`functools.partial` which
        filters by suffix
 
     :type cb_suffix: Callable[[str],bool] or None
     :param cb_file_stem:
 
-       Function creating using :py:meth:`functools.partial` which
+       Function creating using :py:func:`functools.partial` which
        filters by file name stem
 
     :type cb_file_stem: Callable[[str],bool] or None
-    :returns: if a match, yield :paramref:`x`
-    :rtype: Iterator[Traversable]
+    :returns:
+
+       if a match, yield
+       :paramref:`logging_strict.util.package_resource.check_folder.params.x`
+
+    :rtype: Iterator[ external:python+ref:`importlib.resources.abc.Traversable` ]
     """
     if TYPE_CHECKING:
         is_found_target_file: bool
@@ -482,12 +477,13 @@ def filter_by_suffix(expected_suffix, test_suffix):
     .. code-block:: python
 
         from functools import partial
-        from decimals.util_package_resource import filter_by_suffix, PartSuffix
+        from logging_strict.package_resource import filter_by_suffix, PartSuffix
 
         cb_suffix: PartSuffix = partial(filter_by_suffix, expected_suffix)
         ...
 
-    Then use ``cb_suffix`` as kwarg to :py:meth:`.cache_extract`
+    Then use ``cb_suffix`` as kwarg to
+    external:logging-strict+ref:`PackageResource.cache_extract <logging_strict.util.package_resource.PackageResource.cache_extract>`
 
     :param expected_suffix: Suffix (e.g. ".ppn") searching for
     :type expected_suffix: str or tuple[str, ...]
@@ -542,7 +538,7 @@ def filter_by_file_stem(expected_file_name, test_file_name):
     .. code-block:: python
 
         from functools import partial
-        from decimals.util_package_resource import filter_by_file_stem
+        from logging_strict.util.package_resource import filter_by_file_stem
 
         cb_file_stem = partial(filter_by_file_stem, expected_file_name)
         ...
@@ -579,7 +575,9 @@ def filter_by_file_stem(expected_file_name, test_file_name):
 def _extract_folder(package):
     """Mockable to change the destination folder
 
-    Use only by :py:func:`cache_extract` so can override destination folder
+    Use only by
+    :py:meth:`logging_strict.util.package_resource.PackageResource.cache_extract`
+    so can override destination folder
 
     :param package: package name
     :type package: str
@@ -589,35 +587,23 @@ def _extract_folder(package):
     return DestFolderUser(package).cache_dir
 
 
-def walk_tree_folders(
-    traversable_root: Traversable,
-) -> Iterator[Traversable]:
+def walk_tree_folders(traversable_root):
     """:py:meth:`importlib.resources.files` returns a single
-    Traversable which is the Python3 package root folder. A
-    Traversable supports :py:meth:`pathlib.Path.iterdir`, but
-    not :py:meth:`pathlib.Path.glob`.
-
-    walking algo
-
-       Generator yield only folders
-
-       .. seealso::
-
-          Traversable_
-
-
-
+    external:python+ref:`~importlib.resources.abc.Traversable` which is
+    the Python3 package root folder. A
+    external:python+ref:`~importlib.resources.abc.Traversable` supports
+    :py:meth:`pathlib.Path.iterdir`, but not :py:meth:`pathlib.Path.glob`.
 
     :param process_name: package data folder or a subfolder
-    :type process_name: :py:class:`~importlib.abc.Traversable`
+    :type process_name:
+
+       external:python+ref:`~importlib.resources.abc.Traversable`
+
     :returns: The entire sub-tree. Includes self
-    :rtype: :py:class:`~collections.abc.Iterator`
+    :rtype:
 
-    .. note:: empty folder
+       :py:class:`~collections.abc.Iterator`[ external:python+ref:`~importlib.resources.abc.Traversable` ]
 
-       Does not check whether a folder is empty
-
-    .. _Traversable: https://github.com/python/cpython/blob/3.12/Lib/importlib/resources/abc.py
     """
     if TYPE_CHECKING:
         traversable_x: Traversable
@@ -668,7 +654,7 @@ def _get_package_data_folder(dotted_path):
 
        The traversable path. Either a package root or a subfolder
 
-    :rtype: Optional[Traversable]
+    :rtype: external:python+ref:`~importlib.resources.abc.Traversable` | None
     """
     try:
         trav_ret = importlib_resources.files(dotted_path)
@@ -684,9 +670,6 @@ class PackageResource:
     the virtual environment, which package data folder is the
     base folder in which to start the search for data files.
     As in a fallback folder
-
-    Previously :paramref:`package_data_folder_start` was mockable
-    module level variable, :py:data:`FALLBACK_FOLDER`.
 
     Do not assume the default start data folder is ``data``. Impose rule
     that data files must not be stored in the package base folder; must be
@@ -723,7 +706,7 @@ class PackageResource:
 
     def path_relative(
         self,
-        y: Path,
+        y,
         /,
         *,
         path_relative_package_dir=None,
@@ -737,9 +720,11 @@ class PackageResource:
         during testing, to move the extracted data file to another
         folder
 
-        An Example :paramref:`y` which is an absolute path package data
-        extracted by :py:meth:`importlib_resources.as_file`. Which
-        should be zip safe
+
+        An Example
+        :paramref:`~logging_strict.util.package_resource.PackageResource.path_relative.params.y`
+        which is an absolute path package data extracted by
+        external:python+ref:`importlib.resources.as_file`. Which should be zip safe
 
         .. code-block:: text
 
@@ -774,13 +759,13 @@ class PackageResource:
 
 
         :param y: Extracted data file's path
-        :type y: :py:class:`Traversible`
+        :type y: :py:class:`~pathlib.Path`
         :param path_relative_package_dir:
 
            Default "data" (folder). Relative package path. Treat a
            base folder
 
-        :type path_relative_package_dir: Path or str or None
+        :type path_relative_package_dir: :py:class:`~pathlib.Path` | str | None
         :param parent_count:
 
            Ignoring file name.
@@ -791,9 +776,9 @@ class PackageResource:
         :returns:
 
            Relative path excluding from
-           :paramref:`path_relative_package_dir`
+           :paramref:`~logging_strict.util.package_resource.PackageResource.path_relative.params.path_relative_package_dir`
 
-        :rtype: Path
+        :rtype: :py:class:`~pathlib.Path`
 
         :raises:
 
@@ -934,27 +919,28 @@ class PackageResource:
            Function creating using :py:func:`functools.partial`
            which filters by suffix
 
-        :type cb_suffix: Callable[[str],bool] or None
+        :type cb_suffix: Callable[[str],bool] | None
         :param cb_file_stem:
 
            Function creating using :py:func:`functools.partial` which
            filters by file name stem
 
-        :type cb_file_stem: Callable[[str],bool] or None
+        :type cb_file_stem: Callable[[str],bool] | None
         :param path_relative_package_dir:
 
            package base folder to start the search. None becomes the
-           :py:data:`FALLBACK_FOLDER`, not the package base folder. Assumes
-           package authors are smart and would never be that gullible.
+           external:logging-strict+ref:`~logging_strict.util.package_resource.PackageResource.get_parent_paths.param.package_data_folder_start`,
+           not the package base folder. Assumes package authors are smart
+           and would never be that gullible.
 
-        :type path_relative_package_dir: Path or str or None
+        :type path_relative_package_dir: :py:class:`~pathlib.Path` | str | None
         :param parent_count:
 
            Default 1. Retrieve x number of parent folder names
 
-        :type parent_count: int or None
+        :type parent_count: int | None
         :returns: file name and respective parents as an Sequence[str]
-        :rtype: Optional[dict[str, Sequence[str]]]
+        :rtype: dict[str, Sequence[str]] | None
         """
         if TYPE_CHECKING:
             path_relative_to: Path
@@ -1084,18 +1070,20 @@ class PackageResource:
            that to occur.
 
            This function is used as input to functions:
-           :py:func:`resource_extract` or :py:func:`cache_extract`.
+           external:logging-strict+ref:`PackageResource.resource_extract <logging_strict.util.package_resource.PackageResource.resource_extract>`
+           or
+           external:logging-strict+ref:`PackageResource.cache_extract <logging_strict.util.package_resource.PackageResource.cache_extract>`.
            So any Exception or logging would be delayed until those calls
 
         :param cb_suffix:
 
-           Function creating using :py:meth:`functools.partial` which
+           Function creating using :py:func:`functools.partial` which
            filters by suffix
 
         :type cb_suffix: Callable[[str],bool]
         :param cb_file_stem:
 
-           Function creating using :py:meth:`functools.partial` which
+           Function creating using :py:func:`functools.partial` which
            filters by file name stem
 
         :type cb_file_stem: Callable[[str],bool]
@@ -1115,9 +1103,10 @@ class PackageResource:
 
         :returns:
 
-           All Traversable paths. Possibly filtered by theme
+           All external:python+ref:`importlib.resources.abc.Traversable`
+           paths. Possibly filtered by theme
 
-        :rtype: Iterator[Traversable]
+        :rtype: Iterator[ external:python+ref:`importlib.resources.abc.Traversable` ]
         :raises:
 
            - :py:exc:`ImportError` -- package not installed. Before
@@ -1249,21 +1238,24 @@ class PackageResource:
 
         :param base_folder_generator:
 
-           Package data Generator(s) can be found in
-           :py:mod:`.package_paths`
+           Package data folder Generator. Narrows down the search to
+           folders known to contain target package data files
 
-        :type base_folder_generator: Iterator[Traversable]
+        :type base_folder_generator:
+
+           Iterator[ external:python+ref:`importlib.resources.abc.Traversable` ]
+
         :param path_dest: destination folder
-        :type path_dest: Path or str
+        :type path_dest: :py:class:`pathlib.Path` | str
         :param cb_suffix:
 
-           Function creating using :py:meth:`functools.partial` which
+           Function creating using :py:func:`functools.partial` which
            filters by suffix
 
         :type cb_suffix: Callable[[str],bool]
         :param cb_file_stem:
 
-           Function creating using :py:meth:`functools.partial` which
+           Function creating using :py:func:`functools.partial` which
            filters by file name stem
 
         :type cb_file_stem: Callable[[str],bool]
@@ -1271,23 +1263,23 @@ class PackageResource:
 
            Default ``False``. Force overwriting of destination file
 
-        :type is_overwrite: bool or None
+        :type is_overwrite: bool | None
         :param as_user:
 
            Default ``False``. ``False`` dest file owner set to root.
            Otherwise dest file owner set to user
 
-        :type as_user: bool or None
+        :type as_user: bool | None
         :returns: local cached file path
-        :rtype: Iterator[Path]
+        :rtype: Iterator[ :py:class:`~pathlib.Path` ]
 
         .. seealso::
 
            :menuselection:`Generator --> Resource folders`
-           :py:func:`.package_data_folders`
+           external:logging-strict+ref:`PackageResource.package_data_folders <logging_strict.util.package_resource.PackageResource.package_data_folders>`
 
            cb_suffix
-           :py:func:`.filter_by_suffix`
+           external:logging-strict+ref:`~logging_strict.util.package_resource.filter_by_suffix`
 
         .. caution:: Refresh generator
 
@@ -1346,8 +1338,9 @@ class PackageResource:
         # Check acl writable permissions. Is dest folder tree writable?
         pass
 
-        """ if package not installed, :paramref:`base_folder_generator`
-            will raise :py:exc:`ImportError`
+        """ if package not installed,
+        :paramref:`~logging_strict.util.package_resource.PackageResource.resource_extract.params.base_folder_generator`
+        will raise :py:exc:`ImportError`
         """
         try:
             for traversable_dir in base_folder_generator:
@@ -1604,28 +1597,31 @@ class PackageResource:
 
         :param base_folder_generator:
 
-           Package data Generator(s) can be found in
-           :py:mod:`..package_paths`
+           Package data folder Generator. Narrows down folders to
+           search to only folders containing the target data files
 
-        :type base_folder_generator: Iterator[Traversable]
+        :type base_folder_generator:
+
+           Iterator[ external:python+ref:`importlib.resources.abc.Traversable` ]
+
         :param cb_suffix:
 
-           Function creating using :py:meth:`functools.partial` which
+           Function creating using :py:func:`functools.partial` which
            filters by suffix
 
         :type cb_suffix: Callable[[str],bool]
         :param cb_file_stem:
 
-           Function creating using :py:meth:`functools.partial` which
+           Function creating using :py:func:`functools.partial` which
            filters by file name stem
 
         :type cb_file_stem: Callable[[str],bool]
         :returns: local cached file path
-        :rtype: Iterator[Path]
+        :rtype: Iterator[ :py:class:`~pathlib.Path` ]
 
         .. seealso::
 
-           :py:func:`.filter_by_suffix`
+           external:logging-strict+ref:`~logging_strict.util.package_resource.filter_by_suffix`
 
         .. caution:: Refresh generator
 

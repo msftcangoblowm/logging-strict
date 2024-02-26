@@ -27,7 +27,7 @@ Module private variables
    This module's dotted path
 
 .. py:data:: _LOGGER
-   :type: :py:class:`logging.Logger`
+   :type: logging.Logger
 
    Module level logger
 

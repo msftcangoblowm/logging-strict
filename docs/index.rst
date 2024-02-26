@@ -1,6 +1,6 @@
 .. Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
 .. For details: https://github.com/msftcangoblowm/logging_strict/blob/master/NOTICE.txt
-.. module:: asz
+.. module:: logging_strict
 
 logging_strict
 ===============
@@ -37,14 +37,14 @@ For logging.config yaml files, logging-strict does the following:
 
 - validates against a strictyaml schema
 
-  The schema is specifically tailored for the logging.config.handlers
+  The schema is specifically tailored for the external:python+ref:`logging.handlers`
 
   As long as the yaml is valid, will have the data types
-  logging.config.handlers expect
+  external:python+ref:`logging.handlers` expect
 
 - exports package data
 
-  Alternative to pkgutil.get_data
+  Alternative to :py:func:`pkgutil.get_data`
 
   Export data files using a pattern rather than one file at a time
 

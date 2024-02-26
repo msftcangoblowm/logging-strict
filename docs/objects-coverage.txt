@@ -1,0 +1,9 @@
+# Sphinx inventory version 2
+# Project: coverage 7.4.0
+# Version: 7.4.0
+# The remainder of this file is compressed using zlib.
+coverage py:module 0 https://coverage.readthedocs.io/en/latest -
+coverage.multiproc py:module 0 https://github.com/nedbat/coveragepy/blob/b2b89a491bb607e958c432c17a5677b3abb6a952/coverage/multiproc.py -
+coverage.control py:module 0 https://github.com/nedbat/coveragepy/blob/b2b89a491bb607e958c432c17a5677b3abb6a952/coverage/control.py -
+coverage.control.Coverage py:class 1 https://coverage.readthedocs.io/en/latest/api_coverage.html -
+coverage.control.Coverage.start py:method 1 https://coverage.readthedocs.io/en/latest/api_coverage.html#coverage.Coverage.start -

@@ -46,8 +46,6 @@ Limitations
 
   :py:mod:`strictyaml` has no support for :py:class:`datetime.time`
 
-
-
 Module private variables
 -------------------------
 
@@ -58,7 +56,7 @@ Module private variables
    Module exports
 
 .. py:data:: schema_logging_config
-   :type: strictyaml.Validator
+   :type: external:strictyaml+ref:`strictyaml.validators.Validator`
 
    strictyaml schema to compare the yaml against
 

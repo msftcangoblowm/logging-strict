@@ -1,0 +1,35 @@
+# Sphinx inventory version 2
+# Project: strictyaml 1.7.3
+# Version: 1.7.3
+# The remainder of this file is compressed using zlib.
+strictyaml py:module 0 https://github.com/crdoconnor/strictyaml -
+strictyaml.exceptions py:module 0 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.representation py:module 0 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/representation.py -
+strictyaml.validators py:module 0 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/validators.py -
+strictyaml.exceptions.StrictYAMLError py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.YAMLValidationError py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.YAMLValidationError.params.context py:parameter 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.YAMLValidationError.params.problem py:parameter 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.YAMLValidationError.params.chunk py:parameter 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.YAMLValidationError.context_mark py:property 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.YAMLValidationError.problem_mark py:property 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.InvalidValidatorError py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.CannotBuildDocumentFromInvalidData py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.CannotBuildDocumentsFromEmptyDictOrList py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.YAMLSerializationError py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.InvalidOptionalDefault py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.DisallowedToken py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.TagTokenDisallowed py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.FlowMappingDisallowed py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.AnchorTokenDisallowed py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.DuplicateKeysDisallowed py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.InconsistentIndentationDisallowed py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.raise_type_error py:function 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.raise_type_error.params.yaml_object py:parameter 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.raise_type_error.params.to_type py:parameter 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.exceptions.raise_type_error.params.alternatives py:parameter 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.StrictYAMLError py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.YAMLValidationError py:exception 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.Validator py:class 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/validators.py -
+strictyaml.representation.YAML py:class 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/representation.py#L48 -
+strictyaml.validators.Validator py:class 1 https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/validators.py -

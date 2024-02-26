@@ -53,6 +53,33 @@ endif
 help:					## (Default) Display this help -- Always up to date
 	@awk -F ':.*##' '/^[^: ]+:.*##/{printf "  \033[1m%-20s\033[m %s\n",$$1,$$2} /^##@/{printf "\n%s\n",substr($$0,5)}' $(MAKEFILE_LIST)
 
+.PHONY: clean_platform clean sterile
+
+_clean_platform:
+	@rm -f *.so */*.so
+	rm -f *.pyd */*.pyd
+	rm -rf __pycache__ */__pycache__ */*/__pycache__ */*/*/__pycache__ */*/*/*/__pycache__ */*/*/*/*/__pycache__
+	rm -f *.pyc */*.pyc */*/*.pyc */*/*/*.pyc */*/*/*/*.pyc */*/*/*/*/*.pyc
+	rm -f *.pyo */*.pyo */*/*.pyo */*/*/*.pyo */*/*/*/*.pyo */*/*/*/*/*.pyo
+	rm -f *$$py.class */*$$py.class */*/*$$py.class */*/*/*$$py.class */*/*/*/*$$py.class */*/*/*/*/*$$py.class
+
+clean: _clean_platform	## Remove artifacts of test execution, installation, etc.
+	@echo "Cleaning..."
+	-pip uninstall -yq logging_strict
+	mkdir -p build	# so the chmod won't fail if build doesn't exist
+	chmod -R 777 build ||:
+	rm -rf logging_strict.egg-info dist
+	rm -f MANIFEST
+	rm -f .coverage .coverage-combine-* .coverage-recipe-*
+	rm -f coverage.xml coverage.json
+	rm -f */.coverage */*/.coverage */*/*/.coverage */*/*/*/.coverage */*/*/*/*/.coverage */*/*/*/*/*/.coverage
+	rm -rf doc/_build
+	rm -rf tmp
+	rm -rf .*cache */.*cache */*/.*cache */*/*/.*cache .hypothesis
+	rm -rf .mypy_cache/
+
+sterile: clean			## Remove all non-controlled content, even if expensive.
+	rm -rf .tox
 
 ##@ Build dependencies
 
@@ -74,6 +101,7 @@ ifeq ($(is_venv),1)
 	@pip install --quiet --disable-pip-version-check --requirement requirements/pip-tools.pip
 	$(PIP_COMPILE) -o requirements/pip-tools.pip requirements/pip-tools.in
 	$(PIP_COMPILE) -o requirements/pip.pip requirements/pip.in
+	$(PIP_COMPILE) -o requirements/kit.pip requirements/kit.in
 	$(PIP_COMPILE) -o requirements/prod.pip requirements/prod.in
 	$(PIP_COMPILE) --no-strip-extras -o requirements/tox.pip requirements/tox.in
 	$(PIP_COMPILE) --no-strip-extras -o requirements/manage.pip requirements/manage.in
@@ -152,20 +180,41 @@ endif
 REPO_OWNER := msftcangoblowm/logging_strict
 REPO := $(REPO_OWNER)/logging_strict
 
-.PHONY: edit_for_release cheats relbranch check_kits
+.PHONY: edit_for_release cheats relbranch kit_check kit_build kit_upload
+.PHONY: test_upload kits_build kits_download github_releases
 
-edit_for_release:		## Edit sources to insert release facts
+edit_for_release:		## Edit sources to insert release facts (see howto.txt)
 	python igor.py edit_for_release
 
-cheats:					## Create some useful snippets for releasing
+cheats:					## Create some useful snippets for releasing (see howto.txt)
 	python igor.py cheats | tee cheats.txt
 
-relbranch:				## Create the branch for releasing
+relbranch:				## Create the branch for releasing (see howto.txt)
 	git switch -c $(REPO_OWNER)/release-$$(date +%Y%m%d)
 
-check_kits:				## Check that dist/* are well-formed
+# Do not create a target(s) kit: or kits:
+kit_check:				## Check that dist/* are well-formed
 	python -m twine check dist/*
 	@echo $$(ls -1 dist | wc -l) distribution kits
+
+kit_build:				## Make the source distribution
+	python igor.py build_next ""
+
+kit_upload:				## Upload the built distributions to PyPI
+	twine upload --verbose dist/*
+
+test_upload:			## Upload the distributions to PyPI's testing server
+	twine upload --verbose --repository testpypi --password $$TWINE_TEST_PASSWORD dist/*
+
+kits_build:				## Trigger GitHub to build kits
+	python ci/trigger_build_kits.py $(REPO_OWNER)
+
+kits_download:			## Download the built kits from GitHub
+	python ci/download_gha_artifacts.py $(REPO_OWNER) 'dist-*' dist
+
+github_releases: $(DOCBIN)		## Update GitHub releases.
+	$(DOCBIN)/python -m scriv github-release --all
+
 
 .PHONY: install
 install: override usage := make [force=1]

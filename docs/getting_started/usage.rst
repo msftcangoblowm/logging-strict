@@ -189,9 +189,9 @@ This is a 2 step process.
 within entrypoint
 ~~~~~~~~~~~~~~~~~~
 
-The ProcessPool (not ThreadPool) worker is isolated within it's own
-process. So the dirty nature of logging configuration has no effect
-on other processes.
+The :py:class:`multiprocessing.pool.Pool` (not ThreadPool) worker is
+isolated within it's own process. So the dirty nature of logging
+configuration has no effect on other processes.
 
 logging.config yaml file within package, logging_strict
 
@@ -222,8 +222,8 @@ logging.config yaml file within another package
 within worker
 ~~~~~~~~~~~~~~
 
-entrypoint passes str_yaml to the (ProcessPool) worker. A worker calls
-`setup_logging_yaml` with the yaml str
+entrypoint passes str_yaml to the (:py:class:`multiprocessing.pool.Pool`)
+worker. A worker calls `setup_logging_yaml` with the yaml str
 
 .. code:: text
 
@@ -232,7 +232,7 @@ entrypoint passes str_yaml to the (ProcessPool) worker. A worker calls
    setup_logging_yaml(str_yaml)
 
 
-To learn more about building UI apps that have `multiprocessing.pool.ProcessPool`
+To learn more about building UI apps that have :py:class:`multiprocessing.pool.Pool`
 workers, check out the `asz` source code
 
 Whats next

@@ -138,6 +138,6 @@ There is no command, instead here's a list:
 
 - mp_1_asz.worker.logging.config.yaml
 
-  For use with :py:class:`multiprocessing.pool.ProcessPool` workers
+  For use with :py:class:`multiprocessing.pool.Pool` workers
 
   Handler: logging.StreamHandler

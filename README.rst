@@ -31,10 +31,10 @@ For logging.config yaml files, logging-strict does the following:
 
 - validates against a strictyaml schema
 
-  The schema is specifically tailored for the logging.config.handlers
+  The schema is specifically tailored for the logging.handlers
 
   As long as the yaml is valid, will have the data types
-  logging.config.handlers expect
+  logging.handlers expect
 
 - exports package data
 
@@ -46,17 +46,15 @@ For logging.config yaml files, logging-strict does the following:
 
 * Python 3.9 through 3.12, and 3.13.0a3 and up.
 
+**New in 1.2.x:**
+
+sphinx object inventories minimizes sphinx warnings; package logo; .readthedocs.yml; 
+tox.ini; many .github/workflows;
+
 **New in 1.1.x:**
 
 Sphinx documentation;
 Public API changed. retired functions setup_worker and setup_ui. Split each into 2 or 3;
-
-**New in 0.1.x:**
-
-techniques relavent to logging;
-validate logging.config yaml;
-two logging.config yaml files. One for app. One for worker;
-pre-commit hook validate-logging-strict-yaml
 
 Why?
 ------

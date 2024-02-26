@@ -140,16 +140,16 @@ Module private variables
    This modules exports
 
 .. py:data:: T
-   :type: :py:class:`typing.TypeVar`
+   :type: typing.TypeVar
    :value: typing.TypeVar("T")
 
-   Equivalent to :py:class:`typing.Any`
+   Equivalent to :py:class:`~typing.Any`
 
 .. py:data:: P
-   :type: :py:class:`typing_extensions.ParamSpec`
+   :type: typing.ParamSpec
    :value: typing_extensions.ParamSpec('P')
 
-   Equivalent to :py:class:`typing.Any`
+   Equivalent to :py:class:`~typing.Any`
 
 Module objects
 ----------------------------
@@ -185,7 +185,15 @@ P = ParamSpec("P")
 
 
 def _func(param_a: str, param_b: int | None = 10) -> str:
-    """Sample function to inspect the locals"""
+    """Sample function to inspect the locals
+
+    :param param_a: To whom am i speaking to? Name please
+    :type param_a: str
+    :param param_b: Default 10. A int to be modified
+    :type param_b: int | None
+    :returns: Greetings from this function to our adoring fans
+    :rtype: str
+    """
     if is_not_ok(param_a):
         param_a = ""
     else:  # pragma: no cover
@@ -279,12 +287,12 @@ class MockFunction:
 
 
 def get_locals(
-    func_path: str,
-    func: Callable[..., Any],
+    func_path,
+    func,
     /,
-    *args: P.args,
-    **kwargs: P.kwargs,
-) -> tuple[T, dict[str, Any]]:
+    *args,
+    **kwargs,
+):
     """Uses :py:func:`patch <unittest.mock.patch>` to retrieve the
     tested functions locals and return value!
 
@@ -296,13 +304,13 @@ def get_locals(
     :param func_path: dotted path to func
     :type func_path: str
     :param func: The func
-    :type func: Callable[..., Any]
+    :type func: Callable[..., :py:class:`~typing.Any`]
     :param args: Positional arguments
-    :type args: P.args
+    :type args: external:python+ref:`typing.ParamSpecArgs`
     :param kwargs: Optional (keyword) arguments
-    :type kwargs: P.kwargs
+    :type kwargs: external:python+ref:`typing.ParamSpecKwargs`
     :returns: Tuple containing return value and the locals
-    :rtype: tuple[T, dict[str, Any]]
+    :rtype: tuple[T, dict[str, :py:class:`~typing.Any`]]
     """
     with patch(
         func_path,

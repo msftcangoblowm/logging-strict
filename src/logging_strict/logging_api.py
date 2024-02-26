@@ -175,7 +175,7 @@ class LoggingConfigYaml(LoggingYamlType):
 
     :vartype category:
 
-       :py:class:`LoggingConfigCategory` | str | :py:class:`~typing.Any` | None
+       external:logging-strict+ref:`~logging_strict.constants.LoggingConfigCategory` | str | :py:class:`~typing.Any` | None
 
     :ivar genre:
 
@@ -183,19 +183,20 @@ class LoggingConfigYaml(LoggingYamlType):
        a library of yaml files that can be used with a particular
        UI framework or worker type
 
-    :vartype genre: str or None
+    :vartype genre: str | None
     :ivar flavor:
 
        Unique identifier name given to a particular :py:mod:`logging.config`
        yaml. This name is slugified. Meaning period and underscores
        converted to hyphens
 
-       Flavor is a very terse description, for a :paramref:`genre`, how
-       this yaml differs from others. If completely generic, call it
+       Flavor is a very terse description, for a
+       external:logging-strict+ref:`~logging_strict.logging_api.LoggingConfigYaml.genre`,
+       how this yaml differs from others. If completely generic, call it
        ``generic``. If different handlers or formatters or filters are
        used, what is the yaml's purpose?
 
-    :vartype flavor: str or None
+    :vartype flavor: str | None
     :ivar version_no:
 
        .. line-block::
@@ -205,14 +206,14 @@ class LoggingConfigYaml(LoggingYamlType):
 
           **Not** the version of the yaml spec. Don't confuse the two.
 
-    :vartype version_no: :py:class:`~typing.Any` or None
+    :vartype version_no: :py:class:`~typing.Any` | None
     :raises:
 
-       - :py:exc:`LoggingStrictPackageNameRequired` -- Package name required for
-         determining destination folder
+       - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictPackageNameRequired`
+         -- Package name required for determining destination folder
 
-       - :py:exc:`LoggingStrictPackageStartFolderNameRequired` -- Package base
-         data folder name is required
+       - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictPackageStartFolderNameRequired`
+         -- Package base data folder name is required
 
     """
 
@@ -285,8 +286,8 @@ class LoggingConfigYaml(LoggingYamlType):
         :rtype: str
         :raises:
 
-           - :py:exc:`LoggingStrictGenreRequired` --- Genre is required. e.g.
-             textual pyside mp rabbitmq
+           - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictGenreRequired`
+             -- Genre is required. e.g. textual pyside mp rabbitmq
 
         .. todo:: slugify
 
@@ -322,13 +323,13 @@ class LoggingConfigYaml(LoggingYamlType):
 
         So can use:
 
-        - :py:meth:`iter_yaml`
+        - external:logging-strict+ref:`LoggingYamlType.iter_yamls <logging_strict.logging_yaml_abc.LoggingYamlType.iter_yamls>`
 
         Can't use
 
-        - :py:meth:`extract`
+        - external:logging-strict+ref:`LoggingConfigYaml.extract <logging_strict.logging_yaml_abc.LoggingConfigYaml.extract>`
 
-        - :py:meth:`setup`
+        - - external:logging-strict+ref:`LoggingYamlType.setup <logging_strict.logging_yaml_abc.LoggingYamlType.setup>`
 
         Genre is the UI framwork or worker characteristic
 
@@ -346,10 +347,12 @@ class LoggingConfigYaml(LoggingYamlType):
     def flavor(self):
         """Specific implementation of a genre.
 
-        E.g. multiple :py:mod:`logging.config` yaml files for :py:mod:`textual`
+        E.g. multiple :py:mod:`logging.config` yaml files for
+        external:textual+ref:`textual`
 
-        Uses the handler, TextualHandler, but each has some variation.
-        Like custom formaters or filters
+        Uses the handler,
+        external:textual+ref:`textual.logging.TextualHandler`, but each
+        has some variation. Like custom formaters or filters
 
         So the flavor may be
 
@@ -394,7 +397,8 @@ class LoggingConfigYaml(LoggingYamlType):
         :rtype: str
         :raises:
 
-           - :py:exc:`LoggingStrictProcessCategoryRequired` -- Requires category
+           - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictProcessCategoryRequired`
+             -- Requires category
 
         """
         if is_not_ok(self.category):
@@ -420,9 +424,11 @@ class LoggingConfigYaml(LoggingYamlType):
         :rtype: str
         :raises:
 
-           - :py:exc:`LoggingStrictProcessCategoryRequired` -- Category required
+           - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictProcessCategoryRequired`
+             -- Category required
 
-           - :py:exc:`LoggingStrictGenreRequired` -- Genre required
+           - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictGenreRequired`
+             -- Genre required
 
         """
         try:
@@ -693,7 +699,7 @@ def worker_yaml_curated(
     changes are not overwritten
 
     Process 2nd step is calling:
-    :py:func:`logging_strict.logging_yaml_abc.setup_logging_yaml`
+    external:logging-strict+ref:`setup_logging_yaml <logging_strict.logging_yaml_abc.setup_logging_yaml>`
 
     :param genre:
 
@@ -716,8 +722,8 @@ def worker_yaml_curated(
     :param version_no:
 
        Default 1. Version of this particular
-       :paramref:`category`. **Not** the version of the
-       yaml spec. Don't confuse the two.
+       :paramref:`~logging_strict.logging_api.worker_yaml_curated.params.genre`.
+       **Not** the version of the yaml spec. Don't confuse the two.
 
     :type version_no: :py:class:`~typing.Any` or None
     :param package_start_relative_folder:
@@ -733,8 +739,8 @@ def worker_yaml_curated(
 
        - :py:exc:`FileNotFoundError` -- yaml file not found within package
 
-       - :py:exc:`strictyaml.exceptions.YAMLValidationError` -- yaml file
-         validation failed
+       - external:strictyaml+ref:`strictyaml.exceptions.YAMLValidationError`
+         -- yaml file validation failed
 
        - :py:exc:`AssertionError` -- Expecting one yaml file, many found
 
@@ -773,7 +779,7 @@ def setup_worker_other(
     Use this if located in another package
 
     Process 2nd step is calling:
-    :py:func:`logging_strict.logging_yaml_abc.setup_logging_yaml`
+    external:logging-strict+ref:`setup_logging_yaml <logging_strict.logging_yaml_abc.setup_logging_yaml>`
 
     :param package_name:
 
@@ -783,8 +789,9 @@ def setup_worker_other(
     :type package_name: str
     :param package_data_folder_start:
 
-       Within :paramref:`package_name`, base data folder name. Not a
-       relative path. Does not assume ``data``
+       Within
+       :paramref:`~logging_strict.logging_api.setup_worker_other.params.package_name`,
+       base data folder name. Not a relative path. Does not assume ``data``
 
     :type package_data_folder_start: str
     :param genre:
@@ -799,8 +806,9 @@ def setup_worker_other(
        Default "asz". Unique identifier name given to a particular
        :py:mod:`logging.config` yaml. Should be one word w/o special characters
 
-       Flavor is a very terse description, for a :paramref:`genre`, how
-       this yaml differs from others. If completely generic, call it
+       Flavor is a very terse description, for a
+       :paramref:`~logging_strict.logging_api.setup_worker_other.params.genre`,
+       how this yaml differs from others. If completely generic, call it
        ``generic``. If different handlers or formatters or filters are
        used, what is the yaml's purpose?
 
@@ -808,8 +816,8 @@ def setup_worker_other(
     :param version_no:
 
        Default 1. Version of this particular
-       :paramref:`category`. **Not** the version of the
-       yaml spec. Don't confuse the two.
+       :paramref:`~logging_strict.logging_api.setup_worker_other.params.genre`.
+       **Not** the version of the yaml spec. Don't confuse the two.
 
     :type version_no: :py:class:`~typing.Any` or None
     :param package_start_relative_folder:
@@ -825,16 +833,16 @@ def setup_worker_other(
 
        - :py:exc:`FileNotFoundError` -- yaml file not found within package
 
-       - :py:exc:`strictyaml.exceptions.YAMLValidationError` -- yaml file
-         validation failed
+       - external:strictyaml+ref:`strictyaml.exceptions.YAMLValidationError`
+         -- yaml file validation failed
 
        - :py:exc:`AssertionError` -- Expecting one yaml file, many found
 
-       - :py:exc:`LoggingStrictPackageNameRequired` -- Which package
-         are the logging.config yaml in?
+       - external:logging-strict+ref:`logging_strict.LoggingStrictPackageNameRequired`
+         -- Which package are the logging.config yaml in?
 
-       - :py:exc:`LoggingStrictPackageStartFolderNameRequired` -- Within the
-         provided package, the package base data folder name
+       - external:logging-strict+ref:`logging_strict.LoggingStrictPackageStartFolderNameRequired`
+         -- Within the provided package, the package base data folder name
 
     """
     try:
@@ -867,7 +875,7 @@ class LoggingState:
 
     If run from app::
 
-       logging is redirected to ``textual.logging.TextualHandler``
+       logging is redirected to external:textual+ref:`textual.logging.TextualHandler`
 
        See |textual_api|`logging`
 

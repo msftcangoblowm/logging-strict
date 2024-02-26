@@ -28,12 +28,11 @@ else:
         runtime_checkable,
     )
 
-__all__: tuple[str, str, str, str, str, str, str, str]
+__all__: tuple[str, str, str, str, str]
 
 is_module_debug: bool
 g_module: str
 _LOGGER: logging.Logger
-FALLBACK_FOLDER: str
 
 def msg_stem(file_name: str) -> str: ...
 @runtime_checkable

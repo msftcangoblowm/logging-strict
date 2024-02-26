@@ -3,10 +3,7 @@ from __future__ import annotations
 import contextlib
 import logging
 import sys
-from typing import (
-    Any,
-    Optional,
-)
+from typing import Any
 
 import attrs
 
@@ -37,19 +34,19 @@ from ..constants import (
 __all__: Final[tuple[str, str]]
 
 def is_assume_root(
-    logger_name: Optional[Any],
+    logger_name: Any | None,
 ) -> bool: ...
 def _normalize_level(
-    level: Optional[Any],
+    level: Any | None,
 ) -> str: ...
 def _normalize_level_name(
-    logger_name: Optional[Any],
+    logger_name: Any | None,
 ) -> str: ...
 def _normalize_logger(
     logger: logging.Logger | str | None,
 ) -> logging.Logger: ...
 def _normalize_formatter(
-    format_: Optional[Any] = LOG_FORMAT,
+    format_: Any | None = LOG_FORMAT,
 ) -> logging.Formatter: ...
 @attrs.define
 class _LoggingWatcher:
@@ -74,7 +71,7 @@ class _LoggingWatcher:
 
     def getHandlerByName(self, name: str) -> type[logging.Handler]: ...
     def getHandlerNames(self) -> frozenset[str]: ...
-    def getLevelNo(self, level_name: str) -> Optional[int]: ...
+    def getLevelNo(self, level_name: str) -> int | None: ...
 
 class _CapturingHandler(logging.Handler):
     def __init__(self) -> None: ...
@@ -98,11 +95,11 @@ class _LoggerStoredState:
 def captureLogs(
     logger: str | logging.Logger | None = None,
     level: str | int | None = None,
-    format_: Optional[str] = LOG_FORMAT,
+    format_: str | None = LOG_FORMAT,
 ) -> Iterator[_LoggingWatcher]: ...
 @contextlib.contextmanager
 def captureLogsMany(
     loggers: Sequence[str | logging.Logger] = (),
     levels: Sequence[str | int | None] = (),
-    format_: Optional[str] = LOG_FORMAT,
+    format_: str | None = LOG_FORMAT,
 ) -> Iterator[Sequence[_LoggingWatcher]]: ...

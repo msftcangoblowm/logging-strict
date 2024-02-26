@@ -29,7 +29,7 @@ Would like to know the locals key/value pairs and return value
 
 .. code-block:: python
 
-    from asz.tech_niques import get_locals
+    from logging_strict.tech_niques import get_locals
 
     func_path = f'{__name__}.piggy_back'
     args = ("A",)

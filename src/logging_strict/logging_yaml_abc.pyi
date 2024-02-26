@@ -22,11 +22,10 @@ __all__: Final[tuple[str, str, str]]
 
 YAML_LOGGING_CONFIG_SUFFIX: Final[str]
 PATTERN_DEFAULT: Final[str]
+VERSION_FALLBACK: str
 
 def setup_logging_yaml(path_yaml: Any) -> None: ...
 def as_str(package_name: str, file_name: str) -> str: ...
-
-VERSION_FALLBACK: str
 
 class LoggingYamlType(abc.ABC):
     @staticmethod
@@ -34,18 +33,18 @@ class LoggingYamlType(abc.ABC):
     @classmethod
     def pattern(
         cls,
-        category: Optional[str] = None,
-        genre: Optional[str] = None,
-        flavor: Optional[str] = None,
-        version: Optional[str] = VERSION_FALLBACK,
+        category: str | None = None,
+        genre: str | None = None,
+        flavor: str | None = None,
+        version: str | None = VERSION_FALLBACK,
     ) -> str: ...
     def iter_yamls(
         self,
         path_dir: Path,
-        category: Optional[str] = None,
-        genre: Optional[str] = None,
-        flavor: Optional[str] = None,
-        version: Optional[str] = VERSION_FALLBACK,
+        category: str | None = None,
+        genre: str | None = None,
+        flavor: str | None = None,
+        version: str | None = VERSION_FALLBACK,
     ) -> Iterator[Path]: ...
     @classmethod
     def __subclasshook__(cls, C: Any) -> bool: ...

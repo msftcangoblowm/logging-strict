@@ -9,6 +9,9 @@
 
 Conveniently exports all technique helpers
 
+Module private variables
+----------------------------
+
 .. py:data:: __all__
    :type: tuple[str, str, str]
    :value: ("get_locals", "is_class_attrib_kind", "ClassAttribTypes", \
@@ -16,10 +19,12 @@ Conveniently exports all technique helpers
 
    This modules exports
 
+Module objects
+----------------------------
+
 """
 import enum
 import inspect
-from typing import Any
 
 from .context_locals import get_locals
 from .coverage_misbehaves import detect_coverage
@@ -39,7 +44,7 @@ __all__ = (
 
 
 class ClassAttribTypes(enum.Enum):
-    """As understood by :py:func:`inspect.classify_class_attrs`
+    """As understood by external:python+ref:`inspect.classify_class_attrs`
 
     .. py:attribute:: CLASSMETHOD
        :type: str
@@ -80,14 +85,24 @@ class ClassAttribTypes(enum.Enum):
     DATA = "data"
 
 
-def is_class_attrib_kind(cls: type[Any], str_m: Any, kind: ClassAttribTypes) -> bool:
+def is_class_attrib_kind(cls, str_m, kind):
     """For testing an ABC implementation
 
     :param cls: A class
-    :type cls: type[Any]
+    :type cls: type[ :py:class:`~typing.Any` ]
     :param str_m: A class member's name. Check the class interface is exists
-    :type str_m: str
-    :returns: ``True`` if is expected :paramref:`kind` otherwise ``False``
+    :type str_m: :py:class:`~typing.Any`
+    :param kind: class attribute type
+    :type kind:
+
+       external:logging-strict+ref:`~logging_strict.tech_niques.ClassAttribTypes`
+
+    :returns:
+
+       ``True`` if is expected
+       :paramref:`logging_strict.tech_niques.is_class_attrib_kind.params.kind`
+       otherwise ``False``
+
     :rtype: bool
     :raises:
 

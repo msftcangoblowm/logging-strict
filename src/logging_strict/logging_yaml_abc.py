@@ -1,18 +1,28 @@
 """
 .. py:module:: logging_strict.logging_yaml_abc
    :platform: Unix
-   :synopsis: Refresh or reload logging state of worker
+   :synopsis: base class of logging_yaml implementations
 
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
 
+Base class of logging_yaml implementations
+
+:py:mod:`logging.config` yaml config files are exported to
+:code:`$HOME/.locals/share/[app name]`
+
+One for the app and another for worker(s).
+
+``QA Tester`` can edit the yaml config files, **before using**,
+ensure validation passes!
+
 Module private variables
 -------------------------
 
 .. py:data:: __all__
-   :type: tuple[str, str]
-   :value: ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX")
+   :type: tuple[str, str, str]
+   :value: ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", "setup_logging_yaml")
 
    Module exports
 
@@ -23,6 +33,11 @@ Module private variables
    For logging.config YAML files, define file extension (Suffixes)
    Differentiates from other .yaml files
 
+.. py:data:: VERSION_FALLBACK
+   :type: str
+   :value: "1"
+
+   Initial version of :py:mod:`logging.config` YAML files
 
 Module objects
 ---------------
@@ -69,21 +84,16 @@ VERSION_FALLBACK = "1"
 
 def setup_logging_yaml(path_yaml):
     """Loads :py:mod:`logging.config` configuration.
-    :py:mod:`logging.config` yaml config files are exported to
-    :code:`$HOME/.locals/share/[app name]`
 
-    One for the app and another for worker(s).
-
-    ``QA Tester`` can edit the yaml config files, **before using**,
-    ensure validation passes!
+    Can pass in a path or a the YAML str
 
     :param path_yaml: :py:mod:`logging.config` YAML file path
     :type path_yaml: :py:class:`~typing.Any`
 
     :raises:
 
-       - :py:exc:`strictyaml.exceptions.YAMLValidationError` -- Invalid.
-             Validation against logging.config schema failed
+       - external:python+ref:`strictyaml.YAMLValidationError` -- Invalid.
+         Validation against logging.config schema failed
 
     """
     if TYPE_CHECKING:
@@ -135,7 +145,7 @@ def as_str(package_name: str, file_name: str) -> str:
 
     :raises:
 
-       - :py:exc:`strictyaml.exceptions.YAMLValidationError` -- Invalid.
+       - external:python+ref:`strictyaml.YAMLValidationError` -- Invalid.
          Validation against logging.config schema failed
 
        - :py:exc:`FileNotFoundError` -- Could not find logging config YAML file
@@ -153,7 +163,7 @@ def as_str(package_name: str, file_name: str) -> str:
     if is_exists:
         # test load the yaml file
         str_yaml = path_yaml.read_text()
-        """raises :py:exc:`strictyaml.exceptions.YAMLValidationError`
+        """raises external:python+ref:`strictyaml.YAMLValidationError`
         If another yaml implementation, the exception raised will
         be that implementation specific
         """
@@ -214,33 +224,35 @@ class LoggingYamlType(abc.ABC):
 
         - genre and flavor
 
-        :type category: :py:class:`~logging_strict.constants.LoggingConfigCategory`
+        :param category:
+        :type category: str | None
         :param genre:
 
            If UI: "textual" or "rich". If worker: "stream". Then can have
            a library of yaml files that can be used with a particular
            UI framework or worker type
 
-        :type genre: str or None
+        :type genre: str | None
         :param flavor:
 
            Unique identifier name given to a particular :py:mod:`logging.config`
            yaml. This name is slugified. Meaning period and underscores
            converted to hyphens
 
-           Flavor is a very terse description, for a :paramref:`genre`, how
-           this yaml differs from others. If completely generic, call it
+           Flavor is a very terse description, for a
+           :paramref:`logging_strict.logging_yaml_abc.LoggingYamlType.pattern.params.genre`,
+           how this yaml differs from others. If completely generic, call it
            ``generic``. If different handlers or formatters or filters are
            used, what is the yaml's purpose?
 
-        :type flavor: str or None
+        :type flavor: str | None
         :param version:
 
            Default "1". Version of this particular
-           :paramref:`category`. **Not** the version of the
-           yaml spec. Don't confuse the two.
+           :paramref:`logging_strict.logging_yaml_abc.LoggingYamlType.pattern.params.category`.
+           **Not** the version of the yaml spec. Don't confuse the two.
 
-        :type version: :py:class:`~typing.Any` or None
+        :type version: :py:class:`~typing.Any` | None
         :returns: Pattern used with :py:func:`glob.glob` to find files
         :rtype: str
         """
@@ -251,7 +263,8 @@ class LoggingYamlType(abc.ABC):
             file_suffixes = f".{category}{cls.suffixes}"
         else:
             """empty str, unsupported type, or None, or str with only
-            whitespace would be stopped by type[LoggingYamlType]
+            whitespace would be stopped by
+            type[ external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType` ]
             constructor producing a ValueError
             """
             file_suffixes = f".*{cls.suffixes}"
@@ -274,7 +287,8 @@ class LoggingYamlType(abc.ABC):
     def iter_yamls(self, path_dir):
         """Conducts a recursive search thru the folder tree starting from
         package base data folder, further narrow search by relative
-        (to package base data folder) path, :paramref:`path_dir`
+        (to package base data folder) path,
+        :paramref:`logging_strict.logging_yaml_abc.LoggingYamlType.iter_yamls.params.path_dir`
 
         Iterator of absolute path of search results
 
@@ -288,7 +302,7 @@ class LoggingYamlType(abc.ABC):
            ``True`` if at least one yaml file exists in folder
            otherwise ``False``
 
-        :rtype: Iterator[Path]
+        :rtype: Iterator[ :py:class:`~pathlib.Path` ]
         """
         cls = type(self)
         # print(f"{self.category} {self.genre} {self.flavor} {self.version}")
@@ -319,7 +333,9 @@ class LoggingYamlType(abc.ABC):
 
     @classmethod
     def __subclasshook__(cls, C):
-        """A class wanting to be :py:class:`.LoggingYamlType`, minimally requires:
+        """A class wanting to be
+        external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType`,
+        minimally requires:
 
         Properties:
 
@@ -341,7 +357,7 @@ class LoggingYamlType(abc.ABC):
 
         Then register itself
         :code:`LoggingYamlType.register(AnotherDatumClass)` or subclass
-        :py:class:`.LoggingYamlType`
+        external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType`
 
         :param C:
 
@@ -350,8 +366,10 @@ class LoggingYamlType(abc.ABC):
         :type C: :py:class:`~typing.Any`
         :returns:
 
-           ``True`` implements :py:class:`.LoggingYamlType` interface or is a subclass.
-           ``False`` not a :py:class:`.LoggingYamlType`
+           ``True`` implements
+           external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType`
+           interface or is a subclass. ``False`` not a
+           external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType`
 
         :rtype: bool
         """
@@ -448,12 +466,12 @@ class LoggingYamlType(abc.ABC):
         :rtype: str
         :raises:
 
-           - :py:exc:`strictyaml.exceptions.YAMLValidationError` -- Invalid.
+           - external:python+ref:`strictyaml.exceptions.YAMLValidationError` -- Invalid.
              Validation against logging.config schema failed
 
            - :py:exc:`FileNotFoundError` -- Could not find logging config YAML file
 
-           - :py:exc:`~logging_strict.exceptions.LoggingStrictGenreRequired` --
+           - external:python+ref:`~logging_strict.exceptions.LoggingStrictGenreRequired` --
              Genre required to get file name
 
         """
@@ -468,14 +486,14 @@ class LoggingYamlType(abc.ABC):
         return ret
 
     def setup(self, str_yaml):  # pragma: no cover dangerous
-        """A :py:class:`multiprocessing.pool.ProcessPool` worker, needs
-        to be feed the :py:mod:`logging.config` YAML file
+        """Only called by app, not worker. For worker, is a 2 step
+        process, not 1.
+
+        A :py:class:`multiprocessing.pool.Pool` worker, needs
+        to be feed the contents of the :py:mod:`logging.config`
+        YAML file
 
         xdg user data folder: :code:`$HOME/.local/share/[app name]`
-
-        During testing call :py:meth:`.LoggingYamlType.extract`
-
-        Only called by app, not worker. For worker, is a 2 step process, not 1.
 
         :param str_yaml: :py:mod:`logging.config` yaml str
         :type str_yaml: str

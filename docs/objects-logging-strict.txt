@@ -1,0 +1,482 @@
+# Sphinx inventory version 2
+# Project: logging-strict 1.1.0
+# Version: 1.1.0
+# The remainder of this file is compressed using zlib.
+__all__ py:data 1 code/yaml/logging_yaml_validate.html#all__ -
+__version__ py:data 1 code/constants/version.html#version__ -
+__version_tuple__ py:data 1 code/constants/version.html#version_tuple__ -
+logging_strict py:module 0 index.html#module-$ -
+logging_strict.constants py:module 0 code/constants/constants_general.html#module-$ -
+logging_strict.constants.FALLBACK_LEVEL py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants.LOG_FMT_DETAILED py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants.LOG_FMT_SIMPLE py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants.LOG_FORMAT py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants.LOG_LEVEL_WORKER py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants.PREFIX_DEFAULT py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants.__all__ py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants.__version__ py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants._dev py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants._map_release py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants.g_app_name py:data 1 code/constants/constants_general.html#$ -
+logging_strict.constants.version_info py:data 1 code/constants/constants_general.html#$ -
+logging_strict.ep_validate_yaml py:module 0 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions py:module 0 code/constants/exceptions.html#module-$ -
+logging_strict.exceptions.__all__ py:data 1 code/constants/exceptions.html#$ -
+logging_strict.exceptions.LoggingStrictError py:exception 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions.LoggingStrictError.params.msg py:parameter 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions.LoggingStrictPackageNameRequired py:exception 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions.LoggingStrictPackageNameRequired.params.msg py:parameter 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions.LoggingStrictPackageStartFolderNameRequired py:exception 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions.LoggingStrictPackageStartFolderNameRequired.params.msg py:parameter 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions.LoggingStrictProcessCategoryRequired py:exception 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions.LoggingStrictProcessCategoryRequired.params.msg py:parameter 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions.LoggingStrictGenreRequired py:exception 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.exceptions.LoggingStrictGenreRequired.params.msg py:parameter 1 code/yaml/ep_validate_yaml.html#module-$ -
+logging_strict.logging_api py:module 0 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.__all__ py:data 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.cb_true py:function 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml py:class 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.suffixes py:attribute 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.params.package_name py:parameter 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.params.package_data_folder_start py:parameter 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.params.category py:parameter 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.params.genre py:parameter 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.params.flavor py:parameter 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.params.version_no py:parameter 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.file_stem py:property 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.category py:property 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.genre py:property 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.flavor py:property 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.version py:property 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.file_suffix py:property 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.file_name py:property 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.package py:property 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.dest_folder py:property 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.extract py:method 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.LoggingConfigYaml.extract.params.path_relative_package_dir py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_ui_other py:function 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.setup_ui_other.params.package_name py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_ui_other.params.package_data_folder_start py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_ui_other.params.genre py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_ui_other.params.flavor py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_ui_other.params.version_no py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_ui_other.params.package_start_relative_folder py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.ui_yaml_curated py:function 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.ui_yaml_curated.params.flavor py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.ui_yaml_curated.params.genre py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.ui_yaml_curated.params.version_no py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.ui_yaml_curated.params.package_start_relative_folder py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.worker_yaml_curated py:function 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.worker_yaml_curated.params.flavor py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.worker_yaml_curated.params.genre py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.worker_yaml_curated.params.package_start_relative_folder py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.worker_yaml_curated.params.version_no py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_worker_other py:function 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_worker_other.params.package_name py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_worker_other.params.package_data_folder_start py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_worker_other.params.genre py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_worker_other.params.flavor py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_worker_other.params.version_no py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.setup_worker_other.params.package_start_relative_folder py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_yaml_abc py:module 0 code/yaml/logging_yaml_abc.html#module-$ -
+logging_strict.logging_yaml_abc.__all__ py:data 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.YAML_LOGGING_CONFIG_SUFFIX py:data 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.VERSION_FALLBACK py:data 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.setup_logging_yaml py:function 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.setup_logging_yaml.params.path_yaml py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.as_str py:function 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.as_str.params.package_name py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.as_str.params.file_name py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType py:class 1 code/yaml/logging_yaml_abc.html#module-$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.get_version py:staticmethod 1 code/yaml/logging_yaml_abc.html#module-$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.get_version.params.val 1 py:parameter 1 code/yaml/logging_yaml_abc.html#module-$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.pattern py:classmethod 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.pattern.params.category py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.pattern.params.flavor py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.pattern.params.genre py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.pattern.params.version py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.iter_yamls py:method 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.iter_yamls.params.path_dir py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.__subclasshook__ py:classmethod 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.__subclasshook__.params.C py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.file_stem py:property 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.file_name py:property 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.package py:property 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.dest_folder py:property 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.extract py:method 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.extract.params.path_relative_package_dir py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.as_str py:method 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.setup py:method 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.logging_yaml_abc.LoggingYamlType.setup.params.str_yaml py:parameter 1 code/yaml/logging_yaml_abc.html#$ -
+logging_strict.tech_niques.captureLogs py:function 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.CaptureOutput py:class 1 code/tech_niques/stream_capture.html#module-$ -
+logging_strict.tech_niques.get_locals py:function 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.detect_coverage py:function 1 code/tech_niques/coverage_misbehaves.html#module-$ -
+logging_strict.tech_niques.LoggerRedirector py:class 1 code/tech_niques/logger_redirect.html#module-$ -
+logging_strict.tech_niques.ClassAttribTypes py:class 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.ClassAttribTypes.CLASSMETHOD py:attribute 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.ClassAttribTypes.STATICMETHOD py:attribute 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.ClassAttribTypes.PROPERTY py:attribute 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.ClassAttribTypes.METHOD py:attribute 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.ClassAttribTypes.DATA py:attribute 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.is_class_attrib_kind py:function 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.is_class_attrib_kind.params.cls py:parameter 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.is_class_attrib_kind.params.str_m py:parameter 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.is_class_attrib_kind.params.kind py:parameter 1 code/tech_niques/index.html#module-$ -
+logging_strict.tech_niques.context_locals py:module 0 code/tech_niques/context_locals.html#module-$ -
+logging_strict.tech_niques.context_locals.P py:data 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.T py:data 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.__all__ py:data 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.get_locals py:function 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.get_locals.params.args py:parameter 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.get_locals.params.func py:parameter 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.get_locals.params.func_path py:parameter 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.get_locals.params.kwargs py:parameter 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.logger_redirect py:module 0 code/tech_niques/logger_redirect.html#module-$ -
+logging_strict.tech_niques.logger_redirect.LoggerRedirector py:class 1 code/tech_niques/logger_redirect.html#module-$ -
+logging_strict.tech_niques.logger_redirect.LoggerRedirector.redirect_loggers.params.fake_stderr py:parameter 1 code/tech_niques/logger_redirect.html#$ -
+logging_strict.tech_niques.logger_redirect.LoggerRedirector.redirect_loggers.params.fake_stdout py:parameter 1 code/tech_niques/logger_redirect.html#$ -
+logging_strict.tech_niques.logger_redirect.LoggerRedirector.reset_loggers.params.fake_stderr py:parameter 1 code/tech_niques/logger_redirect.html#$ -
+logging_strict.tech_niques.logger_redirect.LoggerRedirector.reset_loggers.params.fake_stdout py:parameter 1 code/tech_niques/logger_redirect.html#$ -
+logging_strict.tech_niques.logging_capture py:module 0 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._normalize_formatter py:function 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._normalize_formatter.params.format_ py:parameter 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._normalize_logger py:function 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._normalize_logger.params.logger py:parameter 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._normalize_level_name py:function 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._normalize_level_name.params.logger_name py:parameter 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._normalize_level py:function 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._normalize_level.params.level py:paramater 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._LoggingWatcher py:class 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.records py:attribute 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.output py:attribute 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getHandlerByName py:method 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getHandlerByName.params.name py:parameter 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getHandlerNames py:method 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getLevelNo py:method 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getLevelNo.params.level_name 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._CapturingHandler py:class 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture._CapturingHandler.watcher py:attribute 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture._CapturingHandler.flush py:method 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture._CapturingHandler.emit py:method 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture._CapturingHandler.emit.params.record py:parameter 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture._LoggerStoredState py:class 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture._LoggerStoredState.level_name py:attribute 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture._LoggerStoredState.propagate py:attribute 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture._LoggerStoredState.handlers py:attribute 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture.__all__ py:data 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture.captureLogs py:function 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture.captureLogs.params.format_ py:parameter 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture.captureLogs.params.level py:parameter 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture.captureLogs.params.logger py:parameter 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture.captureLogsMany py:function 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture.captureLogsMany.params.format_ py:parameter 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture.captureLogsMany.params.levels py:parameter 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.logging_capture.captureLogsMany.params.loggers py:parameter 1 code/tech_niques/logging_capture.html#$ -
+logging_strict.tech_niques.stream_capture py:module 0 code/tech_niques/stream_capture.html#module-$ -
+logging_strict.tech_niques.stream_capture.CaptureOutput py:class 1 code/tech_niques/stream_capture.html#module-$ -
+logging_strict.tech_niques.stream_capture.CaptureOutput.__enter__ py:method 1 code/tech_niques/stream_capture.html#module-$ -
+logging_strict.tech_niques.stream_capture.CaptureOutput.__exit__ py:method 1 code/tech_niques/stream_capture.html#module-$ -
+logging_strict.tech_niques.stream_capture.CaptureOutput.__exit__.params.exc_type py:parameter 1 code/tech_niques/stream_capture.html#$ -
+logging_strict.tech_niques.stream_capture.CaptureOutput.__exit__.params.exc_value py:parameter 1 code/tech_niques/stream_capture.html#$ -
+logging_strict.tech_niques.stream_capture.CaptureOutput.__exit__.params.exc_tb py:parameter 1 code/tech_niques/stream_capture.html#$ -
+logging_strict.tech_niques.stream_capture.CaptureOutput.stderr py:property 1 code/tech_niques/stream_capture.html#module-$ -
+logging_strict.tech_niques.stream_capture.CaptureOutput.stdout py:property 1 code/tech_niques/stream_capture.html#module-$ -
+logging_strict.tech_niques.stream_capture.__all__ py:data 1 code/tech_niques/stream_capture.html#$ -
+logging_strict.util.check_logging py:module 0 code/util/check_logging.html#module-$ -
+logging_strict.util.check_logging.__all__ py:data 1 code/util/check_logging.html#$ -
+logging_strict.util.check_logging.check_formatter.params.format_ py:parameter 1 code/util/check_logging.html#$ -
+logging_strict.util.check_logging.check_level.params.level py:parameter 1 code/util/check_logging.html#$ -
+logging_strict.util.check_logging.check_level_name.params.logger_name py:parameter 1 code/util/check_logging.html#$ -
+logging_strict.util.check_logging.check_logger.params.logger py:parameter 1 code/util/check_logging.html#$ -
+logging_strict.util.check_logging.is_assume_root.params.logger_name py:parameter 1 code/util/check_logging.html#$ -
+logging_strict.util.check_logging.str2int.params.level py:parameter 1 code/util/check_logging.html#$ -
+logging_strict.util.check_type py:module 0 code/util/check_type.html#module-$ -
+logging_strict.util.check_type.__all__ py:attribute 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.check_int_verbosity.params.test py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.check_start_folder_importable.params.folder_start py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.check_type_path.params.module_path py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.check_type_path.params.msg_additional py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.is_not_ok.params.test py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.is_ok.params.test py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.package_resource py:module 0 code/util/package_resource.html#module-$ -
+logging_strict.util.package_resource.PackageResource.cache_extract py:method 1 code/util/package_resource.html#module-$ -
+logging_strict.util.package_resource.PackageResource.cache_extract.params.base_folder_generator py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.cache_extract.params.cb_file_stem py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.cache_extract.params.cb_suffix py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.get_parent_paths py:method 1 code/util/package_resource.html#module-$ -
+logging_strict.util.package_resource.PackageResource.get_parent_paths.params.cb_file_stem py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.get_parent_paths.params.cb_suffix py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.get_parent_paths.params.parent_count py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.get_parent_paths.params.path_relative_package_dir py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.package_data_folders py:method 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.package_data_folders.params.cb_file_stem py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.package_data_folders.params.cb_suffix py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.package_data_folders.params.package_name py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.package_data_folders.params.path_relative_package_dir py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.path_relative py:method 1 code/util/package_resource.html#module-$ -
+logging_strict.util.package_resource.PackageResource.path_relative.params.parent_count py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.path_relative.params.path_relative_package_dir py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.path_relative.params.y py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.resource_extract py:method 1 code/util/package_resource.html#module-$ -
+logging_strict.util.package_resource.PackageResource.resource_extract.params.as_user py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.resource_extract.params.base_folder_generator py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.resource_extract.params.cb_file_stem py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.resource_extract.params.cb_suffix py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.resource_extract.params.is_overwrite py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PackageResource.resource_extract.params.path_dest py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PartStem.params.file_expected py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PartStem.params.test_file_stem py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PartSuffix.params.expected_suffix py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.PartSuffix.params.test_suffix py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource._LOGGER py:data 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.__all__ py:data 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.filter_by_file_stem py:function 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.filter_by_file_stem.params.expected_file_name py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.filter_by_file_stem.params.test_file_name py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.filter_by_suffix py:function 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.filter_by_suffix.params.expected_suffix py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.filter_by_suffix.params.test_suffix py:parameter 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.g_module py:data 1 code/util/package_resource.html#$ -
+logging_strict.util.package_resource.is_module_debug py:data 1 code/util/package_resource.html#$ -
+logging_strict.util.pep518_read py:module 0 code/util/pep518_read.html#module-$ -
+logging_strict.util.pep518_read.__all__ py:attribute 1 code/util/pep518_read.html#$ -
+logging_strict.util.pep518_read.find_project_root py:function 1 code/util/pep518_read.html#$ -
+logging_strict.util.pep518_read.find_project_root.params.srcs py:parameter 1 code/util/pep518_read.html#$ -
+logging_strict.util.pep518_read.find_project_root.params.stdin_filename py:parameter 1 code/util/pep518_read.html#$ -
+logging_strict.util.pep518_read.find_pyproject_toml py:function 1 code/util/pep518_read.html#$ -
+logging_strict.util.pep518_read.find_pyproject_toml.params.path_search_start py:parameter 1 code/util/pep518_read.html#$ -
+logging_strict.util.pep518_read.find_pyproject_toml.params.stdin_filename py:parameter 1 code/util/pep518_read.html#$ -
+logging_strict.util.util_root py:module 0 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.__all__ py:data 1 code/util/util_root.html#$ -
+logging_strict.util.util_root.g_module py:data 1 code/util/util_root.html#$ -
+logging_strict.util.util_root._LOGGER py:data 1 code/util/util_root.html#$ -
+logging_strict.util.util_root.g_is_root py:data 1 code/util/util_root.html#$ -
+logging_strict.util.util_root.is_python_old py:data 1 code/util/util_root.html#$ -
+logging_strict.util.util_root.get_logname py:function 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.ungraceful_app_exit py:function 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.is_root py:staticmethod 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.__slots__ py:attribute 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.path_home_root py:classmethod 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.check_root py:classmethod 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.check_root.params.callback py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.check_root.params.is_app_exit py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.check_root.params.is_raise_exc py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.check_not_root py:classmethod 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.check_not_root.params.callback py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.check_not_root.params.is_app_exit py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.check_not_root.params.is_raise_exc py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.set_owner_as_user py:classmethod 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.set_owner_as_user.params.is_as_user py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.IsRoot.set_owner_as_user.params.path_file py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.check_python_not_old.params.callback py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.check_python_not_old.params.is_app_exit py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.util_root.check_python_not_old.params.is_raise_exc py:parameter 1 code/util/util_root.html#module-$ -
+logging_strict.util.xdg_folder py:module 0 code/util/xdg_folder.html#module-$ -
+logging_strict.util.xdg_folder.__all__ py:data 1 code/util/xdg_folder.html#$ -
+schema_logging_config py:data 1 code/yaml/logging_yaml_validate.html#$ -
+validate_yaml_dirty py:function 1 code/yaml/logging_yaml_validate.html#$ -
+api/index std:doc -1 api/index.html API
+api/index:api std:label -1 api/index.html#api API
+api/locals/index std:doc -1 api/locals/index.html Locals
+api/locals/index:locals std:label -1 api/locals/index.html#locals Locals
+api/locals/scope_b_locals std:doc -1 api/locals/scope_b_locals.html Scope B locals
+api/locals/scope_b_locals:scope b locals std:label -1 api/locals/scope_b_locals.html#scope-b-locals Scope B locals
+api/locals/unittest_setup_to_include_locals std:doc -1 api/locals/unittest_setup_to_include_locals.html unittest tb_locals
+api/locals/unittest_setup_to_include_locals:unittest tb_locals std:label -1 api/locals/unittest_setup_to_include_locals.html#unittest-tb-locals unittest tb_locals
+api/logging/api_capture_logging std:doc -1 api/logging/api_capture_logging.html Capture logging
+api/logging/api_capture_logging:capture logging std:label -1 api/logging/api_capture_logging.html#capture-logging Capture logging
+api/logging/api_logging_asynchronous std:doc -1 api/logging/api_logging_asynchronous.html Asynchronous logging
+api/logging/api_logging_asynchronous:asynchronous logging std:label -1 api/logging/api_logging_asynchronous.html#asynchronous-logging Asynchronous logging
+api/logging/api_logging_handlers std:doc -1 api/logging/api_logging_handlers.html Hardcoded dict
+api/logging/api_logging_handlers:hardcoded dict std:label -1 api/logging/api_logging_handlers.html#hardcoded-dict Hardcoded dict
+api/logging/api_logging_synchronous std:doc -1 api/logging/api_logging_synchronous.html Synchronous logging
+api/logging/api_logging_synchronous:synchronous logging std:label -1 api/logging/api_logging_synchronous.html#synchronous-logging Synchronous logging
+api/logging/api_logging_warnings std:doc -1 api/logging/api_logging_warnings.html logging warnings
+api/logging/api_logging_warnings:capture asyncio std:label -1 api/logging/api_logging_warnings.html#capture-asyncio Capture asyncio
+api/logging/api_logging_warnings:logging warnings std:label -1 api/logging/api_logging_warnings.html#logging-warnings logging warnings
+api/logging/api_logging_warnings:suppress logging warnings std:label -1 api/logging/api_logging_warnings.html#suppress-logging-warnings Suppress logging warnings
+api/logging/api_logging_warnings:warning.warn std:label -1 api/logging/api_logging_warnings.html#warning-warn warning.warn
+api/logging/index std:doc -1 api/logging/index.html Logging
+api/logging/index:logging std:label -1 api/logging/index.html#logging Logging
+api_asynchronous_logging std:label -1 api/logging/api_logging_asynchronous.html#api-asynchronous-logging Asynchronous logging
+api_capture_logging std:label -1 api/logging/api_capture_logging.html#api-capture-logging Capture logging
+api_locals_scope_b_locals_capture std:label -1 api/locals/scope_b_locals.html#api-locals-scope-b-locals-capture Scope B locals
+api_locals_unittest_tb std:label -1 api/locals/unittest_setup_to_include_locals.html#api-locals-unittest-tb unittest tb_locals
+api_logging_handlers std:label -1 api/logging/api_logging_handlers.html#api-logging-handlers Hardcoded dict
+api_logging_warning_warn std:label -1 api/logging/api_logging_warnings.html#api-logging-warning-warn warning.warn
+api_logging_warnings std:label -1 api/logging/api_logging_warnings.html#api-logging-warnings logging warnings
+api_logging_warnings_capture_asyncio std:label -1 api/logging/api_logging_warnings.html#api-logging-warnings-capture-asyncio Capture asyncio
+api_synchronous_logging std:label -1 api/logging/api_logging_synchronous.html#api-synchronous-logging Synchronous logging
+asyncio_logging_warnings_suppress std:label -1 api/logging/api_logging_warnings.html#asyncio-logging-warnings-suppress Suppress logging warnings
+code/constants/constants_general std:doc -1 code/constants/constants_general.html Constants – general
+code/constants/constants_general:constants -- general std:label -1 code/constants/constants_general.html#module-logging_strict.constants Constants – general
+code/constants/constants_general:module objects std:label -1 code/constants/constants_general.html#module-objects Module objects
+code/constants/constants_general:module private variables std:label -1 code/constants/constants_general.html#module-private-variables Module private variables
+code/constants/constants_general:release phases std:label -1 code/constants/constants_general.html#release-phases Release phases
+code/constants/exceptions std:doc -1 code/constants/exceptions.html Exceptions
+code/constants/exceptions:exceptions std:label -1 code/constants/exceptions.html#module-logging_strict.exceptions Exceptions
+code/constants/exceptions:module objects std:label -1 code/constants/exceptions.html#module-objects Module objects
+code/constants/exceptions:module private variables std:label -1 code/constants/exceptions.html#module-private-variables Module private variables
+code/constants/exceptions:public api std:label -1 code/constants/exceptions.html#public-api Public API
+code/constants/index std:doc -1 code/constants/index.html Constants
+code/constants/index:constants std:label -1 code/constants/index.html#constants Constants
+code/constants/version std:doc -1 code/constants/version.html Version
+code/constants/version:build / kitting (dev) std:label -1 code/constants/version.html#build-kitting-dev Build / kitting (dev)
+code/constants/version:build / kitting (tagged) std:label -1 code/constants/version.html#build-kitting-tagged Build / kitting (tagged)
+code/constants/version:development versions std:label -1 code/constants/version.html#development-versions Development versions
+code/constants/version:install std:label -1 code/constants/version.html#install Install
+code/constants/version:module private variables std:label -1 code/constants/version.html#module-private-variables Module private variables
+code/constants/version:tagged versions std:label -1 code/constants/version.html#tagged-versions Tagged versions
+code/constants/version:update the ``_version`` file std:label -1 code/constants/version.html#update-the-version-file Update the _version file
+code/constants/version:version std:label -1 code/constants/version.html#version Version
+code/index std:doc -1 code/index.html Code Manual
+code/index:code manual std:label -1 code/index.html#code-manual Code Manual
+code/public_api/index std:doc -1 code/public_api/index.html Public API
+code/public_api/index:constants std:label -1 code/public_api/index.html#constants Constants
+code/public_api/index:exceptions std:label -1 code/public_api/index.html#exceptions Exceptions
+code/public_api/index:public api std:label -1 code/public_api/index.html#module-logging_strict Public API
+code/public_api/index:step 1 std:label -1 code/public_api/index.html#step-1 Step 1
+code/public_api/index:step 2 std:label -1 code/public_api/index.html#step-2 Step 2
+code/public_api/index:types std:label -1 code/public_api/index.html#types Types
+code/public_api/index:ui std:label -1 code/public_api/index.html#ui UI
+code/public_api/index:worker process std:label -1 code/public_api/index.html#worker-process worker process
+code/tech_niques/context_locals std:doc -1 code/tech_niques/context_locals.html Context locals
+code/tech_niques/context_locals:and wait! there's more std:label -1 code/tech_niques/context_locals.html#and-wait-there-s-more And wait! There’s more
+code/tech_niques/context_locals:context locals std:label -1 code/tech_niques/context_locals.html#module-logging_strict.tech_niques.context_locals Context locals
+code/tech_niques/context_locals:module objects std:label -1 code/tech_niques/context_locals.html#module-objects Module objects
+code/tech_niques/context_locals:module private variables std:label -1 code/tech_niques/context_locals.html#module-private-variables Module private variables
+code/tech_niques/context_locals:one return value example std:label -1 code/tech_niques/context_locals.html#one-return-value-example One return value example
+code/tech_niques/context_locals:want desired context's locals std:label -1 code/tech_niques/context_locals.html#want-desired-context-s-locals Want desired context’s locals
+code/tech_niques/index std:doc -1 code/tech_niques/index.html Techniques
+code/tech_niques/index:techniques std:label -1 code/tech_niques/index.html#techniques Techniques
+code/tech_niques/logger_redirect std:doc -1 code/tech_niques/logger_redirect.html Logger redirect
+code/tech_niques/logger_redirect:logger redirect std:label -1 code/tech_niques/logger_redirect.html#module-logging_strict.tech_niques.logger_redirect Logger redirect
+code/tech_niques/logger_redirect:module objects std:label -1 code/tech_niques/logger_redirect.html#module-objects Module objects
+code/tech_niques/logger_redirect:module private variables std:label -1 code/tech_niques/logger_redirect.html#module-private-variables Module private variables
+code/tech_niques/logging_capture std:doc -1 code/tech_niques/logging_capture.html Logging capture
+code/tech_niques/logging_capture:code snippet std:label -1 code/tech_niques/logging_capture.html#code-snippet Code snippet
+code/tech_niques/logging_capture:into the rabbit hole std:label -1 code/tech_niques/logging_capture.html#into-the-rabbit-hole Into the rabbit hole
+code/tech_niques/logging_capture:logging capture std:label -1 code/tech_niques/logging_capture.html#module-logging_strict.tech_niques.logging_capture Logging capture
+code/tech_niques/logging_capture:module objects std:label -1 code/tech_niques/logging_capture.html#module-objects Module objects
+code/tech_niques/logging_capture:module private variables std:label -1 code/tech_niques/logging_capture.html#module-private-variables Module private variables
+code/tech_niques/logging_capture:sync and async logging std:label -1 code/tech_niques/logging_capture.html#sync-and-async-logging sync and async logging
+code/tech_niques/logging_capture:the details std:label -1 code/tech_niques/logging_capture.html#the-details The details
+code/tech_niques/logging_capture:tl;dr; std:label -1 code/tech_niques/logging_capture.html#tl-dr tl;dr;
+code/tech_niques/logging_capture:unittest assertlogs/assertnologs std:label -1 code/tech_niques/logging_capture.html#unittest-assertlogs-assertnologs unittest assertLogs/assertNoLogs
+code/tech_niques/stream_capture std:doc -1 code/tech_niques/stream_capture.html Stream capture
+code/tech_niques/stream_capture:module objects std:label -1 code/tech_niques/stream_capture.html#module-objects Module objects
+code/tech_niques/stream_capture:module private variables std:label -1 code/tech_niques/stream_capture.html#module-private-variables Module private variables
+code/tech_niques/stream_capture:stream capture std:label -1 code/tech_niques/stream_capture.html#module-logging_strict.tech_niques.stream_capture Stream capture
+code/util/check_logging std:doc -1 code/util/check_logging.html Check logging
+code/util/check_logging:check logging std:label -1 code/util/check_logging.html#module-logging_strict.util.check_logging Check logging
+code/util/check_logging:module objects std:label -1 code/util/check_logging.html#module-objects Module objects
+code/util/check_logging:module private variables std:label -1 code/util/check_logging.html#module-private-variables Module private variables
+code/util/check_type std:doc -1 code/util/check_type.html Check type
+code/util/check_type:check type std:label -1 code/util/check_type.html#module-logging_strict.util.check_type Check type
+code/util/check_type:module objects std:label -1 code/util/check_type.html#module-objects Module objects
+code/util/check_type:module private variables std:label -1 code/util/check_type.html#module-private-variables Module private variables
+code/util/index std:doc -1 code/util/index.html Util
+code/util/index:util std:label -1 code/util/index.html#util Util
+code/util/package_resource std:doc -1 code/util/package_resource.html Package resource
+code/util/package_resource:example std:label -1 code/util/package_resource.html#example Example
+code/util/package_resource:module objects std:label -1 code/util/package_resource.html#module-objects Module objects
+code/util/package_resource:module private variables std:label -1 code/util/package_resource.html#module-private-variables Module private variables
+code/util/package_resource:package resource std:label -1 code/util/package_resource.html#module-logging_strict.util.package_resource Package resource
+code/util/package_resource:the problem std:label -1 code/util/package_resource.html#the-problem The Problem
+code/util/pep518_read std:doc -1 code/util/pep518_read.html pep518 read pyproject.toml
+code/util/pep518_read:module objects std:label -1 code/util/pep518_read.html#module-objects Module objects
+code/util/pep518_read:module private variables std:label -1 code/util/pep518_read.html#module-private-variables Module private variables
+code/util/pep518_read:pep518 read pyproject.toml std:label -1 code/util/pep518_read.html#module-logging_strict.util.pep518_read pep518 read pyproject.toml
+code/util/util_root std:doc -1 code/util/util_root.html Is root
+code/util/util_root:is root std:label -1 code/util/util_root.html#module-logging_strict.util.util_root Is root
+code/util/util_root:module objects std:label -1 code/util/util_root.html#module-objects Module objects
+code/util/util_root:module private variables std:label -1 code/util/util_root.html#module-private-variables Module private variables
+code/util/xdg_folder std:doc -1 code/util/xdg_folder.html XDG folders
+code/util/xdg_folder:module objects std:label -1 code/util/xdg_folder.html#module-objects Module objects
+code/util/xdg_folder:module private variables std:label -1 code/util/xdg_folder.html#module-private-variables Module private variables
+code/util/xdg_folder:xdg folders std:label -1 code/util/xdg_folder.html#module-logging_strict.util.xdg_folder XDG folders
+code/yaml/ep_validate_yaml std:doc -1 code/yaml/ep_validate_yaml.html Validate YAML
+code/yaml/ep_validate_yaml:module objects std:label -1 code/yaml/ep_validate_yaml.html#module-objects Module objects
+code/yaml/ep_validate_yaml:validate yaml std:label -1 code/yaml/ep_validate_yaml.html#validate-yaml Validate YAML
+code/yaml/index std:doc -1 code/yaml/index.html YAML
+code/yaml/index:yaml std:label -1 code/yaml/index.html#yaml YAML
+code/yaml/logging_api std:doc -1 code/yaml/logging_api.html YAML API
+code/yaml/logging_api:module objects std:label -1 code/yaml/logging_api.html#module-objects Module objects
+code/yaml/logging_api:module private variables std:label -1 code/yaml/logging_api.html#module-private-variables Module private variables
+code/yaml/logging_api:yaml api std:label -1 code/yaml/logging_api.html#yaml-api YAML API
+code/yaml/logging_yaml_abc std:doc -1 code/yaml/logging_yaml_abc.html YAML ABC
+code/yaml/logging_yaml_abc:module objects std:label -1 code/yaml/logging_yaml_abc.html#module-objects Module objects
+code/yaml/logging_yaml_abc:module private variables std:label -1 code/yaml/logging_yaml_abc.html#module-private-variables Module private variables
+code/yaml/logging_yaml_abc:yaml abc std:label -1 code/yaml/logging_yaml_abc.html#yaml-abc YAML ABC
+code/yaml/logging_yaml_validate std:doc -1 code/yaml/logging_yaml_validate.html YAML Validate
+code/yaml/logging_yaml_validate:limitations std:label -1 code/yaml/logging_yaml_validate.html#limitations Limitations
+code/yaml/logging_yaml_validate:module private variables std:label -1 code/yaml/logging_yaml_validate.html#module-private-variables Module private variables
+code/yaml/logging_yaml_validate:yaml validate std:label -1 code/yaml/logging_yaml_validate.html#yaml-validate YAML Validate
+configure_when_not_required std:label -1 getting_started/usage.html#configure-when-not-required -
+error_purposefully_cause std:label -1 api/locals/unittest_setup_to_include_locals.html#error-purposefully-cause -
+genindex std:label -1 genindex.html Index
+getting_started std:label -1 getting_started/install.html#getting-started Getting Started
+getting_started/exporting std:doc -1 getting_started/exporting.html Exporting
+getting_started/exporting:exporting std:label -1 getting_started/exporting.html#exporting Exporting
+getting_started/exporting:upgrade path std:label -1 getting_started/exporting.html#upgrade-path Upgrade path
+getting_started/exporting:when std:label -1 getting_started/exporting.html#when When
+getting_started/exporting:where / what std:label -1 getting_started/exporting.html#where-what Where / what
+getting_started/index std:doc -1 getting_started/index.html Getting started
+getting_started/index:getting started std:label -1 getting_started/index.html#getting-started Getting started
+getting_started/install std:doc -1 getting_started/install.html Overview
+getting_started/install:activate venv std:label -1 getting_started/install.html#activate-venv Activate venv
+getting_started/install:getting started std:label -1 getting_started/install.html#getting-started Getting Started
+getting_started/install:helpers std:label -1 getting_started/install.html#helpers helpers
+getting_started/install:install -- optional (pypi.org) std:label -1 getting_started/install.html#install-optional-pypi-org Install – optional (pypi.org)
+getting_started/install:install -- optional (source code) std:label -1 getting_started/install.html#install-optional-source-code Install – optional (source code)
+getting_started/install:install -- production (pypi.org) std:label -1 getting_started/install.html#install-production-pypi-org Install – production (pypi.org)
+getting_started/install:install -- production (source code) std:label -1 getting_started/install.html#install-production-source-code Install – production (source code)
+getting_started/install:overview std:label -1 getting_started/install.html#overview Overview
+getting_started/install:tech_niques std:label -1 getting_started/install.html#tech-niques tech_niques
+getting_started/install:what's in |project_name| std:label -1 getting_started/install.html#what-s-in-project-name What’s in logging-strict
+getting_started/install:whats next std:label -1 getting_started/install.html#whats-next Whats next
+getting_started/usage std:doc -1 getting_started/usage.html app integration
+getting_started/usage:app std:label -1 getting_started/usage.html#app app
+getting_started/usage:app integration std:label -1 getting_started/usage.html#app-integration app integration
+getting_started/usage:logging.config yaml -- within another package std:label -1 getting_started/usage.html#logging-config-yaml-within-another-package logging.config yaml – within another package
+getting_started/usage:logging.config yaml -- within logging_strict std:label -1 getting_started/usage.html#logging-config-yaml-within-logging-strict logging.config yaml – within logging_strict
+getting_started/usage:loggingstate std:label -1 getting_started/usage.html#loggingstate LoggingState
+getting_started/usage:whats next std:label -1 getting_started/usage.html#whats-next Whats next
+getting_started/usage:within entrypoint std:label -1 getting_started/usage.html#within-entrypoint within entrypoint
+getting_started/usage:within worker std:label -1 getting_started/usage.html#within-worker within worker
+getting_started/usage:worker std:label -1 getting_started/usage.html#worker worker
+getting_started/validation std:doc -1 getting_started/validation.html Validation
+getting_started/validation:curated files std:label -1 getting_started/validation.html#curated-files Curated files
+getting_started/validation:pre-commit std:label -1 getting_started/validation.html#pre-commit pre-commit
+getting_started/validation:validate a logging.config.yaml file std:label -1 getting_started/validation.html#validate-a-logging-config-yaml-file Validate a logging.config.yaml file
+getting_started/validation:validation std:label -1 getting_started/validation.html#validation Validation
+index std:doc -1 index.html logging_strict
+index-overview std:label -1 index.html#$ Overview
+index-toc std:label -1 index.html#$ Table of Contents
+index:logging_strict std:label -1 index.html#logging-strict logging_strict
+index:overview std:label -1 index.html#overview Overview
+index:quick start std:label -1 index.html#quick-start Quick start
+index:table of contents std:label -1 index.html#table-of-contents Table of Contents
+index:why? std:label -1 index.html#why Why?
+install_activate_venv std:label -1 getting_started/install.html#install-activate-venv Activate venv
+install_dependencies_from_pypi_org std:label -1 getting_started/install.html#install-dependencies-from-pypi-org Install – production (pypi.org)
+install_dependencies_from_source std:label -1 getting_started/install.html#install-dependencies-from-source Install – production (source code)
+install_optional_dependencies_from_source std:label -1 getting_started/install.html#install-optional-dependencies-from-source Install – optional (source code)
+install_optional_dependencies_pypi_org std:label -1 getting_started/install.html#install-optional-dependencies-pypi-org Install – optional (pypi.org)
+install_overview std:label -1 getting_started/install.html#install-overview Overview
+install_whats_next std:label -1 getting_started/install.html#install-whats-next Whats next
+modindex std:label -1 py-modindex.html Module Index
+py-modindex std:label -1 py-modindex.html Python Module Index
+search std:label -1 search.html Search Page
+toctree_api std:label -1 api/index.html#toctree-api -
+toctree_api_locals std:label -1 api/locals/index.html#toctree-api-locals -
+toctree_api_logging std:label -1 api/logging/index.html#toctree-api-logging -
+toctree_constants std:label -1 code/constants/index.html#toctree-constants -
+toctree_getting_started std:label -1 getting_started/index.html#toctree-getting-started -
+toctree_logging_strict std:label -1 index.html#toctree-logging-strict -
+toctree_project_base_folder std:label -1 code/index.html#toctree-project-base-folder -
+toctree_tech_niques std:label -1 code/tech_niques/index.html#toctree-tech-niques -
+toctree_util std:label -1 code/util/index.html#toctree-util -
+toctree_yaml std:label -1 code/yaml/index.html#toctree-yaml -
+whats_in_package std:label -1 getting_started/install.html#whats-in-package What’s in logging-strict

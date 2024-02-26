@@ -55,11 +55,48 @@ ifeq ($(is_venv),1)
 	@$(SPHINXBUILD) -b linkcheck "$(SOURCEDIR)" "$(BUILDDIR)" || echo "$(err_check_web_conn). exit code $$?"
 endif
 
-.PHONY: objects
-objects:				## Query Sphinx known objects. Limited by docs/_build/html/objects.inv
+.PHONY: _objects
+_objects:
 ifeq ($(is_venv),1)
-	@$(VENV_BIN_PYTHON) -m sphinx.ext.intersphinx $(SOURCEDIR)/$(BUILDDIR)/html/objects.inv
+	@if [[ -n "$(project_name)" ]] && [[ -z "$(find)" ]]; then
+
+	echo "$(usage)" 1>&2
+
+	else
+
+	if [[ ! -x $(VENV_BIN)/sphobjinv ]]; then
+	echo "package sphobjinv not installed or available"
+	else
+	objinv=objects-$(project_name).inv
+	/bin/yes | $(VENV_BIN)/sphobjinv suggest $(SOURCEDIR)/$$objinv "$(find)" -st 58
+	fi
+
+	fi
 endif
+
+# make objects_py find=logging.Logger
+# $(VENV_BIN_PYTHON) -m sphinx.ext.intersphinx $(SOURCEDIR)/objects-python.inv
+.PHONY: objects_py
+objects_py: override project_name := python
+objects_py: override usage := "make objects_py find=[dotted path]"
+objects_py:	_objects		## Query python Sphinx objects. make objects_py find="[dotted path]"
+objects_py:
+
+# $(VENV_BIN_PYTHON) -m sphinx.ext.intersphinx $(SOURCEDIR)/objects-logging-strict.inv
+# make objects_strict find=VERSION_FALLBACK
+.PHONY: objects_strict
+objects_strict: override project_name := logging-strict
+objects_strict: override usage := "make objects_strict find=[dotted path]"
+objects_strict:	_objects	## Query logging-strict Sphinx objects. make objects_strict find="[dotted path]"
+objects_strict:
+
+# make obj_strictyaml find=YAML
+# make obj_strictyaml find=strictyaml.exceptions
+.PHONY: obj_strictyaml
+obj_strictyaml: override project_name := strictyaml
+obj_strictyaml: override usage := "make obj_strictyaml find=[dotted path]"
+obj_strictyaml:	_objects	## Query strictyaml Sphinx objects. make obj_strictyaml find="[dotted path]"
+obj_strictyaml:
 
 # Stubbornly insists on repeating on outdated files.
 # -T show tracebacks on Exception

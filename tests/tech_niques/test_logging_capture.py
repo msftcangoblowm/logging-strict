@@ -64,9 +64,9 @@ class AppLoggingStateSafe(unittest.TestCase):
     When run by the UI, on unittest screens, CaptureLogs is being
     used! So if CaptureLogs has side effects, it's really confusing.
 
-    Whereas RecipeScreen is being run within a ProcessPool. So
-    adverse changes to logging config will not propagate outside
-    of a worker process
+    Whereas RecipeScreen is being run within a
+    :py:class:`multiprocessing.pool.Pool`. So adverse changes to
+    :py:mod:`logging.config` will not propagate outside of a worker process
 
     Not so with a ThreadPool.
 
@@ -89,7 +89,8 @@ class AppLoggingStateSafe(unittest.TestCase):
         If being run from within a worker process, do nothing. The
         worker is responsible for setting up logging.
 
-        If being run within a threadpool, that's insane, refactor as a processpool
+        If being run within a threadpool, that's insane, refactor as a
+        :py:class:`multiprocessing.pool.Pool`
 
         Choose the logging config yaml. Which can be located within a:
 
@@ -164,14 +165,6 @@ class AppLoggingStateSafe(unittest.TestCase):
             _normalize_level_name(30)
 
         # logging.Logger(app) as logging.Logger and as str
-        #
-        #    In asz.ui.textual.logging_state_app, func logging_config_set_ui
-        #    sets logging config for:
-        #    - asz (INFO)
-        #    - asyncio (ERROR)
-        #    - everything else (ERROR)
-        #
-        #    Called in asz.ui.textual.asz
         logger_app = logging.getLogger(g_app_name)
         """
         sames = (
@@ -686,9 +679,7 @@ class TestsLoggingCapture(unittest.TestCase):
 
         handler_names = logging2.getHandlerNames()
         self.assertIsInstance(handler_names, frozenset)
-        # run within asz count == 1. handler_names frozenset({"console"})
-        # self.assertEqual(len(handler_names), 0)
-        # self.assertFalse(logger_both.hasHandlers())
+
         self.assertIsInstance(logger_both.hasHandlers(), bool)
         self.assertIsNone(logging2.getHandlerByName(WORKER_BOTH))
 
@@ -706,8 +697,6 @@ class TestsLoggingCapture(unittest.TestCase):
 
             handler_names = cm.getHandlerNames()
             self.assertIsInstance(handler_names, frozenset)
-            # run within asz count == 1. handler_names frozenset({"console"})
-            # self.assertEqual(len(handler_names), 0)
 
             self.assertIsNone(cm.getHandlerByName(WORKER_BOTH))
 

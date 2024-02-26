@@ -59,7 +59,7 @@ class LoggerRedirector:  # pragma: no cover
 
        import sys
        import logging
-       from asz.util.unittest_inspect import LoggerRedirector
+       from logging_strict.tech_niques import LoggerRedirector
        def setUp(self):
            # unittest has reassigned sys.stdout and sys.stderr by this point
 

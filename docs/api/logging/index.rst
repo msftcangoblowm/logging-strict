@@ -9,4 +9,3 @@ Logging
    api_logging_synchronous
    api_logging_warnings
    api_logging_asynchronous
-   api_logging_handlers

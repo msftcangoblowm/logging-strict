@@ -1,0 +1,7 @@
+# Sphinx inventory version 2
+# Project: textual 0.46.0
+# Version: 0.46.0
+# The remainder of this file is compressed using zlib.
+textual py:module 0 https://textual.textualize.io -
+textual.logging py:module 0 https://textual.textualize.io/api/logging -
+textual.logging.TextualHandler py:exception 1 https://textual.textualize.io/api/logging/#textual.logging.TextualHandler -

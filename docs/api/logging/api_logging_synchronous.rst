@@ -16,23 +16,27 @@ Instead, to see root messages, initialize logging and include handlers
     import logging
     import sys
     import unittest
-    from asz.constants import LOG_FORMAT
-    from asz.util.unittest_inspect import LoggerRedirector
+    from logging_strict.constants import LOG_FORMAT, g_app_name
+    from logging_strict.tech_niques import LoggerRedirector
 
 
     class SomeUnittestClass(unittest.TestCase):
         def setUp(self):
-            package_name = "asz"  # replace with your package name
+            package_name = g_app_name  # replace with your package name
             g_module_name = "test_docs_sync_log_capture"
             g_module = f"{package_name}.tests.tech_niques.{g_module_name}"
             self._LOGGER = logging.getLogger(g_module)
 
             # So see root logging messages, replace, needs logging with handlers
+            """
             logging.basicConfig(
                 format=LOG_FORMAT,
                 level=logging.INFO,
                 stream=sys.stdout,
             )
+            """
+            # ^^ uncomment ^^
+            pass
 
             LoggerRedirector.redirect_loggers(
                 fake_stdout=sys.stdout,
@@ -46,14 +50,16 @@ Instead, to see root messages, initialize logging and include handlers
             )
 
         def test_logging_redirecting(self):
-            self._LOGGER.info("Is this shown?")
+            # self._LOGGER.info("Is this shown?")
+            # ^^ uncomment ^^
+            pass
 
 
     if __name__ == "__main__":  # pragma: no cover
         unittest.main(tb_locals=True)
 
-This is an actual unittest module in the package, asz. Uncomment the
-``self._LOGGER.info`` line and then run the unittest
+Before running this unittest, uncomment out the lines preceding the
+comment, ``# ^^ uncomment ^^``
 
 .. code-block:: shell
 
@@ -64,7 +70,7 @@ Expected output
 .. code-block:: text
 
    $> python -m tests.test_docs_sync_log_capture
-   INFO test_docs_sync_log_capture test_logging_redirecting: 55: Is this shown?
+   INFO test_docs_sync_log_capture test_logging_redirecting: *: Is this shown?
    .
    ----------------------------------------------------------------------
    Ran 1 test in 0.000s
