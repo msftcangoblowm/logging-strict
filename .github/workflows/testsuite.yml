@@ -1,5 +1,6 @@
 # Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
 # For details: https://github.com/nedbat/coveragepy/blob/master/NOTICE.txt
+# https://github.com/pyscaffold/pyscaffold/blob/master/src/pyscaffold/templates/github_ci_workflow.template
 
 name: "Tests"
 
@@ -24,12 +25,48 @@ permissions:
   contents: read
 
 concurrency:
-  group: "${{ github.workflow }}-${{ github.ref }}"
+  group: >-
+    ${{ github.workflow }}-${{ github.ref_type }}-
+    ${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      wheel-distribution: ${{ steps.wheel-distribution.outputs.path }}
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+      - name: "Install Python"
+        uses: "actions/setup-python@v5"
+        id: setup-python
+        with:
+          python-version: "3.9" # Minimum of PYVERSIONS
+          cache: pip
+          cache-dependency-path: 'requirements/*.pip'
+      - name: Run static analysis and format checkers
+        run: pre-commit run --all-files --show-diff-on-failure
+
+      - name: "Build package distribution files"
+        run: |
+          python igor.py quietly "python igor.py build_next tag"
+
+      - name: Record the path of wheel distribution
+        id: wheel-distribution
+        run: echo "path=$(ls dist/*.whl)" >> $GITHUB_OUTPUT
+
+      - name: Store the distribution files for use in other stages
+        # `tests` and `publish` will use the same pre-built distributions,
+        # so we make sure to release the exact same package that was tested
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-distribution-files
+          path: dist/
+          retention-days: 1
   tests:
     name: "${{ matrix.python-version }} on ${{ matrix.os }}"
+    needs: prepare  # provide dist/* folder
     runs-on: "${{ matrix.os }}-latest"
     # Don't run tests if the branch name includes "-notests"
     if: "!contains(github.ref, '-notests')"
