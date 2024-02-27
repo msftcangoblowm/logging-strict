@@ -37,8 +37,6 @@ jobs:
       matrix:
         os:
           - ubuntu
-          - macos
-          - windows
         python-version:
           # When changing this list, be sure to check the [gh] list in
           # tox.ini so that tox will run properly. PYVERSIONS
@@ -50,24 +48,8 @@ jobs:
           - "3.11"
           - "3.12"
           - "3.13"
-          - "pypy-3.8"
           - "pypy-3.9"
           - "pypy-3.10"
-        exclude:
-          # Windows pypy 3.9 and 3.10 get stuck with PyPy 7.3.15.  I hope to
-          # unstick them, but I don't want that to block all other progress, so
-          # skip them for now.
-          - os: windows
-            python-version: "pypy-3.9"
-          - os: windows
-            python-version: "pypy-3.10"
-          # Skip 3.13.0a4 and pin to 3.13.0a3 for Windows due to build error.
-          # Undo when 3.13.0a5 is released.
-          - os: windows
-            python-version: "3.13"
-        include:
-          - os: windows
-            python-version: "3.13.0-alpha.3"
       fail-fast: false
 
     steps:

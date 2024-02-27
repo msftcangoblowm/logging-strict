@@ -51,7 +51,7 @@ Module private variables
    Module exports
 
 .. py:data:: schema_logging_config
-   :type: external:strictyaml+ref:`strictyaml.validators.Validator`
+   :type: "strictyaml.validators.Validator"
 
    strictyaml schema to compare the yaml against
 

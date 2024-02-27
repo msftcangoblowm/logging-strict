@@ -106,6 +106,7 @@ ifeq ($(is_venv),1)
 	$(PIP_COMPILE) --no-strip-extras -o requirements/tox.pip requirements/tox.in
 	$(PIP_COMPILE) --no-strip-extras -o requirements/manage.pip requirements/manage.in
 	$(PIP_COMPILE) --no-strip-extras -o requirements/dev.pip requirements/dev.in
+	$(PIP_COMPILE) --no-strip-extras -o requirements/mypy.pip requirements/mypy.in
   endif
 endif
 
@@ -177,7 +178,7 @@ endif
 
 ##@ Kitting
 
-REPO_OWNER := msftcangoblowm/logging_strict
+REPO_OWNER := msftcangoblowm/logging-strict
 REPO := $(REPO_OWNER)/logging_strict
 
 .PHONY: edit_for_release cheats relbranch kit_check kit_build kit_upload

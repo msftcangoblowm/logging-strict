@@ -67,7 +67,7 @@
       side effect _version.py changes)
       $ python igor.py build_next ""
     Trigger the kit GitHub Action (no CI integration yet)
-        $ make build_kits (make debug=1 prep_kit)
+        $ make kits_build (make debug=1 prep_kit)
 - Build and publish docs:
     - IF PRE-RELEASE:
         $ make publishbeta

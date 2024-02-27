@@ -18,6 +18,15 @@ Changelog
    Commit items for NEXT VERSION
    .................................
 
+   - chore(tox.ini): lint uses twine. Include dependency in dev.in
+   - chore(tox.ini): mypy needs requirements/mypy.pip
+   - chore(tox.ini): docs Sphinx warnings removed
+   - docs: sphinx warnings remove all
+   - fix(Makefile): REPO_OWNER repository name contains a hyphen
+   - chore(ci): trigger build kits and download release artifacts
+   - chore(gh workflows): remove attempt to support macos and windows
+   - chore(gh workflows): remove python-version pypy-3.8
+
 .. scriv-start-here
 
 .. _changes_1-2-0:

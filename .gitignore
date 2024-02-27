@@ -36,3 +36,6 @@ src/logging_strict/_version.py
 
 # sphinx
 docs/_build/
+
+# ci
+ci/__pycache__/
