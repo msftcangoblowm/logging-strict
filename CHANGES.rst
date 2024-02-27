@@ -20,6 +20,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-8:
+
+Version 1.2.8 — 2024-02-27
+--------------------------
+
+- fix: build not occurring try to remove igor.py quietly call
+
 .. _changes_1-2-7:
 
 Version 1.2.7 — 2024-02-27

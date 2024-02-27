@@ -1,6 +1,7 @@
 # Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
 # For details: https://github.com/nedbat/coveragepy/blob/master/NOTICE.txt
 # https://github.com/pyscaffold/pyscaffold/blob/master/src/pyscaffold/templates/github_ci_workflow.template
+# https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts#passing-data-between-jobs-in-a-workflow
 
 name: "Quality"
 
@@ -45,14 +46,15 @@ jobs:
           cache-dependency-path: 'requirements/*.pip'
 
       - name: "Build package distribution files"
+        # python igor.py quietly "python igor.py build_next tag"
         run: |
-          python igor.py quietly "python igor.py build_next tag"
-          echo "tarballs: $(ls dist/*.tar.gz)"
-          echo "wheels: $(ls dist/*.whl)"
+          python igor.py build_next tag
+          echo "tarballs: $(ls dist/*.tar.gz ||:)"
+          echo "wheels: $(ls dist/*.whl ||:)"
 
       - name: Record the path of wheel distribution
         id: wheel-distribution
-        run: echo "path=$(ls dist/*.whl)" >> $GITHUB_OUTPUT
+        run: echo "path=$(ls dist/*.whl ||:)" >> $GITHUB_OUTPUT
 
       - name: Store the distribution files for use in other stages
         # `tests` and `publish` will use the same pre-built distributions,
