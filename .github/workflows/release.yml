@@ -17,8 +17,8 @@ jobs:
     - name: Checkout the repo
       uses: actions/checkout@v4
     - name: Set output
-        id: vars
-        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+      id: vars
+      run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
     - name: Install py39
       uses: actions/setup-python@v5
       with:

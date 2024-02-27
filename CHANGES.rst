@@ -20,6 +20,14 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-3:
+
+Version 1.2.3 — 2024-02-27
+--------------------------
+
+- chore(tox.ini): try building tagged version
+- fix(release.yml): indention issue
+
 .. _changes_1-2-2:
 
 Version 1.2.2 — 2024-02-27

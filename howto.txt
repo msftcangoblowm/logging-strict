@@ -2,6 +2,9 @@
 
 - Run twice
   $ make pre-commit
+- Remove old branches
+  $ git branch
+  $ git branch -D [branch name]
 - Check that the current virtualenv matches the current branch.
 - Check current version. Taken from git, updates src/[prog name]/_version.py
   Initial version, edit _version.py manually, otherwise
