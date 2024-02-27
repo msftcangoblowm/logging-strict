@@ -20,6 +20,15 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-7:
+
+Version 1.2.7 — 2024-02-27
+--------------------------
+
+- chore: actions/download-artifact@v3 and actions/upload-artifact@v3 depreciated
+- chore: be verbose listing tarballs and wheels
+
+
 .. _changes_1-2-6:
 
 Version 1.2.6 — 2024-02-27

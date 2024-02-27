@@ -47,6 +47,8 @@ jobs:
       - name: "Build package distribution files"
         run: |
           python igor.py quietly "python igor.py build_next tag"
+          echo "tarballs: $(ls dist/*.tar.gz)"
+          echo "wheels: $(ls dist/*.whl)"
 
       - name: Record the path of wheel distribution
         id: wheel-distribution
@@ -55,11 +57,13 @@ jobs:
       - name: Store the distribution files for use in other stages
         # `tests` and `publish` will use the same pre-built distributions,
         # so we make sure to release the exact same package that was tested
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: python-distribution-files
           path: dist/
           retention-days: 1
+      - name: Display structure of downloaded files
+        run: echo "${{ steps.wheel-distribution.outputs.path }} ... upload"
 
   lint:
     name: "isort black flake8 etc"
@@ -78,8 +82,10 @@ jobs:
           cache-dependency-path: 'requirements/*.pip'
 
       - name: Retrieve pre-built distribution files
-        uses: actions/download-artifact@v3
-        with: {name: python-distribution-files, path: dist/}
+        uses: actions/download-artifact@v4
+        with:
+          name: python-distribution-files
+          path: dist/
 
       - name: "Install dependencies"
         run: |
