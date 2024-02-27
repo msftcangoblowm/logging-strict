@@ -43,8 +43,6 @@ jobs:
           python-version: "3.9" # Minimum of PYVERSIONS
           cache: pip
           cache-dependency-path: 'requirements/*.pip'
-      - name: Run static analysis and format checkers
-        run: pre-commit run --all-files --show-diff-on-failure
 
       - name: "Build package distribution files"
         run: |

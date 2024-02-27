@@ -20,6 +20,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-6:
+
+Version 1.2.6 — 2024-02-27
+--------------------------
+
+- chore: move pre-commit to a tox.ini testenv
+
 .. _changes_1-2-5:
 
 Version 1.2.5 — 2024-02-27
