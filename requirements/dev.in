@@ -2,7 +2,7 @@
 # For details: https://github.com/msftcangoblowm/logging_strict/blob/master/NOTICE.txt
 
 # dev tooling
-#   - tox: lint 
+#   - tox: lint
 
 -c pins.pip
 -c prod.pip

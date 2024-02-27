@@ -9,6 +9,7 @@ import requests
 
 _SESSION = None
 
+
 def get_session():
     """Get a properly authenticated requests Session."""
 

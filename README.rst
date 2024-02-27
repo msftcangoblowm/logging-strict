@@ -48,7 +48,7 @@ For logging.config yaml files, logging-strict does the following:
 
 **New in 1.2.x:**
 
-sphinx object inventories minimizes sphinx warnings; package logo; .readthedocs.yml; 
+sphinx object inventories; eliminate sphinx warnings; package logo; .readthedocs.yml;
 tox.ini; many .github/workflows;
 
 **New in 1.1.x:**

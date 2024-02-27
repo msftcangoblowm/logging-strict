@@ -15,6 +15,7 @@ import zipfile
 
 from session import get_session
 
+
 def download_url(url, filename):
     """Download a file from `url` to `filename`
 
@@ -33,7 +34,7 @@ def download_url(url, filename):
     response = get_session().get(url, stream=True)
     if response.status_code == 200:
         with open(filename, "wb") as f:
-            for chunk in response.iter_content(16*1024):
+            for chunk in response.iter_content(16 * 1024):
                 f.write(chunk)
     else:
         raise RuntimeError(f"Fetching {url} produced: status={response.status_code}")
