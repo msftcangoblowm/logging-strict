@@ -20,6 +20,14 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-2:
+
+Version 1.2.2 — 2024-02-27
+--------------------------
+
+- fix(tox.ini): lint failing. In testenv build and install package
+- chore(ci): release and kit were building develop wheels. Specify tag
+
 .. _changes_1-2-1:
 
 Version 1.2.1 — 2024-02-27
