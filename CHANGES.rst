@@ -20,6 +20,14 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-4:
+
+Version 1.2.4 — 2024-02-27
+--------------------------
+
+- chore(tox.ini): try usedevelop off
+- build(pyproject.toml): build as build environment dependency
+
 .. _changes_1-2-3:
 
 Version 1.2.3 — 2024-02-27

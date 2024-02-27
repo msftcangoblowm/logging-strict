@@ -8,6 +8,18 @@ sdist/
 wheels/
 .tox/
 
+# __pycache__/
+ci/__pycache__/
+src/logging_strict/__pycache__/
+src/logging_strict/bad_idea/__pycache__/
+src/logging_strict/bad_idea/folder0/__pycache__/
+src/logging_strict/bad_idea/folder1/__pycache__/
+src/logging_strict/configs/__pycache__/
+src/logging_strict/tech_niques/__pycache__/
+src/logging_strict/util/__pycache__/
+tests/__pycache__/
+tests/tech_niques/__pycache__/
+
 ##@ mypy
 .mypy_cache/
 .dmypy.json
@@ -19,8 +31,6 @@ dmypy.json
 .coverage-*
 coverage.xml
 coverage.json
-tests/__pycache__/
-tests/tech_niques/__pycache__/
 
 ##@ pyenv
 # Placed in parent of package base folder. So not in repository
@@ -36,6 +46,3 @@ src/logging_strict/_version.py
 
 # sphinx
 docs/_build/
-
-# ci
-ci/__pycache__/
