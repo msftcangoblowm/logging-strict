@@ -20,6 +20,16 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-9:
+
+Version 1.2.9 — 2024-02-28
+--------------------------
+
+- test: tests maybe compiled before run. Cached and non-cached paths' differ
+- chore(tox.ini): In lint, remove call, twine check dist/*
+- chore: In testsuite and quality, remove prepare which uploaded dist/
+- style: fix github repo url in requirements/*.in and docs/*.in
+
 .. _changes_1-2-8:
 
 Version 1.2.8 — 2024-02-27

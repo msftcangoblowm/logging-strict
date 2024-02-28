@@ -9,6 +9,7 @@ on:
 
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: 1
+  DEST_FOLDER: dist/
 
 jobs:
   build:
@@ -40,10 +41,10 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
       run: |
         pip install --upgrade twine
-        twine upload dist/*
+        twine upload ${{ env.DEST_FOLDER }}*
     - name: Release GitHub
       uses: softprops/action-gh-release@v1
       with:
-        files: "dist/*"
+        files: ${{ env.DEST_FOLDER }}*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,7 +1,10 @@
 import sys
 import tempfile
 import unittest
-from pathlib import Path
+from pathlib import (
+    Path,
+    PurePath,
+)
 from unittest.mock import (
     Mock,
     patch,
@@ -32,7 +35,13 @@ else:  # pragma: no cover
 
 class LoggingApi(unittest.TestCase):
     def setUp(self):
-        path_tests = Path(__file__).parent
+        if "__pycache__" in __file__:
+            # cached
+            path_tests = Path(__file__).parent.parent
+        else:
+            # not cached
+            path_tests = Path(__file__).parent
+
         self.path_cwd = path_tests.parent
         self.path_package_src = self.path_cwd.joinpath("src", g_app_name)
         self.package_dest_c = g_app_name
@@ -360,6 +369,22 @@ class LoggingApi(unittest.TestCase):
             )
             args = (self.path_package_src,)
             kwargs = {}
+
+            pattern_actual = api.pattern(
+                category=category,
+                genre=genre,
+                flavor=flavor,
+                version=version,
+            )
+            pattern_expected = (
+                f"{genre}_{version}_{flavor}.{category}{LoggingConfigYaml.suffixes}"
+            )
+            self.assertEqual(pattern_actual, pattern_expected)
+
+            self.assertTrue(issubclass(type(self.path_package_src), PurePath))
+            self.assertTrue(self.path_package_src.exists())
+            self.assertTrue(self.path_package_src.is_dir())
+
             gen = api.iter_yamls(*args, **kwargs)
             self.assertIsInstance(gen, Iterator)
             files = list(gen)

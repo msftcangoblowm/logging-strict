@@ -26,7 +26,12 @@ else:  # pragma: no cover
 
 class EntrypointStrictYAMLValidate(unittest.TestCase):
     def setUp(self):
-        path_tests = Path(__file__).parent
+        if "__pycache__" in __file__:
+            # cached
+            path_tests = Path(__file__).parent.parent
+        else:
+            # not cached
+            path_tests = Path(__file__).parent
         self.path_cwd = path_tests.parent
         self.package = g_app_name
         self.path_package_src = self.path_cwd.joinpath("src", g_app_name)

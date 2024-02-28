@@ -1,11 +1,5 @@
 # Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
-# For details: https://github.com/msftcangoblowm/logging_strict/blob/master/NOTICE.txt
-
-# For *asz a package* and *with the ui*, `pip install -r requirements/ui.pip` asz
-# Also needed is distro dependences for optional clipboard support
-
-# Install *as a package*
-# excludes: coverage
+# For details: https://github.com/msftcangoblowm/logging-strict/blob/master/NOTICE.txt
 
 -c pins.pip
 

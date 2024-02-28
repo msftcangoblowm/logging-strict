@@ -29,6 +29,15 @@ from logging_strict.util.check_type import (
 
 
 class CommonChecks(unittest.TestCase):
+    def setUp(self):
+        if "__pycache__" in __file__:
+            # cached
+            self.path_tests = Path(__file__).parent.parent
+        else:
+            # not cached
+            self.path_tests = Path(__file__).parent
+        self.path_cwd = self.path_tests.parent
+
     def test_is_ok(self):
         """Is not None and an non-empty string"""
         invalids = (
@@ -65,8 +74,8 @@ class CommonChecks(unittest.TestCase):
 
     def test_check_type_path(self):
         """Check for pathlib.Path and os.PathLike"""
-        path_unittests_dir = Path(__file__).parent.parent
-        path_cwd = path_unittests_dir.parent
+        path_unittests_dir = self.path_tests
+        path_cwd = self.path_cwd
 
         path_attrs = (
             ("path_unittest_dir", path_unittests_dir),

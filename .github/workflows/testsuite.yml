@@ -21,6 +21,7 @@ env:
   PIP_DISABLE_PIP_VERSION_CHECK: 1
   COVERAGE_IGOR_VERBOSE: 1
   FORCE_COLOR: 1    # Get colored test output
+  DEST_FOLDER: dist/
 
 permissions:
   contents: read
@@ -32,46 +33,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    outputs:
-      wheel-distribution: ${{ steps.wheel-distribution.outputs.path }}
-    steps:
-      - name: "Check out the repo"
-        uses: "actions/checkout@v4"
-      - name: "Install Python"
-        uses: "actions/setup-python@v5"
-        id: setup-python
-        with:
-          python-version: "3.9" # Minimum of PYVERSIONS
-          cache: pip
-          cache-dependency-path: 'requirements/*.pip'
-
-      # python igor.py quietly "python igor.py build_next tag"
-      - name: "Build package distribution files"
-        run: |
-          python igor.py build_next tag
-          echo "tarballs: $(ls dist/*.tar.gz ||:)"
-          echo "wheels: $(ls dist/*.whl ||:)"
-
-      - name: Record the path of wheel distribution
-        id: wheel-distribution
-        run: echo "path=$(ls dist/*.whl ||:)" >> $GITHUB_OUTPUT
-
-      - name: Store the distribution files for use in other stages
-        # `tests` and `publish` will use the same pre-built distributions,
-        # so we make sure to release the exact same package that was tested
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-distribution-files
-          path: dist/
-          retention-days: 1
-      - name: Display structure of downloaded files
-        run: echo "${{ steps.wheel-distribution.outputs.path }} ... upload"
-
   tests:
     name: "${{ matrix.python-version }} on ${{ matrix.os }}"
-    needs: prepare  # provide dist/* folder
     runs-on: "${{ matrix.os }}-latest"
     # Don't run tests if the branch name includes "-notests"
     if: "!contains(github.ref, '-notests')"
@@ -127,7 +90,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: python-distribution-files
-          path: dist/
+          path: ${{ env.DEST_FOLDER }}
 
       - name: "Run tox for ${{ matrix.python-version }}"
         run: |

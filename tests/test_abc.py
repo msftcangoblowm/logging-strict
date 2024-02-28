@@ -83,7 +83,14 @@ class LoggingWorker(unittest.TestCase):
         )
 
         self.file_name = file_name()
-        path_tests = Path(__file__).parent
+
+        if "__pycache__" in __file__:
+            # cached
+            path_tests = Path(__file__).parent.parent
+        else:
+            # not cached
+            path_tests = Path(__file__).parent
+
         self.path_cwd = path_tests.parent
         self.path_package_src = self.path_cwd.joinpath("src", g_app_name)
 

@@ -40,7 +40,12 @@ else:  # pragma: no cover
 
 class pep518_sections(unittest.TestCase):
     def setUp(self):
-        self.path_tests = Path(__file__).parent.parent
+        if "__pycache__" in __file__:
+            # cached
+            self.path_tests = Path(__file__).parent.parent
+        else:
+            # not cached
+            self.path_tests = Path(__file__).parent
         self.cwd = self.path_tests.parent
 
     def test_find_project_root(self):
@@ -217,7 +222,7 @@ if __name__ == "__main__":  # pragma: no cover
     """
     .. code-block:: shell
 
-       python -m tests.util.test_pep518_read
+       python -m tests.test_pep518_read
 
        coverage run --data-file=".coverage-combine-14" \
        -m unittest discover -t. -s tests/util -p "test_pep518_read*.py" --buffer
