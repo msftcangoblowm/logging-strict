@@ -21,7 +21,6 @@ env:
   PIP_DISABLE_PIP_VERSION_CHECK: 1
   COVERAGE_IGOR_VERBOSE: 1
   FORCE_COLOR: 1    # Get colored test output
-  DEST_FOLDER: dist/
 
 permissions:
   contents: read
@@ -85,12 +84,6 @@ jobs:
         run: |
           set -xe
           python -m pip install -r requirements/tox.pip
-
-      - name: Retrieve pre-built distribution files
-        uses: actions/download-artifact@v4
-        with:
-          name: python-distribution-files
-          path: ${{ env.DEST_FOLDER }}
 
       - name: "Run tox for ${{ matrix.python-version }}"
         run: |

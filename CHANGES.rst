@@ -15,10 +15,22 @@ Changelog
    - strictyaml has no automated tests
    - strictyaml has no typing hint stubs. ignore_missing_imports
 
+   - ci/kit.yml in sdist Set output tag will be branch name, not tag name see ci/release.yml
+
    Commit items for NEXT VERSION
    .................................
 
 .. scriv-start-here
+
+.. _changes_1-2-10:
+
+Version 1.2.10 — 2024-02-28
+---------------------------
+
+- chore(ci): in testsuite do not download artifacts
+- chore(ci): in release get tag name, not branch name. Prevent build create dev wheel
+- chore(ci): in codeql limit to src folder tree. Include igor.py and ci/session.py
+- chore(ci): in codeql remove from matrix javascript
 
 .. _changes_1-2-9:
 

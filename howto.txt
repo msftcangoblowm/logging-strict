@@ -81,7 +81,7 @@
     - commit and publish home page (if any)
 - Kits:
     - Wait for kits to finish:
-        - https://github.com/msftcangoblowm/asz/.github/workflows/kit.yml
+        - https://github.com/msftcangoblowm/logging-strict/.github/workflows/kit.yml
     - Download and check built kits from GitHub Actions:
         $ make clean download_kits check_kits
         - there should be 52
@@ -111,9 +111,9 @@
         - keep just the latest version of each x.y release, make the rest active but hidden.
             - pre-releases should be hidden
     - IF NOT PRE-RELEASE:
-        - @ https://readthedocs.org/dashboard/asz/advanced/
+        - @ https://readthedocs.org/dashboard/logging-strict/advanced/
             - change the default and latest versions to the new version
-        - @ https://readthedocs.org/projects/coverage/builds/
+        - @ https://readthedocs.org/projects/logging-strict/builds/
             - manually build "latest"
             - wait for the new tag build to finish successfully.
 - Once CI passes, merge the bump-version branch to master and push it
