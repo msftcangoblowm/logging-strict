@@ -28,6 +28,7 @@ Version 1.2.11 — 2024-02-28
 ---------------------------
 
 - chore(ci): in codeql move paths and paths-ignore into Initialize CodeQL
+- chore(ci): in release from on push --> on create tag
 - chore(ci): in release fetch tags then get latest commit tag
 
 .. _changes_1-2-10:

@@ -1,7 +1,8 @@
 name: release
 
+# not on every push. Only then a commit is tagged
 on:
-  push:
+  create:
     branches:
       - master
     tags:

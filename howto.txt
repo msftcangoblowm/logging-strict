@@ -64,7 +64,8 @@
       $ git branch
       $ git switch master
       $ git merge -S -m "Your merge commit message" [source_branch]
-    - $ git push
+    - Check web connection then push. Don't trigger a release until a tag push
+      $ git push
 - Start the kits:
     - Update logging_strict/src/_version.py with next version and build (not tagged yet)
       $ python igor.py build_next "[bumped version]"
