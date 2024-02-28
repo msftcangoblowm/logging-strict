@@ -61,8 +61,7 @@ jobs:
         config: |
           paths:
             - src
-            - igor.py
-            - 'ci/*.py'
+            - ci
           paths-ignore:
             - 'src/**/bad_idea/**/*.yaml'
             - 'src/**/configs/*.yaml'
