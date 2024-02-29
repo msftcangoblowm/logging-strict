@@ -22,6 +22,16 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-14:
+
+Version 1.2.14 — 2024-02-29
+---------------------------
+
+- chore(release.yml): separate build from publish and release
+- chore(release.yml): run on push, not create
+- chore(release.yml): on push publish to test.pypi
+- chore(release.yml): on tagged publish to pypi and github releases
+
 .. _changes_1-2-13:
 
 Version 1.2.13 — 2024-02-29

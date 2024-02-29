@@ -1,13 +1,14 @@
-name: release
+# https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#the-whole-ci-cd-workflow
+
+name: "release"
 
 # not on every push. Only then a commit is tagged
 on:
-  create:
+  push:
     branches:
       - master
     tags:
       - '*.*.*'
-
 
 defaults:
   run:
@@ -22,8 +23,8 @@ permissions:
 
 jobs:
   build:
-    if: github.event_name == 'create' && startsWith(github.ref, 'refs/tags')
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout the repo
       uses: actions/checkout@v4
@@ -56,18 +57,99 @@ jobs:
         echo "python igor.py build_next $RELEASE_VERSION"
         python igor.py build_next "$RELEASE_VERSION"
 
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: python-package-distributions
+        path: ${{ env.DEST_FOLDER }}
+
+  publish-to-pypi:
+    name: >-
+      Publish Python distribution to PyPI
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    needs:
+    - build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/logging-strict
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing and sigstore
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v3
+      with:
+        name: python-package-distributions
+        path: ${{ env.DEST_FOLDER }}
+
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        environment:
-          name: pypi
-          url: https://pypi.org/p/logging-strict
-        permissions:
-          id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
 
-    - name: Release GitHub
-      uses: softprops/action-gh-release@v1
+  github-release:
+    name: >-
+      Sign the Python distribution with Sigstore
+      and upload them to GitHub Release
+    needs:
+    - publish-to-pypi
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # IMPORTANT: mandatory for making GitHub Releases
+      id-token: write  # IMPORTANT: mandatory for sigstore
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v3
       with:
-        files: ${{ env.DEST_FOLDER }}*
+        name: python-package-distributions
+        path: ${{ env.DEST_FOLDER }}
+    - name: Sign the dists with Sigstore
+      uses: sigstore/gh-action-sigstore-python@v1.2.3
+      with:
+        inputs: >-
+          ./dist/*.tar.gz
+          ./dist/*.whl
+    - name: Create GitHub Release
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: >-
+        gh release create
+        '${{ github.ref_name }}'
+        --repo '${{ github.repository }}'
+        --notes ""
+    - name: Upload artifact signatures to GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      # Upload to GitHub Release using the `gh` CLI.
+      # `dist/` contains the built packages, and the
+      # sigstore-produced signatures and certificates.
+      run: >-
+        gh release upload
+        '${{ github.ref_name }}' dist/**
+        --repo '${{ github.repository }}'
+
+  publish-to-testpypi:
+    name: Publish Python distribution to TestPyPI
+    needs:
+    - build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/logging-strict
+
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v3
+      with:
+        name: python-package-distributions
+        path: ${{ env.DEST_FOLDER }}
+
+    - name: Publish distribution to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
