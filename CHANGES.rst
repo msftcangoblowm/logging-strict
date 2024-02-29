@@ -22,6 +22,15 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-13:
+
+Version 1.2.13 — 2024-02-29
+---------------------------
+
+- chore(release.yml): configure permissions id-token write
+- chore(release.yml): configure environment for pypi
+- chore(release.yml): if condition to only run tagged version
+
 .. _changes_1-2-12:
 
 Version 1.2.12 — 2024-02-29
