@@ -22,6 +22,14 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-12:
+
+Version 1.2.12 — 2024-02-29
+---------------------------
+
+- chore: actions/checkout with fetch-depth 0 gets branches and tags
+- chore(release.yml): Publish package using pypa/gh-action-pypi-publish@release/v1
+
 .. _changes_1-2-11:
 
 Version 1.2.11 — 2024-02-28

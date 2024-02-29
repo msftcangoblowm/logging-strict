@@ -13,7 +13,7 @@
 #   $ cp dist/* /tmp/pypi
 #   $ python -m pip install piprepo
 #   $ piprepo build /tmp/pypi
-#   $ python -m pip install -v coverage --index-url=file:///tmp/pypi/simple
+#   $ python -m pip install -v logging-strict --index-url=file:///tmp/pypi/simple
 #
 # Note that cibuildwheel recommends not shipping wheels for pre-release versions
 # of Python: https://cibuildwheel.readthedocs.io/en/stable/options/#prerelease-pythons
@@ -147,6 +147,9 @@ jobs:
 
       - name: "Check out the repo"
         uses: actions/checkout@v4
+        with:
+          # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
+          fetch-depth: 0
 
       - name: "Install Python 3.9"
         uses: actions/setup-python@v5
@@ -186,10 +189,16 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: actions/checkout@v4
+        with:
+          # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
+          fetch-depth: 0
 
-      - name: Set output
+      # https://stackoverflow.com/questions/66349002/get-latest-tag-git-describe-tags-when-repo-is-cloned-with-depth-1
+      # echo "tag=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_OUTPUT
+      - name: Get latest tag
         id: vars
-        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+        run: |
+          echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
 
       - name: "Install Python 3.9"
         uses: actions/setup-python@v5
@@ -207,6 +216,7 @@ jobs:
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
+          echo "python igor.py build_next $RELEASE_VERSION"
           python igor.py build_next "$RELEASE_VERSION"
 
       - name: "List tarballs"
@@ -226,6 +236,9 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: actions/checkout@v4
+        with:
+          # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
+          fetch-depth: 0
 
       - name: "Install PyPy"
         uses: actions/setup-python@v5
