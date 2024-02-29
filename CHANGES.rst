@@ -31,6 +31,7 @@ Version 1.2.14 — 2024-02-29
 - chore(release.yml): run on push, not create
 - chore(release.yml): on push publish to test.pypi
 - chore(release.yml): on tagged publish to pypi and github releases
+- chore(release.yml): use node20 not node16
 
 .. _changes_1-2-13:
 

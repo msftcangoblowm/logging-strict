@@ -58,7 +58,7 @@ jobs:
         python igor.py build_next "$RELEASE_VERSION"
 
     - name: Store the distribution packages
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: python-package-distributions
         path: ${{ env.DEST_FOLDER }}
@@ -78,7 +78,7 @@ jobs:
 
     steps:
     - name: Download all the dists
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: python-package-distributions
         path: ${{ env.DEST_FOLDER }}
@@ -100,7 +100,7 @@ jobs:
 
     steps:
     - name: Download all the dists
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: python-package-distributions
         path: ${{ env.DEST_FOLDER }}
@@ -144,7 +144,7 @@ jobs:
 
     steps:
     - name: Download all the dists
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: python-package-distributions
         path: ${{ env.DEST_FOLDER }}
