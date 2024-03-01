@@ -22,6 +22,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-17:
+
+Version 1.2.17 — 2024-03-01
+---------------------------
+
+- docs(README.rst): add badges
+
 .. _changes_1-2-16:
 
 Version 1.2.16 — 2024-03-01

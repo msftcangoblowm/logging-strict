@@ -6,6 +6,10 @@ logging-strict
 
 logging.config yaml Strict typing and editable
 
+|  |kit| |license| |versions|
+|  |test-status| |quality-status| |docs|
+|  |stars| |mastodon-msftcangoblowme|
+
 For logging.config yaml files, logging-strict does the following:
 
 - Editable logging configuration
@@ -49,7 +53,7 @@ For logging.config yaml files, logging-strict does the following:
 **New in 1.2.x:**
 
 sphinx object inventories; eliminate sphinx warnings; package logo; tox.ini;
-many .github/workflows; Tagged version on testpypi, pypi, and readthedocs;
+many .github/workflows; Tagged version on testpypi, pypi, and readthedocs; badges;
 
 **New in 1.1.x:**
 
@@ -563,3 +567,28 @@ yaml security issues:
   In our case, specialized to support the built-in Python
   logging.config.handlers and adaptable enough to support custom
   handlers, filters, and formatters
+
+.. |test-status| image:: https://github.com/msftcangoblowm/logging-strict/actions/workflows/testsuite.yml/badge.svg?branch=master&event=push
+    :target: https://github.com/msftcangoblowm/logging-strict/actions/workflows/testsuite.yml
+    :alt: Test suite status
+.. |quality-status| image:: https://github.com/msftcangoblowm/logging-strict/actions/workflows/quality.yml/badge.svg?branch=master&event=push
+    :target: https://github.com/msftcangoblowm/logging-strict/actions/workflows/quality.yml
+    :alt: Quality check status
+.. |docs| image:: https://readthedocs.org/projects/logging-strict/badge/?version=latest&style=flat
+    :target: https://logging-strict.readthedocs.io/
+    :alt: Documentation
+.. |kit| image:: https://img.shields.io/pypi/v/logging-strict
+    :target: https://pypi.org/project/logging-strict/
+    :alt: PyPI status
+.. |versions| image:: https://img.shields.io/pypi/pyversions/logging-strict.svg?logo=python&logoColor=FBE072
+    :target: https://pypi.org/project/logging-strict/
+    :alt: Python versions supported
+.. |license| image:: https://img.shields.io/pypi/l/logging-strict.svg
+    :target: https://pypi.org/project/logging-strict/
+    :alt: License
+.. |stars| image:: https://img.shields.io/github/stars/msftcangoblowm/logging-strict.svg?logo=github
+    :target: https://github.com/msftcangoblowm/logging-strict/stargazers
+    :alt: GitHub stars
+.. |mastodon-msftcangoblowm| image:: https://img.shields.io/badge/dynamic/json?style=flat&labelColor=450657&logo=mastodon&logoColor=ffffff&link=https%3A%2F%2Fmastodon.social%2F%40nedbat&url=https%3A%2F%2Fmastodon.social%2Fusers%msftcangoblowme%2Ffollowers.json&query=totalItems&label=@msftcangoblowme
+    :target: https://mastodon.social/@msftcangoblowme
+    :alt: msftcangoblowme on Mastodon
