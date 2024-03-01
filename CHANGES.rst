@@ -22,6 +22,14 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-15:
+
+Version 1.2.15 — 2024-03-01
+---------------------------
+
+- chore(release.yml): jobs can be rerun, protect against publish duplicates
+- chore(PyPi): server not configured with environment name
+
 .. _changes_1-2-14:
 
 Version 1.2.14 — 2024-03-01

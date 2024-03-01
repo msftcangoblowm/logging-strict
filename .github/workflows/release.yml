@@ -85,6 +85,8 @@ jobs:
 
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        skip-existing: true
 
   github-release:
     name: >-
@@ -154,3 +156,4 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
+        skip-existing: true
