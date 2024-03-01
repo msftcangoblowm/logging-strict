@@ -64,7 +64,7 @@ version = "1.2.14"
 # The full version, including alpha/beta/rc tags.
 release = "1.2.14"
 # The date of release, in "monthname day, year" format.
-release_date = "February 29, 2024"
+release_date = "March 1, 2024"
 # @@@ end
 
 # release = config.version

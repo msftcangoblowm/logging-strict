@@ -24,6 +24,14 @@ Changelog
 
 .. _changes_1-2-14:
 
+Version 1.2.14 — 2024-03-01
+---------------------------
+
+- chore(TestPyPi): require tagged version, cannot use PEP 440 local versions
+- chore(TestPyPi): server not configured with environment name
+
+.. _changes_1-2-14:
+
 Version 1.2.14 — 2024-02-29
 ---------------------------
 
