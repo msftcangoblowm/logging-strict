@@ -8,7 +8,7 @@ logging.config yaml Strict typing and editable
 
 |  |kit| |license| |versions|
 |  |test-status| |quality-status| |docs|
-|  |stars| |mastodon-msftcangoblowme|
+|  |stars| |mastodon-msftcangoblowm|
 
 For logging.config yaml files, logging-strict does the following:
 
@@ -589,6 +589,6 @@ yaml security issues:
 .. |stars| image:: https://img.shields.io/github/stars/msftcangoblowm/logging-strict.svg?logo=github
     :target: https://github.com/msftcangoblowm/logging-strict/stargazers
     :alt: GitHub stars
-.. |mastodon-msftcangoblowm| image:: https://img.shields.io/badge/dynamic/json?style=flat&labelColor=450657&logo=mastodon&logoColor=ffffff&link=https%3A%2F%2Fmastodon.social%2F%40nedbat&url=https%3A%2F%2Fmastodon.social%2Fusers%msftcangoblowme%2Ffollowers.json&query=totalItems&label=@msftcangoblowme
+.. |mastodon-msftcangoblowm| image:: https://img.shields.io/mastodon/follow/112019041247183249
     :target: https://mastodon.social/@msftcangoblowme
     :alt: msftcangoblowme on Mastodon

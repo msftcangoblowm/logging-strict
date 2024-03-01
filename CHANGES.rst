@@ -22,6 +22,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-18:
+
+Version 1.2.18 — 2024-03-01
+---------------------------
+
+- docs(README.rst): a badge image url invalid tox -e docs fail
+
 .. _changes_1-2-17:
 
 Version 1.2.17 — 2024-03-01
