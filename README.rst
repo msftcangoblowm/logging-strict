@@ -48,8 +48,8 @@ For logging.config yaml files, logging-strict does the following:
 
 **New in 1.2.x:**
 
-sphinx object inventories; eliminate sphinx warnings; package logo; .readthedocs.yml;
-tox.ini; many .github/workflows; Tagged version on testpypi and pypi; 
+sphinx object inventories; eliminate sphinx warnings; package logo; tox.ini;
+many .github/workflows; Tagged version on testpypi, pypi, and readthedocs;
 
 **New in 1.1.x:**
 

@@ -13,11 +13,11 @@ build:
     python: "3.9"
 
 sphinx:
-  builder: html
   configuration: docs/conf.py
 
 # Don't build anything except HTML.
-formats: []
+formats:
+  - pdf
 
 python:
   install:

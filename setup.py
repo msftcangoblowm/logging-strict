@@ -33,12 +33,16 @@ def _clean_version() -> dict[str, str]:
     def clean_scheme(version: ScmVersion) -> str:
         """Full version from vcs
 
+        When readthedocs.org builds the docs, "+clean" is prepended to
+        version causing a failure to build the docs. What is "+clean"
+        for?! Remove it
+
         :param version: Version as setuptools_scm grabs from vcs
         :type version: :py:class:`setuptools_scm.ScmVersion`
         :returns: version scheme
         :rtype: str
         """
-        return get_local_dirty_tag(version) if version.dirty else "+clean"
+        return get_local_dirty_tag(version) if version.dirty else ""
 
     return {"local_scheme": get_version, "version_scheme": clean_scheme}
 

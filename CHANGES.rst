@@ -22,6 +22,14 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-16:
+
+Version 1.2.16 — 2024-03-01
+---------------------------
+
+- chore(setup.py): in clean_scheme stop prepending +clean causes readthedocs to fail
+- chore(readthedocs): build html and pdf
+
 .. _changes_1-2-15:
 
 Version 1.2.15 — 2024-03-01
