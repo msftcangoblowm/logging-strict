@@ -583,8 +583,8 @@ yaml security issues:
 .. |versions| image:: https://img.shields.io/pypi/pyversions/logging-strict.svg?logo=python&logoColor=FBE072
     :target: https://pypi.org/project/logging-strict/
     :alt: Python versions supported
-.. |license| image:: https://img.shields.io/pypi/l/logging-strict.svg
-    :target: https://pypi.org/project/logging-strict/
+.. |license| image:: https://img.shields.io/github/license/msftcangoblowm/logging-strict
+    :target: https://pypi.org/project/logging-strict/blob/master/LICENSE.txt
     :alt: License
 .. |stars| image:: https://img.shields.io/github/stars/msftcangoblowm/logging-strict.svg?logo=github
     :target: https://github.com/msftcangoblowm/logging-strict/stargazers

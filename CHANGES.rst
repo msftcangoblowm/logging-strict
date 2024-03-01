@@ -22,6 +22,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-19:
+
+Version 1.2.19 — 2024-03-01
+---------------------------
+
+- docs: license badge not resolving. Change to github badge
+
 .. _changes_1-2-18:
 
 Version 1.2.18 — 2024-03-01
