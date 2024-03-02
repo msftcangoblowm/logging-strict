@@ -53,7 +53,7 @@ For logging.config yaml files, logging-strict does the following:
 **New in 1.2.x:**
 
 sphinx object inventories; eliminate sphinx warnings; package logo; tox.ini;
-many .github/workflows; Tagged version on testpypi, pypi, and readthedocs; badges;
+many .github/workflows; Tagged version on testpypi, pypi, and readthedocs; badges; VHS tapes;
 
 **New in 1.1.x:**
 
@@ -154,12 +154,15 @@ For custom (handlers, filters, and formatters) functions, there is no
 way to know beforehand the parameter name **and therefore** the data type,
 parameter type will become str
 
-To validate a logging.yaml file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+(Assuming the virtual environment is activated)
 
-Assuming the virtual environment is activated
+Within source code (tree)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Within source code (tree)
+.. image:: https://github.com/msftcangoblowm/logging-strict/blob/master/docs/_static/validate_flavor_asz.gif
+   :alt: validation of package logging.config yaml files
+   :width: 1200px
+   :height: 800px
 
 .. code:: console
 
@@ -202,7 +205,8 @@ Assuming the virtual environment is activated
    The total `*.logging.config.yaml` file count and total
    `*.worker.logging.config.yaml` are both thrown off by `+2`
 
-- Within xdg user data dir
+Within xdg user data dir
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: console
 
@@ -219,16 +223,6 @@ last (0): ~/.local/share/logging_strict/mp_1_asz.worker.logging.config.yaml
 Processed: 1 / 1
 Success / fail: 1 / 0
 last (0): ~/.local/share/logging_strict/textual_1_asz.app.logging.config.yaml
-
-- Within a package
-
-.. code:: console
-
-   logging_strict_validate_yaml $HOME/Downloads/logging_strict/src/logging_strict/configs
-
-Processed: 4 / 4
-Success / fail: 4 / 0
-last (0): ~/Downloads/logging_strict/src/logging_strict/mp_1_asz.worker.logging.config.yaml
 
 pre-commit
 ------------

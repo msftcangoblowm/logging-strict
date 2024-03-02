@@ -22,6 +22,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-20:
+
+Version 1.2.20 — 2024-03-02
+---------------------------
+
+- docs: add VHS tape. Demonstrate validation animated gif
+
 .. _changes_1-2-19:
 
 Version 1.2.19 — 2024-03-01
