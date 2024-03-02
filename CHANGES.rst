@@ -22,6 +22,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-21:
+
+Version 1.2.21 — 2024-03-02
+---------------------------
+
+- docs: resize and clean up validation animation gif
+
 .. _changes_1-2-20:
 
 Version 1.2.20 — 2024-03-02

@@ -161,8 +161,8 @@ Within source code (tree)
 
 .. image:: https://github.com/msftcangoblowm/logging-strict/blob/master/docs/_static/validate_flavor_asz.gif
    :alt: validation of package logging.config yaml files
-   :width: 1200px
-   :height: 800px
+   :width: 1000px
+   :height: 500px
 
 .. code:: console
 
