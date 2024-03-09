@@ -22,6 +22,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-24:
+
+Version 1.2.24 — 2024-03-09
+---------------------------
+
+- docs: replace references to logging.config.handlers with logging.handlers
+
 .. _changes_1-2-23:
 
 Version 1.2.23 — 2024-03-09

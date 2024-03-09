@@ -1,7 +1,7 @@
 Validation
 ===========
 
-logging.config.handlers, each, expects parameters to have the correct data type.
+logging.handlers, each, expects parameters to have the correct data type.
 
 yaml package strictyaml, default data type is str, for other types, the function
 variable name and type must be known (and supported) beforehand.

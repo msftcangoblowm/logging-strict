@@ -42,7 +42,7 @@ def _process_args() -> tuple[tuple[Path, ...], bool]:
     prog = f"{g_app_name}_validate_yaml"
     epilog = f"""Validation of `*.[app|worker].logging.config.yaml` file(s)
 against a strictyaml schema. Resultant data types are as expected by
-Python built-in logging.config.handlers
+Python built-in logging.handlers
 
 For custom (handlers, filters, and formatters) functions, there is no
 way to know beforehand the parameter name and type, parameter type will

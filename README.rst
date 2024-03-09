@@ -145,7 +145,7 @@ implemented
 Validation
 -----------
 
-logging.config.handlers, each, expects parameters to have the correct data type.
+logging.handlers, each, expects parameters to have the correct data type.
 
 yaml package strictyaml, default data type is str, for other types, the function
 variable name and type must be known (and supported) beforehand.
@@ -559,7 +559,7 @@ yaml security issues:
 - type-safe YAML parsing and validation against a schema
 
   In our case, specialized to support the built-in Python
-  logging.config.handlers and adaptable enough to support custom
+  logging.handlers and adaptable enough to support custom
   handlers, filters, and formatters
 
 .. |test-status| image:: https://github.com/msftcangoblowm/logging-strict/actions/workflows/testsuite.yml/badge.svg?branch=master&event=push
