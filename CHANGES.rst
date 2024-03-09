@@ -22,6 +22,14 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-22:
+
+Version 1.2.22 — 2024-03-09
+---------------------------
+
+- docs(README.rst): Use raw.githubusercontent.com rather than github.com urls
+- fix(README.rst): on rst to epub convert, github.com url showed page, not image
+
 .. _changes_1-2-21:
 
 Version 1.2.21 — 2024-03-02

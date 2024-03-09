@@ -159,7 +159,7 @@ parameter type will become str
 Within source code (tree)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: https://github.com/msftcangoblowm/logging-strict/blob/master/docs/_static/validate_flavor_asz.gif
+.. image:: https://raw.githubusercontent.com/msftcangoblowm/logging-strict/master/docs/_static/validate_flavor_asz.gif
    :alt: validation of package logging.config yaml files
    :width: 1000px
    :height: 500px
