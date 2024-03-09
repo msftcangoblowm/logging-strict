@@ -18,9 +18,17 @@ Changelog
    - ci/kit.yml in sdist Set output tag will be branch name, not tag name see ci/release.yml
 
    Commit items for NEXT VERSION
-   .................................
+   ..............................
 
 .. scriv-start-here
+
+.. _changes_1-2-23:
+
+Version 1.2.23 — 2024-03-09
+---------------------------
+
+- fix(setup.py): setuptools-scm configuration use setuptools-scm builtin handlers
+- docs(setup.py): setuptools-scm docs are sparse. Explain as if to a six year old
 
 .. _changes_1-2-22:
 

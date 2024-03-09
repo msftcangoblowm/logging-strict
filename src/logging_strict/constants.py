@@ -22,11 +22,18 @@ e.g. "0.1.1.dev0+g4b33a80.d20240129" local is "g4b33a80.d20240129"
 When releasing this is not what is wanted, so use
 SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT with the version
 
+- Current version
+
+  .. code-block:: shell
+
+     PYTHONWARNINGS="ignore" python setup.py --version
+
+
 - Release by tag aka final
 
   .. code-block:: shell
 
-     SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="$(git describe --tag)" python setup.py --version
+     PYTHONWARNINGS="ignore" SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="$(git describe --tag)" python setup.py --version
      SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="$(git describe --tag)" python -m build
 
 
@@ -34,7 +41,7 @@ SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT with the version
 
   .. code-block:: shell
 
-     SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1" python setup.py --version
+     PYTHONWARNINGS="ignore" SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1" python setup.py --version
      SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1" python -m build
 
 
@@ -42,7 +49,7 @@ SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT with the version
 
   .. code-block:: shell
 
-     SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1.dev1" python setup.py --version
+     PYTHONWARNINGS="ignore" SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1.dev1" python setup.py --version
      SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1.dev1" python -m build
 
 
@@ -52,9 +59,8 @@ Move the tag past post commits
 
   .. code-block:: shell
 
-     SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1.post1" python setup.py --version
+     PYTHONWARNINGS="ignore" SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1.post1" python setup.py --version
      SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1.post1" python -m build
-
 
 
 Module private variables

@@ -1,52 +1,71 @@
 from __future__ import annotations
 
 from setuptools import setup
-from setuptools_scm import ScmVersion
-from setuptools_scm.version import get_local_dirty_tag
+from setuptools_scm.version import (
+    get_local_node_and_date,
+    guess_next_dev_version,
+)
 
 
 def _clean_version() -> dict[str, str]:
-    """scm is generating developer versions, rather than tagged versions
+    """``setuptools-scm`` get the current version if you're in a tagged commit.
+    When not, most of the time, tries very hard to "guess" the next version
+    dividing it in two parts, the "version" and the "local" part, with the
+    format {version}+{local}, both of them can be configured.
 
-    dict communicating between :menuselection:`setuptools_scm --> setuptools`
+    CI/CD configuration
 
-    :returns: start folder relative path. e.g. tests/ui
+    Runs on every push, but setup to do nothing unless on a tagged release
+
+    LOCAL
+
+    Options
+
+    - node-and-date (default)
+    - node-and-timestamp
+    - dirty-tag
+    - no-local-version
+
+    Although pypi only accepts ``no-local-version``, chose
+    ``node-and-date`` (:py:func:`get_local_node_and_date`)
+
+    Rationale:
+
+    - when testing locally, a non-local version build would be very confusing
+
+    - never have uncommitted files in workdir (+dirty or +clean)
+
+    VERSION
+
+    Try default, ``guess-next-dev``
+
+    :returns:
+
+       dict containing handlers for version_scheme and local_scheme. The
+       resulting str are combined with format, ``{version}+{local}``
+
     :rtype: dict[str, str]
 
     .. seealso::
 
-       `Credit <https://stackoverflow.com/q/73157896>`_
+       Built-in
+       `[version_scheme] <https://setuptools-scm.readthedocs.io/en/latest/extending/#setuptools_scmversion_scheme>`_
+       handlers
+
+       Built-in
+       `[local_scheme] <https://setuptools-scm.readthedocs.io/en/latest/extending/#setuptools_scmlocal_scheme>`_
+       handlers
+
+       For usage, see :py:mod:`logging_strict.constants`
 
     """
-
-    def get_version(version: ScmVersion) -> str:
-        """Get local scheme. Aka tagged version
-
-        :param version: Version as setuptools_scm grabs from vcs
-        :type version: :py:class:`setuptools_scm.ScmVersion`
-        :returns: local scheme
-        :rtype: str
-        """
-        # str(version.tag)
-        return version.format_with("{tag}")
-
-    def clean_scheme(version: ScmVersion) -> str:
-        """Full version from vcs
-
-        When readthedocs.org builds the docs, "+clean" is prepended to
-        version causing a failure to build the docs. What is "+clean"
-        for?! Remove it
-
-        :param version: Version as setuptools_scm grabs from vcs
-        :type version: :py:class:`setuptools_scm.ScmVersion`
-        :returns: version scheme
-        :rtype: str
-        """
-        return get_local_dirty_tag(version) if version.dirty else ""
-
-    return {"local_scheme": get_version, "version_scheme": clean_scheme}
+    return {
+        "local_scheme": get_local_node_and_date,
+        "version_scheme": guess_next_dev_version,
+    }
 
 
+# dict communicating between :menuselection:`setuptools_scm --> setuptools`
 setup(
     use_scm_version=_clean_version,
 )
