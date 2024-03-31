@@ -20,6 +20,8 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - docs(conf.py): intersphinx_mapping set a base url. In inv, paths become relative
+
 .. scriv-start-here
 
 .. _changes_1-2-24:

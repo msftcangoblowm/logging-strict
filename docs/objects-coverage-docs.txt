@@ -1,0 +1,8 @@
+# Sphinx inventory version 2
+# Project: coverage 7.4.0
+# Version: 7.4.0
+# The remainder of this file is compressed using zlib.
+coverage py:module 0 index.html -
+coverage.control.Coverage py:class 1 api_coverage.html -
+coverage.control.Coverage.start py:method 1 api_coverage.html#coverage.Coverage.start -
+coverage.exceptions.NoDataError py:exception 1 api_exceptions.html -

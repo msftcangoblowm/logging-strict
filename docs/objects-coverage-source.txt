@@ -1,0 +1,6 @@
+# Sphinx inventory version 2
+# Project: coverage 7.4.0
+# Version: 7.4.0
+# The remainder of this file is compressed using zlib.
+coverage.control py:module 0 blob/b2b89a491bb607e958c432c17a5677b3abb6a952/coverage/control.py -
+coverage.multiproc py:module 0 blob/b2b89a491bb607e958c432c17a5677b3abb6a952/coverage/multiproc.py -

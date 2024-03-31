@@ -9,6 +9,7 @@
 
 Sphinx dynamic configuration
 """
+
 import re
 import sys
 from pathlib import Path
@@ -161,20 +162,24 @@ intersphinx_mapping = {
         ("objects-logging-strict.inv", "objects-logging-strict.txt"),
     ),
     "strictyaml": (
-        "",
+        "https://github.com/crdoconnor/strictyaml",
         ("objects-strictyaml.inv", "objects-strictyaml.txt"),
     ),
     "textual": (
-        "",
+        "https://textual.textualize.io",
         ("objects-textual.inv", "objects-textual.txt"),
     ),
     "black": (
-        "",
+        "https://github.com/psf",
         ("objects-black.inv", "objects-black.txt"),
     ),
-    "coverage": (
-        "",
-        ("objects-coverage.inv", "objects-coverage.txt"),
+    "coverage-docs": (
+        "https://coverage.readthedocs.io/en/latest",
+        ("objects-coverage-docs.inv", "objects-coverage-docs.txt"),
+    ),
+    "coverage-source": (
+        "https://github.com/nedbat/coveragepy",
+        ("objects-coverage-source.inv", "objects-coverage-source.txt"),
     ),
 }
 intersphinx_disabled_reftypes = ["std:doc"]

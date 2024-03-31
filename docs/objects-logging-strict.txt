@@ -193,11 +193,16 @@ logging_strict.util.check_logging.is_assume_root.params.logger_name py:parameter
 logging_strict.util.check_logging.str2int.params.level py:parameter 1 code/util/check_logging.html#$ -
 logging_strict.util.check_type py:module 0 code/util/check_type.html#module-$ -
 logging_strict.util.check_type.__all__ py:attribute 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.check_int_verbosity py:function 1 code/util/check_type.html#$ -
 logging_strict.util.check_type.check_int_verbosity.params.test py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.check_start_folder_importable py:function 1 code/util/check_type.html#$ -
 logging_strict.util.check_type.check_start_folder_importable.params.folder_start py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.check_type_path py:function 1 code/util/check_type.html#$ -
 logging_strict.util.check_type.check_type_path.params.module_path py:parameter 1 code/util/check_type.html#$ -
 logging_strict.util.check_type.check_type_path.params.msg_additional py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.is_not_ok py:function 1 code/util/check_type.html#$ -
 logging_strict.util.check_type.is_not_ok.params.test py:parameter 1 code/util/check_type.html#$ -
+logging_strict.util.check_type.is_ok py:function 1 code/util/check_type.html#$ -
 logging_strict.util.check_type.is_ok.params.test py:parameter 1 code/util/check_type.html#$ -
 logging_strict.util.package_resource py:module 0 code/util/package_resource.html#module-$ -
 logging_strict.util.package_resource.PackageResource.cache_extract py:method 1 code/util/package_resource.html#module-$ -
