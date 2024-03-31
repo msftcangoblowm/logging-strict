@@ -39,6 +39,7 @@ Module objects
 ---------------
 
 """
+
 __all__ = (
     "LoggingStrictError",
     "LoggingStrictPackageNameRequired",

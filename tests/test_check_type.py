@@ -10,6 +10,7 @@
 Unittest for check_type module
 
 """
+
 import tempfile
 import unittest
 from pathlib import (

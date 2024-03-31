@@ -42,7 +42,7 @@
         $ make prebuild
     - Don't forget the man page: docs/python-asz.1.txt
     - Check that the docs build correctly:
-        $ tox -e doc
+        $ tox -e docs
         or
         $ cd docs && make doctest && cd - &>/dev/null
         $ cd docs && make linkcheck && cd - &>/dev/null

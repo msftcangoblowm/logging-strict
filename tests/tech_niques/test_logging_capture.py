@@ -10,6 +10,7 @@
 Unittest for logging_capture module
 
 """
+
 from __future__ import annotations
 
 import logging

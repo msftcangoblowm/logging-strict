@@ -14,6 +14,7 @@
    https://stackoverflow.com/a/18104544
 
 """
+
 # import sys
 # del sys.modules["logging_strict"]
 # import coverage
@@ -38,7 +39,7 @@ else:  # pragma: no cover
     from typing import Sequence  # noqa: F401 Used by sphinx
 
 
-class pep518_sections(unittest.TestCase):
+class Pep518Sections(unittest.TestCase):
     def setUp(self):
         if "__pycache__" in __file__:
             # cached

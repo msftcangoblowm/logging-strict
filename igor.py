@@ -13,6 +13,7 @@ Adapted from
 - `https://raw.githubusercontent.com/nedbat/coveragepy/master/igor.py`_
 
 """
+
 import datetime
 import inspect
 import os

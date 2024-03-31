@@ -118,6 +118,7 @@ UI framework terse name or worker implementation characteristic
 e.g. textual, rich, :abbr:`mp (multiprocessing)` or :abbr:`mq (rabbitmq)`
 
 """
+
 from .constants import LoggingConfigCategory
 from .exceptions import (
     LoggingStrictError,

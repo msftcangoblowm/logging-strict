@@ -23,6 +23,7 @@ Module objects
 ----------------------------
 
 """
+
 import os
 
 __all__ = ("detect_coverage",)

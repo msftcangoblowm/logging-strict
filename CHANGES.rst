@@ -8,6 +8,18 @@ Changelog
    Feature request
    .................
 
+   - Run coverage, upload results, and display badge
+
+     https://github.com/pytest-dev/pytest/blob/main/.github/workflows/test.yml
+
+   - Close stale issues after 14 days
+
+   https://github.com/pytest-dev/pytest/blob/main/.github/workflows/stale.yml
+
+   - Gracefully handle sigpipe error around validate entrypoint
+
+     https://github.com/pytest-dev/pytest/blob/main/src/_pytest/config/__init__.py#L190
+
    Known regressions
    ..................
 
@@ -20,9 +32,17 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - docs(conf.py): intersphinx_mapping set a base url. In inv, paths become relative
-
 .. scriv-start-here
+
+.. _changes_1-2-25:
+
+Version 1.2.25 — 2024-03-31
+---------------------------
+
+- docs(conf.py): intersphinx_mapping set a base url. In inv, paths become relative
+- style: black decides add empty line between module header and imports
+- chore(pre-commit): update dependency versions
+- test: one unittest class name not CamelCase
 
 .. _changes_1-2-24:
 

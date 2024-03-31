@@ -7,6 +7,7 @@
    (B). The logging config applies to B, not A
 
 """
+
 from __future__ import annotations
 
 import sys

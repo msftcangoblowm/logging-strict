@@ -151,6 +151,7 @@ Module objects
 ---------------
 
 """
+
 from __future__ import annotations
 
 import importlib.resources as importlib_resources  # py39+
