@@ -2,7 +2,7 @@ Code Manual
 =============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :name: toctree_project_base_folder
 
    public_api/index

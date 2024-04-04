@@ -1,9 +1,8 @@
+from __future__ import annotations
+
 import sys
 from types import TracebackType
-from typing import (
-    Any,
-    Optional,
-)
+from typing import Any
 
 if sys.version_info >= (3, 8):
     from typing import Final
@@ -21,9 +20,9 @@ class CaptureOutput:
     def __enter__(self) -> Self: ...
     def __exit__(
         self,
-        exc_type: Optional[type[Exception]],
-        exc_value: Optional[Any],
-        exc_tb: Optional[TracebackType],
+        exc_type: type[Exception] | None,
+        exc_value: Any | None,
+        exc_tb: TracebackType | None,
     ) -> None: ...
     @property
     def stdout(self) -> str: ...

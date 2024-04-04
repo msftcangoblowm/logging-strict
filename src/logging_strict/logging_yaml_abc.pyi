@@ -3,10 +3,7 @@ from __future__ import annotations
 import abc
 import sys
 from pathlib import Path
-from typing import (
-    Any,
-    Optional,
-)
+from typing import Any
 
 if sys.version_info >= (3, 8):  # pragma: no cover
     from typing import Final

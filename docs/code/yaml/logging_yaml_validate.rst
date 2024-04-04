@@ -17,7 +17,7 @@ Available as an:
    logging.config
    `[spec] <https://docs.python.org/3/library/logging.config.html#dictionary-schema-details>`_
 
-   `strictyaml compound types <https://hitchdev.com/strictyaml/using/alpha/compound/>`_
+   :py:mod:`strictyaml.compound_types`
 
 Limitations
 ------------
@@ -32,14 +32,13 @@ Limitations
 
    - tuple[str, str]
 
-  Actual: tuple[] or tuple[Any, ...]
+  Actual: tuple[] or tuple[typing.Any, ...]
 
   So can't prevent :code:`len(Sequence) > 2`
 
 2. :py:class:`logging.handlers.TimedRotatingFileHandler` arg ``asTime``
 
-  `strictyaml <https://hitchdev.com/strictyaml/>` has no support for
-  :py:class:`datetime.time`
+  :py:mod:`strictyaml <strictyaml.docs>` has no support for :py:class:`datetime.time`
 
 Module private variables
 -------------------------
@@ -50,8 +49,11 @@ Module private variables
 
    Module exports
 
+Module objects
+---------------
+
 .. py:data:: schema_logging_config
-   :type: "strictyaml.validators.Validator"
+   :type: strictyaml.validators.Validator
 
    strictyaml schema to compare the yaml against
 
@@ -78,7 +80,7 @@ Module private variables
 
 
    Eventhough it's easy to fix the yaml,
-   external:python+ref:`logging.config.dictConfig` will accept the non-fixed yaml
+   :py:func:`logging.config.dictConfig` will accept the non-fixed yaml
 
    Reluctantly ... allow flow style
 
@@ -92,13 +94,10 @@ Module private variables
 
    :param yaml_snippet: :py:mod:`logging.config` YAML str
    :type yaml_snippet: str
-   :param schema: `strictyaml <https://hitchdev.com/strictyaml/>` strict typing schema
-   :type schema:
-
-      strictyaml.validators.Validator | :py:data:`.schema_logging_config`
-
+   :param schema: :py:mod:`strictyaml <strictyaml.docs>` strict typing schema
+   :type schema: strictyaml.validators.Validator | logging_strict.logging_yaml_validate.schema_logging_config
    :returns: YAML object. Pass this to each worker
-   :rtype: external:strictyaml+ref:`~strictyaml.representation.YAML` | None
+   :rtype: strictyaml.representation.YAML | None
 
    .. seealso::
 

@@ -24,6 +24,7 @@ Non-abstract methods:
 .. automodule:: logging_strict.logging_yaml_abc
    :members:
    :undoc-members:
-   :noindex:
    :special-members:
    :private-members:
+   :platform: Unix
+   :synopsis: base class of logging_yaml implementations

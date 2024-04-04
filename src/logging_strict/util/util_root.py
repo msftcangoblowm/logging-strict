@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.util.util_root
-   :platform: Unix
-   :synopsis: Checks whether or not root
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -169,7 +165,7 @@ class IsRoot:
         Intended to be run only by root, but not necessarily
 
         :returns: root home folder
-        :rtype: :py:class:`~pathlib.Path`
+        :rtype: pathlib.Path
         """
         if TYPE_CHECKING:
             is_not_root: bool
@@ -192,7 +188,7 @@ class IsRoot:
 
            If provided passes error message for handling
 
-        :type callback: Callable[[], str] | None
+        :type callback: collections.abc.Callable[[], str] | None
         :param is_app_exit: True and not root, should exit app
         :type is_app_exit: bool | None
         :param is_raise_exc:
@@ -250,7 +246,7 @@ class IsRoot:
 
            If provided passes error message for handling
 
-        :type callback: Callable[[], str] | None
+        :type callback: collections.abc.Callable[[], str] | None
         :param is_app_exit:
 
            True and not normal user, should exit app
@@ -309,12 +305,12 @@ class IsRoot:
     ):
         """
         :param path_file: Path to the file
-        :type path_file: :py:class:`~typing.Any`
+        :type path_file: typing.Any
         :param is_as_user:
 
            Flag. ``True`` if file permissions should be as a user otherwise ``False``
 
-        :type is_as_user: :py:class:`~typing.Any` | None
+        :type is_as_user: typing.Any | None
         """
         if TYPE_CHECKING:
             session_user_name: str
@@ -368,7 +364,7 @@ def check_python_not_old(
 
        If provided passes error message for handling
 
-    :type callback: Callable[[], str] | None
+    :type callback: collections.abc.Callable[[], str] | None
     :param is_app_exit: True and before py39, should exit app
     :type is_app_exit: bool | None
     :param is_raise_exc:

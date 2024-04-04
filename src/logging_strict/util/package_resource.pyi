@@ -4,7 +4,6 @@ import logging
 import sys
 from importlib.abc import Traversable
 from pathlib import Path
-from typing import Optional
 
 from ..constants import g_app_name
 
@@ -55,13 +54,13 @@ def match_file(
     y: Traversable,
     /,
     *,
-    cb_suffix: Optional[Callable[[str], bool]] = None,
-    cb_file_stem: Optional[Callable[[str], bool]] = None,
+    cb_suffix: Callable[[str], bool] | None = None,
+    cb_file_stem: Callable[[str], bool] | None = None,
 ) -> bool: ...
 def check_folder(
     x: Traversable,
-    cb_suffix: Optional[Callable[[str], bool]] = None,
-    cb_file_stem: Optional[Callable[[str], bool]] = None,
+    cb_suffix: Callable[[str], bool] | None = None,
+    cb_file_stem: Callable[[str], bool] | None = None,
 ) -> Iterator[Traversable]: ...
 def filter_by_suffix(
     expected_suffix: str | tuple[str, ...],
@@ -76,7 +75,7 @@ def walk_tree_folders(
     traversable_root: Traversable,
 ) -> Iterator[Traversable]: ...
 def is_package_exists(package_name: str) -> bool: ...
-def _get_package_data_folder(dotted_path: str) -> Optional[Traversable]: ...
+def _get_package_data_folder(dotted_path: str) -> Traversable | None: ...
 
 class PackageResource:
     def __init__(
@@ -94,21 +93,21 @@ class PackageResource:
         /,
         *,
         path_relative_package_dir: str | Path | None = None,
-        parent_count: Optional[int] = None,
+        parent_count: int | None = None,
     ) -> Path: ...
     def get_parent_paths(
         self,
         *,
-        cb_suffix: Optional[Callable[[str], bool]] = None,
-        cb_file_stem: Optional[Callable[[str], bool]] = None,
+        cb_suffix: Callable[[str], bool] | None = None,
+        cb_file_stem: Callable[[str], bool] | None = None,
         path_relative_package_dir: str | Path | None = None,
-        parent_count: Optional[int] = 1,
+        parent_count: int | None = 1,
     ) -> dict[str, list[str]]: ...
     def package_data_folders(
         self,
         *,
-        cb_suffix: Optional[Callable[[str], bool]] = None,
-        cb_file_stem: Optional[Callable[[str], bool]] = None,
+        cb_suffix: Callable[[str], bool] | None = None,
+        cb_file_stem: Callable[[str], bool] | None = None,
         path_relative_package_dir: Path | str | None = None,
     ) -> Iterator[Traversable]: ...
     def resource_extract(
@@ -116,16 +115,16 @@ class PackageResource:
         base_folder_generator: Iterator[Traversable],
         path_dest: Path | str,
         /,
-        cb_suffix: Optional[Callable[[str], bool]] = None,
-        cb_file_stem: Optional[Callable[[str], bool]] = None,
-        is_overwrite: Optional[bool] = False,
-        as_user: Optional[bool] = False,
+        cb_suffix: Callable[[str], bool] | None = None,
+        cb_file_stem: Callable[[str], bool] | None = None,
+        is_overwrite: bool | None = False,
+        as_user: bool | None = False,
     ) -> Iterator[Path]: ...
     def cache_extract(
         self,
         base_folder_generator: Iterator[Traversable],
         /,
-        cb_suffix: Optional[Callable[[str], bool]] = None,
-        cb_file_stem: Optional[Callable[[str], bool]] = None,
-        is_overwrite: Optional[bool] = False,
+        cb_suffix: Callable[[str], bool] | None = None,
+        cb_file_stem: Callable[[str], bool] | None = None,
+        is_overwrite: bool | None = False,
     ) -> Iterator[Path]: ...

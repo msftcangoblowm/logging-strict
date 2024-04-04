@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import (
     Any,
     ClassVar,
-    Optional,
 )
 
 if sys.version_info >= (3, 8):

@@ -1,11 +1,5 @@
 """
-.. py:module:: logging_strict.logging_yaml_abc
-   :platform: Unix
-   :synopsis: base class of logging_yaml implementations
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
-
-..
 
 Base class of logging_yaml implementations
 
@@ -49,7 +43,6 @@ from __future__ import annotations
 import abc
 import glob
 import logging.config
-import sys
 from pathlib import (
     Path,
     PurePath,
@@ -69,14 +62,6 @@ from .util.check_type import (
 )
 from .util.xdg_folder import _get_path_config
 
-if TYPE_CHECKING:
-    from typing import Optional  # noqa: F401 used by sphinx
-
-    if sys.version_info >= (3, 9):  # pragma: no cover
-        from collections.abc import Iterator  # noqa: F401 used by sphinx
-    else:  # pragma: no cover
-        from typing import Iterator  # noqa: F401 used by sphinx
-
 __all__ = ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", "setup_logging_yaml")
 
 YAML_LOGGING_CONFIG_SUFFIX = ".logging.config.yaml"
@@ -89,11 +74,11 @@ def setup_logging_yaml(path_yaml):
     Can pass in a path or a the YAML str
 
     :param path_yaml: :py:mod:`logging.config` YAML file path
-    :type path_yaml: :py:class:`~typing.Any`
+    :type path_yaml: typing.Any
 
     :raises:
 
-       - external:python+ref:`strictyaml.YAMLValidationError` -- Invalid.
+       - :py:exc:`strictyaml.YAMLValidationError` -- Invalid.
          Validation against logging.config schema failed
 
     """
@@ -130,7 +115,7 @@ def setup_logging_yaml(path_yaml):
     return None
 
 
-def as_str(package_name: str, file_name: str) -> str:
+def as_str(package_name, file_name):
     """Assumes package data file already extracted to expected folder
 
     :param package_name:
@@ -146,7 +131,7 @@ def as_str(package_name: str, file_name: str) -> str:
 
     :raises:
 
-       - external:python+ref:`strictyaml.YAMLValidationError` -- Invalid.
+       - :py:exc:`strictyaml.YAMLValidationError` -- Invalid.
          Validation against logging.config schema failed
 
        - :py:exc:`FileNotFoundError` -- Could not find logging config YAML file
@@ -164,7 +149,7 @@ def as_str(package_name: str, file_name: str) -> str:
     if is_exists:
         # test load the yaml file
         str_yaml = path_yaml.read_text()
-        """raises external:python+ref:`strictyaml.YAMLValidationError`
+        """raises py:exc:`strictyaml.YAMLValidationError`
         If another yaml implementation, the exception raised will
         be that implementation specific
         """
@@ -189,7 +174,7 @@ class LoggingYamlType(abc.ABC):
            To not filter, getting all versions, ``None``. To get
            the fallback version, pass in an unsupported type, e.g. 0.12345
 
-        :type val: :py:class:`~typing.Any`
+        :type val: typing.Any
         :returns: version as a str (unsigned integer)
         :rtype: str
         """
@@ -253,7 +238,7 @@ class LoggingYamlType(abc.ABC):
            :paramref:`logging_strict.logging_yaml_abc.LoggingYamlType.pattern.params.category`.
            **Not** the version of the yaml spec. Don't confuse the two.
 
-        :type version: :py:class:`~typing.Any` | None
+        :type version: typing.Any | None
         :returns: Pattern used with :py:func:`glob.glob` to find files
         :rtype: str
         """
@@ -265,7 +250,7 @@ class LoggingYamlType(abc.ABC):
         else:
             """empty str, unsupported type, or None, or str with only
             whitespace would be stopped by
-            type[ external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType` ]
+            type[logging_strict.logging_yaml_abc.LoggingYamlType]
             constructor producing a ValueError
             """
             file_suffixes = f".*{cls.suffixes}"
@@ -297,13 +282,13 @@ class LoggingYamlType(abc.ABC):
 
            Absolute path to a folder
 
-        :type path_dir: :py:class:`~pathlib.Path` | None
+        :type path_dir: pathlib.Path | None
         :returns: Within folder tree, iterator of yaml
 
            ``True`` if at least one yaml file exists in folder
            otherwise ``False``
 
-        :rtype: Iterator[ :py:class:`~pathlib.Path` ]
+        :rtype: collections.abc.Iterator[pathlib.Path]
         """
         cls = type(self)
         # print(f"{self.category} {self.genre} {self.flavor} {self.version}")
@@ -335,7 +320,7 @@ class LoggingYamlType(abc.ABC):
     @classmethod
     def __subclasshook__(cls, C):
         """A class wanting to be
-        external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType`,
+        :py:class:`~logging_strict.logging_yaml_abc.LoggingYamlType`,
         minimally requires:
 
         Properties:
@@ -358,19 +343,19 @@ class LoggingYamlType(abc.ABC):
 
         Then register itself
         :code:`LoggingYamlType.register(AnotherDatumClass)` or subclass
-        external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType`
+        :py:class:`~logging_strict.logging_yaml_abc.LoggingYamlType`
 
         :param C:
 
            Class to test whether implements this interface or is a subclass
 
-        :type C: :py:class:`~typing.Any`
+        :type C: typing.Any
         :returns:
 
            ``True`` implements
-           external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType`
+           :py:class:`~logging_strict.logging_yaml_abc.LoggingYamlType`
            interface or is a subclass. ``False`` not a
-           external:logging-strict+ref:`~logging_strict.logging_yaml_abc.LoggingYamlType`
+           :py:class:`~logging_strict.logging_yaml_abc.LoggingYamlType`
 
         :rtype: bool
         """
@@ -436,7 +421,7 @@ class LoggingYamlType(abc.ABC):
            Destination folder. XDG user data dir, on linux,
            :code:`$HOME/.local/share/[app name]`
 
-        :rtype: :py:class:`~pathlib.Path`
+        :rtype: pathlib.Path
         """
         ...
 
@@ -449,7 +434,7 @@ class LoggingYamlType(abc.ABC):
            Default empty string. Relative to the package base data
            folder, provide a relative path or str to narrow search results
 
-        :type path_relative_package_dir: :py:class:`~pathlib.Path` | str | None
+        :type path_relative_package_dir: pathlib.Path | str | None
         :returns:
 
            Destination path of extracted/exported :py:mod:`logging.config` yaml file(s)
@@ -467,12 +452,12 @@ class LoggingYamlType(abc.ABC):
         :rtype: str
         :raises:
 
-           - external:python+ref:`strictyaml.exceptions.YAMLValidationError` -- Invalid.
+           - :py:exc:`strictyaml.exceptions.YAMLValidationError` -- Invalid.
              Validation against logging.config schema failed
 
            - :py:exc:`FileNotFoundError` -- Could not find logging config YAML file
 
-           - external:python+ref:`~logging_strict.exceptions.LoggingStrictGenreRequired` --
+           - :py:exc:`~logging_strict.exceptions.LoggingStrictGenreRequired` --
              Genre required to get file name
 
         """

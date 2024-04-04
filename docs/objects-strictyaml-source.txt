@@ -29,6 +29,7 @@ strictyaml.exceptions.raise_type_error.params.yaml_object py:parameter 1 blob/df
 strictyaml.exceptions.raise_type_error.params.to_type py:parameter 1 blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
 strictyaml.exceptions.raise_type_error.params.alternatives py:parameter 1 blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
 strictyaml.StrictYAMLError py:exception 1 blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
+strictyaml.YAML py:class 1 blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/representation.py#L48 -
 strictyaml.YAMLValidationError py:exception 1 blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/exceptions.py -
 strictyaml.Validator py:class 1 blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/validators.py -
 strictyaml.representation.YAML py:class 1 blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/representation.py#L48 -

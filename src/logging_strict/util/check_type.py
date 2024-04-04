@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.util.check_type
-   :platform: Unix
-   :synopsis: Check utility functions
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -47,7 +43,7 @@ __all__ = (
 
 def check_type_path(module_path, *, msg_context=None):
     """Check
-    external:logging-strict+ref:`logging_strict.util.check_type.check_type_path.params.module_path`
+    :py:obj:`logging_strict.util.check_type.check_type_path.params.module_path`
     is a :py:class:`~pathlib.Path`
 
     :param module_path:
@@ -55,14 +51,14 @@ def check_type_path(module_path, *, msg_context=None):
        Parameter to check, if possible and necessary, coerse into
        :py:class:`~pathlib.Path`
 
-    :type module_path: :py:class:`~typing.Any` | None
+    :type module_path: typing.Any | None
     :param msg_additional:
 
        Context specific message, **not** concerning type
 
     :type msg_additional: str | None
     :returns: Parameter coersed to :py:class:`~pathlib.Path`
-    :rtype: :py:class:`~pathlib.Path`
+    :rtype: pathlib.Path
     :raises:
 
        - :py:exc:`TypeError` -- Invalid type. :py:class:`~pathlib.Path`
@@ -115,7 +111,7 @@ def is_not_ok(test):
     """Check not ``None``, not a str, or an empty str
 
     :param test: variable to test
-    :type test: :py:class:`~typing.Any` | None
+    :type test: typing.Any | None
     :returns: ``True`` if either: ``None``, not a str, or an empty str
     :rtype: bool
     """
@@ -147,7 +143,7 @@ def is_ok(test):
     Edge case: contains only whitespace --> ``False``
 
     :param test: variable to test
-    :type test: :py:class:`~typing.Any` | None
+    :type test: typing.Any | None
     :returns: ``True`` if non-empty str otherwise ``False``
     :rtype: bool
     """
@@ -167,7 +163,7 @@ def check_int_verbosity(test):
     """Check verbosity is an integer with value either 1 or 2
 
     :param test: variable to test
-    :type test: :py:class:`~typing.Any` | None
+    :type test: typing.Any | None
     :returns: ``True`` if integer 1 or 2 otherwise ``False``
     :rtype: bool
     """
@@ -220,7 +216,7 @@ def check_start_folder_importable(folder_start):
     "Make a __init__.py" in that folder, touch [folder path]/__init__.py"
 
     :param folder_start: folder absolute path
-    :type folder_start: :py:class:`~typing.Any` | None
+    :type folder_start: typing.Any | None
     :returns:
 
        ``True`` if folder contains ``__init__.py`` file otherwise ``False``

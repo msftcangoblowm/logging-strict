@@ -3,6 +3,13 @@
 # Version: 7.4.0
 # The remainder of this file is compressed using zlib.
 coverage py:module 0 index.html -
+coverage.cmd.combine py:method 1 cmd.html#cmd-combine -
 coverage.control.Coverage py:class 1 api_coverage.html -
+coverage.control.Coverage.combine py:method 1 api_coverage.html#coverage.Coverage.combine -
+coverage.control.Coverage.erase py:method 1 api_coverage.html#coverage.Coverage.erase -
+coverage.control.Coverage.json_report py:method 1 api_coverage.html#coverage.Coverage.json_report -
+coverage.control.Coverage.report py:method 1 api_coverage.html#coverage.Coverage.report -
 coverage.control.Coverage.start py:method 1 api_coverage.html#coverage.Coverage.start -
 coverage.exceptions.NoDataError py:exception 1 api_exceptions.html -
+coverage.exceptions.NotPython py:exception 1 api_exceptions.html -
+coverage.subprocess.measuring py:module 1 subprocess.html#measuring-sub-processes -

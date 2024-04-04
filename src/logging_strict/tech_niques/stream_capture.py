@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.tech_niques.stream_capture
-   :platform: Unix
-   :synopsis: Context manager to capture streams stdout/stderr
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -51,7 +47,7 @@ class CaptureOutput:
 
         :rtype:
 
-           external:logging-strict+ref:`~logging_strict.tech_niques.stream_capture.CaptureOutput`
+           logging_strict.tech_niques.stream_capture.CaptureOutput
 
         .. seealso::
 
@@ -75,9 +71,9 @@ class CaptureOutput:
         :param exc_type: Exception type
         :type exc_type: type[Exception] | None
         :param exc_value: Exception value
-        :type exc_value: :py:class:`~typing.Any` | None
+        :type exc_value: typing.Any | None
         :param exc_tb: Exception traceback if an Exception occurred
-        :type exc_tb: :py:obj:`types.TracebackType` | None
+        :type exc_tb: types.TracebackType | None
         """
         self._stdout_output = sys.stdout.getvalue()
         sys.stdout = self._stdout

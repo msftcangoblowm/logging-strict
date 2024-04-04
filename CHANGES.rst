@@ -34,6 +34,16 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-26:
+
+Version 1.2.26 — 2024-04-04
+---------------------------
+
+- style: minimize usage of typing.Optional and typing.Union
+- docs: favor intersphinx_mapping over extlinks. Minimize usage of extlinks
+- docs: automodule in use, so module directive create a duplicate. Remove it
+- docs: minimize/remove usage of external:[package]+ref:
+
 .. _changes_1-2-25:
 
 Version 1.2.25 — 2024-03-31

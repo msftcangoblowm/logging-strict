@@ -4,5 +4,6 @@ Exceptions
 .. automodule:: logging_strict.exceptions
    :members:
    :undoc-members:
-   :noindex:
    :special-members:
+   :platform: Unix
+   :synopsis: Custom exceptions

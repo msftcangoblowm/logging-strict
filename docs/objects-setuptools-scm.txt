@@ -1,0 +1,5 @@
+# Sphinx inventory version 2
+# Project: setuptools-scm 8.0.4
+# Version: 8.0.4
+# The remainder of this file is compressed using zlib.
+setuptools_scm py:module 0 usage/#semantic-versioning-semver -

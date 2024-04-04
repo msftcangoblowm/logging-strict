@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.util.check_logging
-   :platform: Unix
-   :synopsis: Checks dealing with logging module
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -63,7 +59,7 @@ def str2int(level=None):
     If possible to convert str -> int. Otherwise ``False``
 
     :param level: Can be
-    :type level: :py:class:`~typing.Any` | None
+    :type level: typing.Any | None
     :returns: ``False`` if cannot convert str -> int otherwise the int
     :rtype: int | bool
     """
@@ -86,7 +82,7 @@ def is_assume_root(logger_name):
     - "root"
 
     :param logger_name: A logger name
-    :type logger_name: :py:class:`~typing.Any` | ``None``
+    :type logger_name: typing.Any | ``None``
     :returns: ``True`` if should assume is root loger name otherwise ``False``
     :rtype: bool
     """
@@ -114,7 +110,7 @@ def check_logger(logger):
 
        Logger name can be a :py:class:`logging.Logger` or str
 
-    :type logger: :py:class:`~typing.Any` | str | ``None``
+    :type logger: typing.Any | str | ``None``
     :returns: Would produce a normalized logger
     :rtype: bool
     """
@@ -140,7 +136,7 @@ def check_level_name(logger_name):
 
        Logger name can be a :py:class:`logging.Logger`, str
 
-    :type logger_name: :py:class:`~typing.Any` | ``None``
+    :type logger_name: typing.Any | ``None``
     :returns: ``True`` check pass otherwise ``False``
     :rtype: bool
     """
@@ -167,9 +163,9 @@ def check_level(level):
 
     :param level:
 
-       str or int or :py:data:`logging.INFO` (, etc) or :py:class:`~typing.Any`
+       str or int or :py:data:`logging.INFO` (, etc) or :py:data:`~typing.Any`
 
-    :type level: :py:class:`~typing.Any` | ``None``
+    :type level: typing.Any | None
     :returns: ``True`` level can be normalized otherwise ``False``
     :rtype: bool
     """
@@ -232,7 +228,7 @@ def check_formatter(format_=LOG_FORMAT):
 
        Can pass in anything. Intended to be a logging format str
 
-    :type format_: :py:class:`~typing.Any` | ``None``
+    :type format_: typing.Any | None
     :returns: ``True`` if a valid logging formatter str otherwise ``False``
     :rtype: bool
     """

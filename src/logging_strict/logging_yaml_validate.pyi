@@ -1,6 +1,7 @@
 # once strictyaml implements type hints #90, this stub breaks
+from __future__ import annotations
+
 import sys
-from typing import Optional
 
 from strictyaml import (
     YAML,
@@ -32,5 +33,5 @@ schema_logging_config: Validator
 
 def validate_yaml_dirty(
     yaml_snippet: str,
-    schema: Optional[Validator] = schema_logging_config,
-) -> Optional[YAML]: ...
+    schema: Validator | None = schema_logging_config,
+) -> YAML | None: ...

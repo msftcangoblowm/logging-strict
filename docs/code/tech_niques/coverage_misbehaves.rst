@@ -5,4 +5,5 @@ Coverage misbehaves
    :members:
    :private-members:
    :undoc-members:
-   :noindex:
+   :platform: Unix
+   :synopsis: Detect runner to adjust logging level inconsistencies

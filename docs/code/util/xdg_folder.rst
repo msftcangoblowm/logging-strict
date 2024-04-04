@@ -4,4 +4,5 @@ XDG folders
 .. automodule:: logging_strict.util.xdg_folder
    :members:
    :undoc-members:
-   :noindex:
+   :platform: Unix
+   :synopsis: Get XDG user or site folders

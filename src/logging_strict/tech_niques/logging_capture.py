@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.tech_niques.logging_capture
-   :platform: Unix
-   :synopsis: Within a context manager capture both stdout and stderr
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -77,17 +73,17 @@ using parentheses is the preferred style.
 When when chaining context managers together, it's a one liner
 
 In addition to the two context managers above, in unittests,
-exteral:python+ref:`unittest.mock.patch` can alter modules behavior
+:py:func:`unittest.mock.patch` can alter modules behavior
 and results without changes to the modules source code.
 
 sync and async logging
----------------------------
+-----------------------
 
 - For
   :ref:`synchronous logging <api/logging/api_logging_synchronous:synchronous logging>`,
   a context manager to fix the issue of redirecting stdout/stderr.
 
-  external:logging-strict+ref:`LoggerRedirector <logging_strict.tech_niques.LoggerRedirector>`
+  :py:class:`LoggerRedirector <logging_strict.tech_niques.LoggerRedirector>`
 
   :code:`from logging_strict.tech_niques import LoggerRedirector`
 
@@ -100,13 +96,13 @@ unittest assertLogs/assertNoLogs
 tl;dr;
 ^^^^^^^
 
-external:python+ref:`unittest.TestCase.assertLogs` assertion makes it
+:py:meth:`unittest.TestCase.assertLogs` assertion makes it
 ill-suited for general use, besides within unittests
 
 The details
 ^^^^^^^^^^^^
 
-external:python+ref:`unittest.TestCase.assertLogs` does log capturing
+:py:meth:`unittest.TestCase.assertLogs` does log capturing
 
     **Tests** that **at least one message is logged** on the logger or
     one of its children, with at least the given level.
@@ -141,10 +137,10 @@ Code snippet
 
 .. seealso::
 
-   assertLogs external:python+ref:`[docs] <unittest.TestCase.assertLogs>`
+   assertLogs :py:meth:`[docs] <unittest.TestCase.assertLogs>`
    `[source] <https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L816>`_
 
-   assertNoLogs (py310+) external:python+ref:`[docs] <unittest.TestCase.assertNoLogs>`
+   assertNoLogs (py310+) :py:meth:`[docs] <unittest.TestCase.assertNoLogs>`
 
 Into the rabbit hole
 ---------------------------
@@ -168,7 +164,7 @@ More in-depth low level implementation notes
 
 
 Module private variables
---------------------------
+-------------------------
 
 .. py:data:: __all__
    :type: tuple[str, str]
@@ -177,7 +173,7 @@ Module private variables
    Exported objects from this module
 
 Module objects
---------------------------
+---------------
 
 """
 
@@ -286,12 +282,14 @@ else:  # pragma: no cover
 
 def _normalize_level(level):
     """For
-    external:logging-strict+ref:`logging_strict.tech_niques.logging_capture.captureLogs`,
+    :py:func:`logging_strict.tech_niques.logging_capture.captureLogs`,
     normalize level
 
-    :param level: str or int or logging.INFO (, etc) or
-    :py:class:`~typing.Any`
-    :type level: :py:class:`~typing.Any` | None
+    :param level:
+
+       str or int or :py:data:`logging.INFO` (, etc) or :py:data:`~typing.Any`
+
+    :type level: typing.Any | None
     :returns: Normalized logger level name
     :rtype: str
     :raise:
@@ -374,14 +372,14 @@ def _normalize_level(level):
 
 def _normalize_level_name(logger_name):
     """For
-    external:logging-strict+ref:`logging_strict.tech_niques.logging_capture.captureLogs`,
+    :py:func:`logging_strict.tech_niques.logging_capture.captureLogs`,
     normalize level names
 
     :param logger_name:
 
-       Logger name can be a external:python+ref:`logging.Logger`, str
+       Logger name can be a :py:class:`logging.Logger`, str
 
-    :type logger_name: :py:class:`~typing.Any` | None
+    :type logger_name: typing.Any | None
     :returns: Normalized logger level name
     :rtype: str
     :raises:
@@ -413,11 +411,11 @@ def _normalize_logger(logger):
 
     :param logger:
 
-       Logger name can be a external:python+ref:`logging.Logger` or str
+       Logger name can be a :py:class:`logging.Logger` or str
 
-    :type logger: external:python+ref:`~logging.Logger` | str | ``None``
+    :type logger: logging.Logger | str | None
     :returns: Normalized logger
-    :rtype: external:python+ref:`logging.Logger`
+    :rtype: logging.Logger
 
     :raises:
 
@@ -425,7 +423,7 @@ def _normalize_logger(logger):
 
     .. note::
 
-       external:python+ref:`logging.Manager.getLogger` requires logger
+       :py:func:`logging.getLogger` requires logger
        name to be a str or :py:exc:`TypeError` occurs
 
     """
@@ -450,13 +448,13 @@ def _normalize_formatter(format_=LOG_FORMAT):
 
     :param format_:
 
-       Default external:logging-strict+ref:`logging_strict.constants.LOG_FORMAT`
+       Default :py:data:`logging_strict.constants.LOG_FORMAT`
 
        Can pass in anything. Intended to be a logging format str
 
-    :type format_: :py:class:`~typing.Any` | None
+    :type format_: typing.Any | None
     :returns: Valid logging formatter to be added to a logging.Handler
-    :rtype: external:python+ref:`logging.Formatter`
+    :rtype: logging.Formatter
     """
     if format_ is None or is_not_ok(format_):
         format_str = LOG_FORMAT
@@ -547,7 +545,7 @@ class _CapturingHandler(logging.Handler):
         """Save record. Format/Save message
 
         :param record: logging record. Save as record and as str message
-        :type record: external:python+ref:`logging.LogRecord`
+        :type record: logging.LogRecord
         """
         self.watcher.records.append(record)
         msg = self.format(record)
@@ -587,7 +585,7 @@ def captureLogs(
         print(cm.output)
 
     The watcher (
-    external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`
+    :py:class:`logging_strict.tech_niques.logging_capture._LoggingWatcher`
     ) has attributes:
 
     - output
@@ -598,18 +596,18 @@ def captureLogs(
 
 
     :param logger: Default ``None``. logger or logger name
-    :type logger: str | external:python+ref:`logging.Logger` | None
+    :type logger: str | logging.Logger | None
     :param level: Default ``None``. Logging level
-    :type level: str | int | ``None``
+    :type level: str | int | None
     :param format_: Default ``None``. Can override logging format spec
-    :type format_: str | ``None``
+    :type format_: str | None
     :returns:
 
        Context manager yields one
-       external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.
+       :py:class:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.
        Which stores the log records/messages
 
-    :rtype: Iterator[ external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.  ]
+    :rtype: Iterator[logging_strict.tech_niques.logging_capture._LoggingWatcher]
 
     .. seealso::
 
@@ -675,22 +673,22 @@ def captureLogsMany(
     format_=LOG_FORMAT,
 ):
     """Behave exactly like
-    external:logging-strict+ref:`~logging_strict.tech_niques.logging_capture.captureLogs`
+    :py:func:`~logging_strict.tech_niques.logging_capture.captureLogs`
     except intended for multiple loggers rather than one
 
     :param loggers: Sequence of loggers
     :type loggers: Sequence[str | logging.Logger]
     :param levels: Sequence of levels corresponding to each loggers in order
-    :type levels: Sequence[str | int | ``None``]
+    :type levels: Sequence[str | int | None]
     :param format_: Default ``None``. Can override logging format spec
-    :type format_: str | ``None``
+    :type format_: str | None
     :returns:
 
        Context manager yields all
-       external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.
+       :py:class:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.
        in a tuple. Order maintained
 
-    :rtype: Iterator[tuple[ external:logging-strict+ref:`logging_strict.tech_niques.logging_capture._LoggingWatcher`.  ]]
+    :rtype: Iterator[tuple[logging_strict.tech_niques.logging_capture._LoggingWatcher]]
     :raises:
 
        - :py:exc:`AssertionError` -- Loggers and levels count mismatch

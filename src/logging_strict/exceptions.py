@@ -1,16 +1,7 @@
 """
-.. module:: logging_strict.exceptions
-   :platform: Unix
-   :synopsis: Custom exceptions
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
-..
-
 Custom exceptions
-
-Public API
------------
 
 Usage
 

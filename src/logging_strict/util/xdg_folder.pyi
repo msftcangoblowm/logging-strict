@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import sys
 from pathlib import Path
-from typing import Optional
 
 if sys.version_info >= (3, 8):  # pragma: no cover
     from typing import Final
@@ -11,20 +12,20 @@ __all__: Final[tuple[str, str, str]]
 
 def _get_author(
     package: str,
-    no_period: Optional[bool] = True,
-    no_space: Optional[bool] = True,
-    no_underscore: Optional[bool] = True,
+    no_period: bool | None = True,
+    no_space: bool | None = True,
+    no_underscore: bool | None = True,
 ) -> str: ...
 
 class DestFolderSite:
     def __init__(
         self,
         appname: str,
-        author_no_period: Optional[bool] = True,
-        author_no_space: Optional[bool] = True,
-        author_no_underscore: Optional[bool] = True,
-        version: Optional[str] = None,
-        multipath: Optional[bool] = False,
+        author_no_period: bool | None = True,
+        author_no_space: bool | None = True,
+        author_no_underscore: bool | None = True,
+        version: str | None = None,
+        multipath: bool | None = False,
     ) -> None: ...
     @property
     def data_dir(self) -> str: ...
@@ -35,12 +36,12 @@ class DestFolderUser:
     def __init__(
         self,
         appname: str,
-        author_no_period: Optional[bool] = True,
-        author_no_space: Optional[bool] = True,
-        author_no_underscore: Optional[bool] = True,
-        version: Optional[str] = None,
-        roaming: Optional[bool] = False,
-        opinion: Optional[bool] = True,
+        author_no_period: bool | None = True,
+        author_no_space: bool | None = True,
+        author_no_underscore: bool | None = True,
+        version: str | None = None,
+        roaming: bool | None = False,
+        opinion: bool | None = True,
     ) -> None: ...
     @property
     def data_dir(self) -> str: ...
@@ -55,9 +56,9 @@ class DestFolderUser:
 
 def _get_path_config(
     package: str,
-    author_no_period: Optional[bool] = True,
-    author_no_space: Optional[bool] = True,
-    author_no_underscore: Optional[bool] = True,
-    version: Optional[str] = None,
-    roaming: Optional[bool] = False,
+    author_no_period: bool | None = True,
+    author_no_space: bool | None = True,
+    author_no_underscore: bool | None = True,
+    version: str | None = None,
+    roaming: bool | None = False,
 ) -> Path: ...

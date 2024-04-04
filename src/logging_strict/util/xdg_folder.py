@@ -1,8 +1,4 @@
 """
-.. py:module:: logging_strict.util.xdg_folder
-   :platform: Unix
-   :synopsis: Get XDG user or site folders
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -31,11 +27,12 @@ Module objects
 
 """
 
+from __future__ import annotations
+
 import email
 import email.policy
 from importlib import metadata
 from pathlib import Path
-from typing import Optional
 
 from appdirs import (
     AppDirs,
@@ -267,10 +264,10 @@ class DestFolderUser:
         author_no_period=True,
         author_no_space=True,
         author_no_underscore=True,
-        version: Optional[str] = None,
-        roaming: Optional[bool] = False,
-        opinion: Optional[bool] = True,
-    ) -> None:
+        version=None,
+        roaming=False,
+        opinion=True,
+    ):
         self.appname = appname
         self.appauthor = _get_author(
             appname,
@@ -373,7 +370,7 @@ def _get_path_config(
     :param author_no_underscore: Default ``True``. If ``True`` replaced with hyphen
     :type author_no_underscore: bool
     :returns: user data folder Path
-    :rtype: :py:class:`~pathlib.Path`
+    :rtype: pathlib.Path
     """
     str_user_data_dir = DestFolderUser(
         package,

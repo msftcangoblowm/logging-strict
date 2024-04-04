@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.util.pep518_read
-   :platform: Unix
-   :synopsis: pyproject.toml generic read functions
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -20,7 +16,7 @@ These functions are lifted from the black project. With minor changes:
 
    ``pyproject.toml`` handling
 
-   - external:black+ref:`black`
+   - :py:mod:`black`
 
 .. note:: Flake8 config files handling
 
@@ -91,14 +87,14 @@ def find_project_root(srcs, stdin_filename=None):
        Default ``None``. stdin file name, considers files parent as the
        project top folder
 
-    :type stdin_filename: str | ``None``
+    :type stdin_filename: str | None
     :returns:
 
        Folder containing .git, .hg, or ``pyproject.toml``, will be a common
        parent of all files and directories passed in
        :paramref:`logging_strict.util.pep518_read.find_project_root.params.srcs`
 
-    :rtype: tuple[:py:class:`~pathlib.Path`, str]
+    :rtype: tuple[pathlib.Path, str]
     :raises:
 
        - :py:exc:`PermissionError` -- Unreadable folder. Ungracefully handled
@@ -109,7 +105,7 @@ def find_project_root(srcs, stdin_filename=None):
 
     .. seealso::
 
-       external:black+ref:`black.files.find_project_root` source and credit Black
+       :py:func:`black.files.find_project_root` source and credit Black
 
     """
 

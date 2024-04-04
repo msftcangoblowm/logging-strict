@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.tech_niques.context_locals
-   :platform: Unix
-   :synopsis: Get the locals and return from a module function
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -143,13 +139,13 @@ Module private variables
    :type: typing.TypeVar
    :value: typing.TypeVar("T")
 
-   Equivalent to :py:class:`~typing.Any`
+   Equivalent to :py:data:`~typing.Any`
 
 .. py:data:: P
    :type: typing.ParamSpec
    :value: typing_extensions.ParamSpec('P')
 
-   Equivalent to :py:class:`~typing.Any`
+   Equivalent to :py:data:`~typing.Any`
 
 Module objects
 ----------------------------
@@ -215,11 +211,11 @@ class MockFunction:
     """Defines a Mock, for functions, to explore the execution details.
 
     :var func: Function to mock
-    :vartype func: Callable[..., Any]
+    :vartype func: collections.abc.Callable[..., typing.Any]
 
     .. seealso::
 
-       Used by :py:obj:`logging_strict.tech_niques.get_locals`
+       Used by :py:func:`logging_strict.tech_niques.get_locals`
 
     """
 
@@ -243,7 +239,7 @@ class MockFunction:
            A generic module level function. Is modified and executed. piggy backing
            the module level function ``locals`` onto the return statement
 
-        :type mock_instance: Callable[P, T]
+        :type mock_instance: collections.abc.Callable[P, T]
         :param args: Generic positional args
         :type args: P.args
         :param kwargs: Generic keyword args
@@ -256,7 +252,7 @@ class MockFunction:
 
         .. seealso::
 
-           `ParamSpec <https://docs.python.org/3/library/typing.html#typing.ParamSpec>`_
+           :py:class:`typing.ParamSpec`
 
         """
         # Modify ``return`` statement, to include ``locals()``. Returns a tuple
@@ -305,13 +301,13 @@ def get_locals(
     :param func_path: dotted path to func
     :type func_path: str
     :param func: The func
-    :type func: Callable[..., :py:class:`~typing.Any`]
+    :type func: collections.abc.Callable[..., typing.Any]
     :param args: Positional arguments
-    :type args: external:python+ref:`typing.ParamSpecArgs`
+    :type args: typing.ParamSpecArgs
     :param kwargs: Optional (keyword) arguments
-    :type kwargs: external:python+ref:`typing.ParamSpecKwargs`
+    :type kwargs: typing.ParamSpecKwargs
     :returns: Tuple containing return value and the locals
-    :rtype: tuple[T, dict[str, :py:class:`~typing.Any`]]
+    :rtype: tuple[logging_strict.tech_niques.context_locals.T, dict[str, typing.Any]]
     """
     with patch(
         func_path,

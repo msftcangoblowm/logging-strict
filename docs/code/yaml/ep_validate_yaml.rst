@@ -1,5 +1,5 @@
-Validate YAML
-==============
+Validate YAML Entrypoint
+=========================
 
 :abbr:`ep (entrypoint)` to validate logging.config yaml files
 
@@ -10,6 +10,7 @@ Validation options:
 .. automodule:: logging_strict.ep_validate_yaml
    :members:
    :undoc-members:
-   :noindex:
    :special-members:
    :private-members:
+   :platform: Unix
+   :synopsis: Entrypoint to check yaml logging.config file

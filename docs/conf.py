@@ -61,11 +61,11 @@ proj_master_doc = config.get("master_doc")
 # @@@ editable
 copyright = "2023–2024, Dave Faulkmore"
 # The short X.Y.Z version.
-version = "1.2.25"
+version = "1.2.26"
 # The full version, including alpha/beta/rc tags.
-release = "1.2.25"
+release = "1.2.26"
 # The date of release, in "monthname day, year" format.
-release_date = "March 31, 2024"
+release_date = "April 4, 2024"
 # @@@ end
 
 # release = config.version
@@ -157,17 +157,25 @@ intersphinx_mapping = {
         "https://docs.python.org/3",
         ("objects-python.inv", None),
     ),
+    "setuptools-scm": (
+        "https://setuptools-scm.readthedocs.io/en/latest",
+        ("objects-setuptools-scm.inv", "objects-setuptools-scm.txt"),
+    ),
     "logging-strict": (
-        "",
+        "https://logging-strict.readthedocs.io/en/latest",
         ("objects-logging-strict.inv", "objects-logging-strict.txt"),
     ),
-    "strictyaml": (
-        "https://github.com/crdoconnor/strictyaml",
-        ("objects-strictyaml.inv", "objects-strictyaml.txt"),
+    "strictyaml-docs": (
+        "https://hitchdev.com/strictyaml",
+        ("objects-strictyaml-docs.inv", "objects-strictyaml-docs.txt"),
     ),
-    "textual": (
+    "strictyaml-source": (
+        "https://github.com/crdoconnor/strictyaml",
+        ("objects-strictyaml-source.inv", "objects-strictyaml-source.txt"),
+    ),
+    "textual-docs": (
         "https://textual.textualize.io",
-        ("objects-textual.inv", "objects-textual.txt"),
+        ("objects-textual-docs.inv", "objects-textual-docs.txt"),
     ),
     "black": (
         "https://github.com/psf",
@@ -198,52 +206,8 @@ def strip_anchor(widget_name: str) -> str:
 
 
 extlinks = {
-    "readthedocs": (
-        "https://%s.readthedocs.io/",
-        "%s docs",
-    ),
-    "rich_text": (
-        "https://rich.readthedocs.io/en/latest/reference/text.html#rich.text.%s",
-        "rich.text.%s",
-    ),
-    "textual_widget": (
-        "https://textual.textualize.io/widgets/%s",
-        "%s",
-    ),
-    "textual_guide": (
-        "https://textual.textualize.io/guide/%s",
-        "%s",
-    ),
-    "textual_api": (
-        "https://textual.textualize.io/api/%s",
-        "%s",
-    ),
-    "readthedocs_latest_en": (
-        "https://%s.readthedocs.io/en/latest",
-        "%s",
-    ),
-    "coverage_en_latest": (
-        "https://coverage.readthedocs.io/en/latest/%s",
-        "%s",
-    ),
-    "coverage_api_en": (
-        "https://coverage.readthedocs.io/en/latest/api_coverage.html#%s",
-        "%s",
-    ),
-    "coverage_cmd_en": (
-        "https://coverage.readthedocs.io/en/latest/cmd.html#%s",
-        "%s",
-    ),
-    "setuptools_scm_latest_en": (
-        "https://setuptools-scm.readthedocs.io/en/latest/%s",
-        "%s",
-    ),
-    "pypi_org": (
+    "pypi_org": (  # url to: aiologger
         "https://pypi.org/project/%s",
-        "%s",
-    ),
-    "catch_22": (  # :catch_22:`catch-22`
-        "https://medium.com/@theintrovertalert/the-fascinating-history-and-meaning-behind-the-saying-%s-d895b342a1a",
         "%s",
     ),
 }

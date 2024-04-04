@@ -10,7 +10,9 @@
 :py:mod:`logging` is thread-safe. A change in one thread affects every
 thread. And logging config is dirty, each logger, since it's a Singleton,
 stays around for the life of the app. So the app and workers need to be
-isolated from each other. **ProcessPool > ThreadPool**. Workers should
+isolated from each other.
+
+**:py:class:`multiprocessing.pool.Pool` > ThreadPool**. Workers should
 exist as separate processes. The logging state ends along with the worker process.
 
 Another design consideration is avoiding blocking the main app thread.
@@ -28,8 +30,8 @@ Uses a (logging) handler specific for a particular UI framework
 (:py:class:`logging.StreamHandler`), capture the worker
 logging output, including it along with the worker output.
 
-Module private variables
--------------------------
+**Module private variables**
+
 
 .. py:data:: __all__
    :type: tuple[str, str, str, str, str, str]
@@ -39,8 +41,8 @@ Module private variables
    Module exports
 
 
-Module objects
----------------
+**Module objects**
+
 
 """
 
@@ -49,10 +51,7 @@ from __future__ import annotations
 import sys
 import threading
 from functools import partial
-from typing import (
-    TYPE_CHECKING,
-    Optional,
-)
+from typing import TYPE_CHECKING
 
 import strictyaml as s
 
@@ -176,7 +175,7 @@ class LoggingConfigYaml(LoggingYamlType):
 
     :vartype category:
 
-       external:logging-strict+ref:`~logging_strict.constants.LoggingConfigCategory` | str | :py:class:`~typing.Any` | None
+       logging_strict.constants.LoggingConfigCategory | str | typing.Any | None
 
     :ivar genre:
 
@@ -192,7 +191,7 @@ class LoggingConfigYaml(LoggingYamlType):
        converted to hyphens
 
        Flavor is a very terse description, for a
-       external:logging-strict+ref:`~logging_strict.logging_api.LoggingConfigYaml.genre`,
+       :py:obj:`LoggingConfigYaml.genre <logging_strict.logging_api.LoggingConfigYaml.genre>`,
        how this yaml differs from others. If completely generic, call it
        ``generic``. If different handlers or formatters or filters are
        used, what is the yaml's purpose?
@@ -207,13 +206,13 @@ class LoggingConfigYaml(LoggingYamlType):
 
           **Not** the version of the yaml spec. Don't confuse the two.
 
-    :vartype version_no: :py:class:`~typing.Any` | None
+    :vartype version_no: typing.Any | None
     :raises:
 
-       - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictPackageNameRequired`
+       - :py:exc:`logging_strict.exceptions.LoggingStrictPackageNameRequired`
          -- Package name required for determining destination folder
 
-       - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictPackageStartFolderNameRequired`
+       - :py:exc:`logging_strict.exceptions.LoggingStrictPackageStartFolderNameRequired`
          -- Package base data folder name is required
 
     """
@@ -287,7 +286,7 @@ class LoggingConfigYaml(LoggingYamlType):
         :rtype: str
         :raises:
 
-           - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictGenreRequired`
+           - :py:exc:`logging_strict.exceptions.LoggingStrictGenreRequired`
              -- Genre is required. e.g. textual pyside mp rabbitmq
 
         .. todo:: slugify
@@ -324,13 +323,13 @@ class LoggingConfigYaml(LoggingYamlType):
 
         So can use:
 
-        - external:logging-strict+ref:`LoggingYamlType.iter_yamls <logging_strict.logging_yaml_abc.LoggingYamlType.iter_yamls>`
+        - :py:meth:`LoggingYamlType.iter_yamls <logging_strict.logging_yaml_abc.LoggingYamlType.iter_yamls>`
 
         Can't use
 
-        - external:logging-strict+ref:`LoggingConfigYaml.extract <logging_strict.logging_yaml_abc.LoggingConfigYaml.extract>`
+        - :py:meth:`LoggingConfigYaml.extract <logging_strict.logging_api.LoggingConfigYaml.extract>`
 
-        - - external:logging-strict+ref:`LoggingYamlType.setup <logging_strict.logging_yaml_abc.LoggingYamlType.setup>`
+        - :py:meth:`LoggingYamlType.setup <logging_strict.logging_yaml_abc.LoggingYamlType.setup>`
 
         Genre is the UI framwork or worker characteristic
 
@@ -349,10 +348,10 @@ class LoggingConfigYaml(LoggingYamlType):
         """Specific implementation of a genre.
 
         E.g. multiple :py:mod:`logging.config` yaml files for
-        external:textual+ref:`textual`
+        :py:mod:`textual`
 
         Uses the handler,
-        external:textual+ref:`textual.logging.TextualHandler`, but each
+        :py:exc:`textual.logging.TextualHandler`, but each
         has some variation. Like custom formaters or filters
 
         So the flavor may be
@@ -386,7 +385,7 @@ class LoggingConfigYaml(LoggingYamlType):
         """Version setter
 
         :param val: Default "1". May be an int or str
-        :type val: :py:class:`~typing.Any`
+        :type val: typing.Any
         """
         self._version = LoggingYamlType.get_version(val)
 
@@ -398,7 +397,7 @@ class LoggingConfigYaml(LoggingYamlType):
         :rtype: str
         :raises:
 
-           - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictProcessCategoryRequired`
+           - :py:exc:`logging_strict.exceptions.LoggingStrictProcessCategoryRequired`
              -- Requires category
 
         """
@@ -425,10 +424,10 @@ class LoggingConfigYaml(LoggingYamlType):
         :rtype: str
         :raises:
 
-           - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictProcessCategoryRequired`
+           - :py:exc:`logging_strict.exceptions.LoggingStrictProcessCategoryRequired`
              -- Category required
 
-           - external:logging-strict+ref:`logging_strict.exceptions.LoggingStrictGenreRequired`
+           - :py:exc:`logging_strict.exceptions.LoggingStrictGenreRequired`
              -- Genre required
 
         """
@@ -463,7 +462,7 @@ class LoggingConfigYaml(LoggingYamlType):
         """Normally xdg user data dir. During testing, temp folder used instead
 
         :returns: Destination folder
-        :rtype: :py:class:`~pathlib.Path`
+        :rtype: pathlib.Path
         """
         return _get_path_config(self.package)
 
@@ -475,7 +474,7 @@ class LoggingConfigYaml(LoggingYamlType):
            Default empty string which means search the entire package.
            Specifying a start folder narrows the search
 
-        :type path_relative_package_dir: :py:class:`~pathlib.Path` or str or None
+        :type path_relative_package_dir: pathlib.Path | str | None
         :returns: Relative path, within package, to ``*.*.logging.config.yaml``
         :rtype: str
 
@@ -595,7 +594,7 @@ def setup_ui_other(
 
     :type flavor: str
     :param version_no: Default "1". Applies to genre or genre & flavor
-    :type version_no: :py:class:`~typing.Any` | None
+    :type version_no: typing.Any | None
     :param package_start_relative_folder:
 
        .. line-block::
@@ -660,7 +659,7 @@ def ui_yaml_curated(
 
     :type flavor: str
     :param version_no: Default "1". Applies to genre or genre & flavor
-    :type version_no: :py:class:`~typing.Any` | None
+    :type version_no: typing.Any | None
     :param package_start_relative_folder:
 
        Default empty string. Relative to package_data_folder_start.
@@ -700,7 +699,7 @@ def worker_yaml_curated(
     changes are not overwritten
 
     Process 2nd step is calling:
-    external:logging-strict+ref:`setup_logging_yaml <logging_strict.logging_yaml_abc.setup_logging_yaml>`
+    :py:func:`~logging_strict.logging_yaml_abc.setup_logging_yaml`
 
     :param genre:
 
@@ -708,7 +707,7 @@ def worker_yaml_curated(
        a library of yaml files that can be used with a particular
        UI framework or worker type
 
-    :type genre: str or None
+    :type genre: str | None
     :param flavor:
 
        Default "asz". Unique identifier name given to a particular
@@ -719,28 +718,28 @@ def worker_yaml_curated(
        ``generic``. If different handlers or formatters or filters are
        used, what is the yaml's purpose?
 
-    :type flavor: str or None
+    :type flavor: str | None
     :param version_no:
 
        Default 1. Version of this particular
        :paramref:`~logging_strict.logging_api.worker_yaml_curated.params.genre`.
        **Not** the version of the yaml spec. Don't confuse the two.
 
-    :type version_no: :py:class:`~typing.Any` or None
+    :type version_no: typing.Any | None
     :param package_start_relative_folder:
 
        Default empty string which means search the entire package.
        Further narrows down search, so as to differentiate between folders
        which contain file with the same file name
 
-    :type package_start_relative_folder: :py:class:`~pathlib.Path` or str or None
+    :type package_start_relative_folder: pathlib.Path | str | None
     :returns: yaml file contents
     :rtype: str
     :raises:
 
        - :py:exc:`FileNotFoundError` -- yaml file not found within package
 
-       - external:strictyaml+ref:`strictyaml.exceptions.YAMLValidationError`
+       - :py:exc:`strictyaml.exceptions.YAMLValidationError`
          -- yaml file validation failed
 
        - :py:exc:`AssertionError` -- Expecting one yaml file, many found
@@ -780,7 +779,7 @@ def setup_worker_other(
     Use this if located in another package
 
     Process 2nd step is calling:
-    external:logging-strict+ref:`setup_logging_yaml <logging_strict.logging_yaml_abc.setup_logging_yaml>`
+    :py:func:`~logging_strict.logging_yaml_abc.setup_logging_yaml`
 
     :param package_name:
 
@@ -820,29 +819,29 @@ def setup_worker_other(
        :paramref:`~logging_strict.logging_api.setup_worker_other.params.genre`.
        **Not** the version of the yaml spec. Don't confuse the two.
 
-    :type version_no: :py:class:`~typing.Any` or None
+    :type version_no: typing.Any | None
     :param package_start_relative_folder:
 
        Default empty string which means search the entire package.
        Further narrows down search, so as to differentiate between folders
        which contain file with the same file name
 
-    :type package_start_relative_folder: :py:class:`~pathlib.Path` or str or None
+    :type package_start_relative_folder: pathlib.Path | str | None
     :returns: yaml file contents
     :rtype: str
     :raises:
 
        - :py:exc:`FileNotFoundError` -- yaml file not found within package
 
-       - external:strictyaml+ref:`strictyaml.exceptions.YAMLValidationError`
+       - :py:exc:`strictyaml.exceptions.YAMLValidationError`
          -- yaml file validation failed
 
        - :py:exc:`AssertionError` -- Expecting one yaml file, many found
 
-       - external:logging-strict+ref:`logging_strict.LoggingStrictPackageNameRequired`
+       - :py:exc:`logging_strict.LoggingStrictPackageNameRequired`
          -- Which package are the logging.config yaml in?
 
-       - external:logging-strict+ref:`logging_strict.LoggingStrictPackageStartFolderNameRequired`
+       - :py:exc:`logging_strict.LoggingStrictPackageStartFolderNameRequired`
          -- Within the provided package, the package base data folder name
 
     """
@@ -876,9 +875,9 @@ class LoggingState:
 
     If run from app::
 
-       logging is redirected to external:textual+ref:`textual.logging.TextualHandler`
+       logging is redirected to :py:exc:`textual.logging.TextualHandler`
 
-       See |textual_api|`logging`
+       See :py:mod:`textual.logging`
 
     If run from cli::
 
@@ -889,9 +888,9 @@ class LoggingState:
     Class variables
 
     :cvar _instance: Default ``None``. Holds Singleton instance
-    :type _instance: ``"LoggingState"`` or ``None``
+    :type _instance: ``"LoggingState"`` | None
     :cvar _lock: Thread lock for Singleton
-    :type _lock: :py:class:`threading.RLock`
+    :type _lock: threading.RLock
 
     .. seealso::
 
@@ -900,9 +899,9 @@ class LoggingState:
 
     """
 
-    _instance: Optional["LoggingState"] = None
+    _instance: "LoggingState" | None = None
     _lock = threading.RLock()
-    # __state: Optional[bool] = None
+    # __state: bool | None = None
 
     def __new__(cls):
         """
@@ -959,7 +958,7 @@ class LoggingState:
         If not a bool, logging state is not changed
 
         :param is_state_app: New logging state. ``True`` if app otherwise ``False``
-        :type is_state_app: :py:class:`~typing.Any`
+        :type is_state_app: typing.Any
         """
         cls = type(self)
         with cls._lock:

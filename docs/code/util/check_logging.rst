@@ -5,5 +5,6 @@ Check logging
    :members:
    :private-members:
    :undoc-members:
-   :noindex:
    :show-inheritance:
+   :platform: Unix
+   :synopsis: Checks dealing with logging module

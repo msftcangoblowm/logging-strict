@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.tech_niques.logger_redirect
-   :platform: Unix
-   :synopsis: In unittest class, redirect stdout/stderr. synchronous logging
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -11,7 +7,7 @@ In unittest class, redirect stdout/stderr. Essential for synchronous logging
 
 
 Module private variables
---------------------------
+-------------------------
 
 .. py:data: __all__
    :type: tuple[str]
@@ -20,7 +16,7 @@ Module private variables
    This module exports
 
 Module objects
---------------------------
+---------------
 
 """
 
@@ -127,9 +123,9 @@ class LoggerRedirector:  # pragma: no cover
         Call in unittest class setUp method
 
         :param fake_stdout: unittest temporary stdout IO stream
-        :type fake_stdout: :py:class:`~typing.TextIO`
+        :type fake_stdout: typing.TextIO
         :param fake_stderr: unittest temporary stderr IO stream
-        :type fake_stderr: :py:class:`~typing.TextIO`
+        :type fake_stderr: typing.TextIO
         """
         if (not fake_stdout or fake_stdout is cls._real_stdout) and (
             not fake_stderr or fake_stderr is cls._real_stderr
@@ -155,9 +151,9 @@ class LoggerRedirector:  # pragma: no cover
         Call in unittest class tearDown method
 
         :param fake_stdout: unittest temporary stdout IO stream
-        :type fake_stdout: :py:class:`~typing.TextIO`
+        :type fake_stdout: typing.TextIO
         :param fake_stderr: unittest temporary stderr IO stream
-        :type fake_stderr: :py:class:`~typing.TextIO`
+        :type fake_stderr: typing.TextIO
         """
         if (not fake_stdout or fake_stdout is cls._real_stdout) and (
             not fake_stderr or fake_stderr is cls._real_stderr

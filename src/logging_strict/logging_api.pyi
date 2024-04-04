@@ -3,10 +3,7 @@ from __future__ import annotations
 import sys
 import types
 from pathlib import Path
-from typing import (
-    Any,
-    Optional,
-)
+from typing import Any
 
 from .constants import LoggingConfigCategory
 from .logging_yaml_abc import (
@@ -69,19 +66,19 @@ def setup_ui_other(
     package_name: str,
     genre: str,
     flavor: str,
-    version_no: Optional[Any] = VERSION_FALLBACK,
+    version_no: Any = VERSION_FALLBACK,
     package_start_relative_folder: Path | str | None = "",
 ) -> None: ...
 def ui_yaml_curated(
     genre: str,
     flavor: str,
-    version_no: Optional[Any] = VERSION_FALLBACK,
+    version_no: Any | None = VERSION_FALLBACK,
     package_start_relative_folder: Path | str | None = "",
 ) -> None: ...
 def worker_yaml_curated(
-    genre: Optional[Any] = "mp",
-    flavor: Optional[Any] = "asz",
-    version_no: Optional[Any] = VERSION_FALLBACK,
+    genre: Any | None = "mp",
+    flavor: Any | None = "asz",
+    version_no: Any | None = VERSION_FALLBACK,
     package_start_relative_folder: Path | str | None = "",
 ) -> str: ...
 def setup_worker_other(
@@ -89,14 +86,14 @@ def setup_worker_other(
     package_data_folder_start: str,
     genre: str,
     flavor: str,
-    version_no: Optional[Any] = VERSION_FALLBACK,
+    version_no: Any | None = VERSION_FALLBACK,
     package_start_relative_folder: Path | str | None = "",
 ) -> str: ...
 
 class LoggingState:
-    __instance: Optional["LoggingState"] = None
+    __instance: "LoggingState" | None = None
 
-    def __new__(cls, is_state_app: Optional[Any] = False) -> Self: ...
+    def __new__(cls, is_state_app: Any | None = False) -> Self: ...
     @property
     def is_state_app(self) -> bool: ...
     @is_state_app.setter

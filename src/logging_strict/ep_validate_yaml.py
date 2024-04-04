@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.ep_validate_yaml
-   :platform: Unix
-   :synopsis: Entrypoint to check yaml logging.config file
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..

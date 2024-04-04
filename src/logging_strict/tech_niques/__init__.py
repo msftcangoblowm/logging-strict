@@ -1,8 +1,4 @@
 """
-.. module:: logging_strict.tech_niques
-   :platform: Unix
-   :synopsis: Export all technique helpers
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -13,7 +9,7 @@ Module private variables
 ----------------------------
 
 .. py:data:: __all__
-   :type: tuple[str, str, str]
+   :type: tuple[str, str, str, str, str, str, str]
    :value: ("get_locals", "is_class_attrib_kind", "ClassAttribTypes", \
    "LoggerRedirector", "captureLogs", "detect_coverage", "CaptureOutput")
 
@@ -45,7 +41,7 @@ __all__ = (
 
 
 class ClassAttribTypes(enum.Enum):
-    """As understood by external:python+ref:`inspect.classify_class_attrs`
+    """As understood by py:obj:`inspect.classify_class_attrs`
 
     .. py:attribute:: CLASSMETHOD
        :type: str
@@ -90,14 +86,11 @@ def is_class_attrib_kind(cls, str_m, kind):
     """For testing an ABC implementation
 
     :param cls: A class
-    :type cls: type[ :py:class:`~typing.Any` ]
+    :type cls: type[typing.Any]
     :param str_m: A class member's name. Check the class interface is exists
-    :type str_m: :py:class:`~typing.Any`
+    :type str_m: typing.Any
     :param kind: class attribute type
-    :type kind:
-
-       external:logging-strict+ref:`~logging_strict.tech_niques.ClassAttribTypes`
-
+    :type kind: logging_strict.tech_niques.ClassAttribTypes
     :returns:
 
        ``True`` if is expected

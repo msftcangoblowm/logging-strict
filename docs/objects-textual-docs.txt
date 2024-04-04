@@ -4,4 +4,4 @@
 # The remainder of this file is compressed using zlib.
 textual py:module 0 tutorial/ -
 textual.logging py:module 0 api/logging -
-textual.logging.TextualHandler logging/#textual.logging.TextualHandler -
+textual.logging.TextualHandler py:exception 1 api/logging/#$ -

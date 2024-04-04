@@ -55,10 +55,12 @@ ifeq ($(is_venv),1)
 	@$(SPHINXBUILD) -b linkcheck "$(SOURCEDIR)" "$(BUILDDIR)" || echo "$(err_check_web_conn). exit code $$?"
 endif
 
-# sphobjinv convert -q zlib objects-textual.txt objects-textual.inv
 # sphobjinv convert -q zlib objects-black.txt objects-black.inv
 # sphobjinv convert -q zlib objects-logging-strict.txt objects-logging-strict.inv
-# sphobjinv convert -q zlib objects-strictyaml.txt objects-strictyaml.inv
+# sphobjinv convert -q zlib objects-setuptools-scm.txt objects-setuptools-scm.inv
+# sphobjinv convert -q zlib objects-strictyaml-source.txt objects-strictyaml-source.inv
+# sphobjinv convert -q zlib objects-strictyaml-docs.txt objects-strictyaml-docs.inv
+# sphobjinv convert -q zlib objects-textual-docs.txt objects-textual-docs.inv
 .PHONY: _objects
 _objects:
 ifeq ($(is_venv),1)

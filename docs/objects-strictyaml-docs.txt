@@ -1,0 +1,6 @@
+# Sphinx inventory version 2
+# Project: strictyaml 1.7.3
+# Version: 1.7.3
+# The remainder of this file is compressed using zlib.
+strictyaml.docs py:module 0 index.html -
+strictyaml.compound_types py:module 0 using/alpha/compound -

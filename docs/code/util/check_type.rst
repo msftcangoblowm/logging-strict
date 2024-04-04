@@ -5,5 +5,6 @@ Check type
    :members:
    :private-members:
    :undoc-members:
-   :noindex:
    :show-inheritance:
+   :platform: Unix
+   :synopsis: Check utility functions

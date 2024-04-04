@@ -2,10 +2,7 @@ from __future__ import annotations
 
 import logging
 import sys
-from typing import (
-    Optional,
-    TextIO,
-)
+from typing import TextIO
 
 if sys.version_info >= (3, 8):
     from typing import Final

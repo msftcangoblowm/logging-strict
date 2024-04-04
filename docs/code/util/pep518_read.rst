@@ -5,5 +5,6 @@ pep518 read pyproject.toml
    :members:
    :private-members:
    :undoc-members:
-   :noindex:
    :show-inheritance:
+   :platform: Unix
+   :synopsis: pyproject.toml generic read functions
