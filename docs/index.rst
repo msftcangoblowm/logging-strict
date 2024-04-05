@@ -36,10 +36,10 @@ For logging.config yaml files, logging-strict does the following:
 
 - validates against a strictyaml schema
 
-  The schema is specifically tailored for the external:python+ref:`logging.handlers`
+  The schema is specifically tailored for the :py:mod:`logging.handlers`
 
   As long as the yaml is valid, will have the data types
-  external:python+ref:`logging.handlers` expect
+  :py:mod:`logging.handlers` expect
 
 - exports package data
 
@@ -89,20 +89,7 @@ From your packages project base folder. This example assumes, unittests folder, 
 
 :doc:`For full details </getting_started/install>`
 
-.. _index-toc:
-
-Table of Contents
-====================
-
-.. toctree::
-   :maxdepth: 2
-   :name: toctree_logging_strict
-
-   getting_started/index
-   api/index
-   code/index
-   code/tech_niques/index
-
+.. tableofcontents::
 
 .. only:: html
 

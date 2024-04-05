@@ -133,10 +133,11 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.doctest",
     "sphinx.ext.githubpages",
-    "sphinxcontrib.fulltoc",
     "sphinx_paramlinks",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
+    "sphinx_external_toc",
+    "sphinx_licenseinfo",
 ]
 linkcheck_ignore = [
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/asyncio/base_events.py#L1894",  # asyncio.base_events._run_once

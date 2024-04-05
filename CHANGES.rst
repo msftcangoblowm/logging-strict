@@ -34,6 +34,16 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-27:
+
+Version 1.2.27 — 2024-04-05
+---------------------------
+
+- feat: table of contents (toc) seperated from Sphinx rst files
+- docs: migrate sphinxcontrib-fulltoc --> sphinx_external_toc
+- docs: in toc, link to license. Shows complete license
+- docs: in toc, link to github and pypi.org
+
 .. _changes_1-2-26:
 
 Version 1.2.26 — 2024-04-04

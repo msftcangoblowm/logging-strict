@@ -1,0 +1,69 @@
+root: index
+subtrees:
+- entries:
+  - file: getting_started/index
+    options:
+      maxdepth: 2
+    entries:
+    - file: getting_started/exporting
+    - file: getting_started/install
+    - file: getting_started/usage
+    - file: getting_started/validation
+- entries:
+  - file: api/index
+    options:
+      maxdepth: 2
+    entries:
+    - file: api/locals/index
+      entries:
+      - file: api/locals/scope_b_locals
+      - file: api/locals/unittest_setup_to_include_locals
+    - file: api/logging/index
+      entries:
+      - file: api/logging/api_capture_logging
+      - file: api/logging/api_logging_asynchronous
+      - file: api/logging/api_logging_synchronous
+      - file: api/logging/api_logging_warnings
+- entries:
+  - file: code/index
+    options:
+      maxdepth: 2
+    entries:
+    - file: code/constants/index
+      entries:
+      - file: code/constants/constants_general
+      - file: code/constants/exceptions
+      - file: code/constants/version
+    - file: code/public_api/index
+    - file: code/util/index
+      entries:
+      - file: code/util/check_logging
+      - file: code/util/check_type
+      - file: code/util/package_resource
+      - file: code/util/pep518_read
+      - file: code/util/util_root
+      - file: code/util/xdg_folder
+    - file: code/yaml/index
+      entries:
+      - file: code/yaml/ep_validate_yaml
+      - file: code/yaml/logging_api
+      - file: code/yaml/logging_yaml_abc
+      - file: code/yaml/logging_yaml_validate
+- entries:
+  - file: code/tech_niques/index
+    options:
+      maxdepth: 1
+    entries:
+    - file: code/tech_niques/context_locals
+    - file: code/tech_niques/coverage_misbehaves
+    - file: code/tech_niques/logger_redirect
+    - file: code/tech_niques/logging_capture
+    - file: code/tech_niques/stream_capture
+- entries:
+  - file: license
+- caption: Links
+  entries:
+  - url: https://github.com/msftcangoblowm/logging-strict
+    title: GitHub Repository
+  - url: https://pypi.org/project/logging-strict
+    title: pypi.org

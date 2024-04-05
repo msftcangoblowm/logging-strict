@@ -9,8 +9,7 @@ sphobjinv   # cross-references inventories, objects.inv
 sphinx
 sphinx-pyproject
 sphinx-autobuild
-sphinxcontrib-asyncio
-sphinxcontrib-fulltoc
 sphinx-paramlinks
 sphinx-licenseinfo
 aiologger  # this is a testing dependency?!
+sphinx_external_toc # sphinxcontrib-fulltoc alternative

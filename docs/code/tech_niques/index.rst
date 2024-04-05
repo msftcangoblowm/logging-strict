@@ -3,16 +3,6 @@ Techniques
 
 tech_niques which are logging related as well as code inspection
 
-.. toctree::
-   :maxdepth: 2
-   :name: toctree_tech_niques
-
-   logging_capture
-   logger_redirect
-   context_locals
-   stream_capture
-   coverage_misbehaves
-
 .. automodule:: logging_strict.tech_niques
    :members:
    :private-members:
@@ -53,3 +43,5 @@ tech_niques which are logging related as well as code inspection
          :value: 'data'
 
          Is this class data
+
+.. tableofcontents::

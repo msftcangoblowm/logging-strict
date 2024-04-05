@@ -873,15 +873,11 @@ class LoggingState:
     """Singleton to hold the current logging state.
     To know whether or not, run by app or from cli
 
-    If run from app::
+    logging is redirected to
 
-       logging is redirected to :py:exc:`textual.logging.TextualHandler`
+    - If run from app --> :py:exc:`textual.logging.TextualHandler`
 
-       See :py:mod:`textual.logging`
-
-    If run from cli::
-
-       logging is redirected to :py:class:`logging.StreamHandler`
+    - If run from cli --> :py:class:`logging.StreamHandler`
 
     Knowing the logging mode (or state), first step towards restoring logging mode
 
@@ -893,6 +889,8 @@ class LoggingState:
     :type _lock: threading.RLock
 
     .. seealso::
+
+       See :py:mod:`textual.logging`
 
        Thread safe Singleton
        `[blog post] <https://medium.com/analytics-vidhya/how-to-create-a-thread-safe-singleton-class-in-python-822e1170a7f6>`_

@@ -33,6 +33,7 @@ click==8.1.7
     # via
     #   click-log
     #   scriv
+    #   sphinx-external-toc
 click-log==0.4.0
     # via scriv
 colorama==0.4.6
@@ -122,6 +123,7 @@ pyyaml==6.0.1
     # via
     #   pychoosealicense
     #   python-frontmatter
+    #   sphinx-external-toc
 referencing==0.33.0
     # via
     #   jsonschema
@@ -157,13 +159,13 @@ sphinx==5.3.0
     #   autodocsumm
     #   sphinx-autobuild
     #   sphinx-autodoc-typehints
+    #   sphinx-external-toc
     #   sphinx-licenseinfo
     #   sphinx-paramlinks
     #   sphinx-prompt
     #   sphinx-tabs
     #   sphinx-toolbox
     #   sphinxcontrib-applehelp
-    #   sphinxcontrib-asyncio
     #   sphinxcontrib-devhelp
     #   sphinxcontrib-htmlhelp
     #   sphinxcontrib-qthelp
@@ -172,6 +174,8 @@ sphinx-autobuild==2021.3.14
     # via -r docs/requirements.in
 sphinx-autodoc-typehints==1.23.0
     # via sphinx-toolbox
+sphinx-external-toc==1.0.1
+    # via -r docs/requirements.in
 sphinx-jinja2-compat==0.2.0.post1
     # via
     #   sphinx-licenseinfo
@@ -190,12 +194,8 @@ sphinx-toolbox==3.5.0
     # via sphinx-licenseinfo
 sphinxcontrib-applehelp==1.0.7
     # via sphinx
-sphinxcontrib-asyncio==0.3.0
-    # via -r docs/requirements.in
 sphinxcontrib-devhelp==1.0.5
     # via sphinx
-sphinxcontrib-fulltoc==1.2.0
-    # via -r docs/requirements.in
 sphinxcontrib-htmlhelp==2.0.4
     # via sphinx
 sphinxcontrib-jsmath==1.0.1

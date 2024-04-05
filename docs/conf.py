@@ -61,11 +61,11 @@ proj_master_doc = config.get("master_doc")
 # @@@ editable
 copyright = "2023–2024, Dave Faulkmore"
 # The short X.Y.Z version.
-version = "1.2.26"
+version = "1.2.27"
 # The full version, including alpha/beta/rc tags.
-release = "1.2.26"
+release = "1.2.27"
 # The date of release, in "monthname day, year" format.
-release_date = "April 4, 2024"
+release_date = "April 5, 2024"
 # @@@ end
 
 # release = config.version
@@ -87,6 +87,8 @@ rst_epilog = """
     release=release, slug=slug
 )
 
+# https://alabaster.readthedocs.io/en/latest/customization.html
+# https://pypi.org/project/sphinx_external_toc/
 html_theme_options = {
     "description": proj_description,
     "show_relbars": True,
