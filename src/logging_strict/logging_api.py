@@ -161,6 +161,8 @@ class LoggingConfigYaml(LoggingYamlType):
        better than having copies in each and every Python package
 
     :vartype package_name: str
+    :ivar package_data_folder_start: relative path, within package, to data folder
+    :vartype package_data_folder_start: str
     :ivar category:
 
        LoggingConfigCategory.UI or LoggingConfigCategory.WORKER

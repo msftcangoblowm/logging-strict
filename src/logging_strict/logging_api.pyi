@@ -32,6 +32,7 @@ class LoggingConfigYaml(LoggingYamlType):
     def __init__(
         self,
         package_name: str,
+        package_data_folder_start: str,
         category: LoggingConfigCategory | str | Any | None,
         genre: str | None = None,
         flavor: str | None = None,

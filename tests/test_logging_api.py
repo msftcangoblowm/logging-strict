@@ -396,16 +396,22 @@ class LoggingApi(unittest.TestCase):
             (None, None, None, None, 0),
             (0.12345, 0.12345, 0.12345, 0.12345, 0),
         )
+        package_name = self.package_dest_c
+        # hardcoded: "configs"
+        package_data_folder_start = self.fallback_package_base_folder
         for category2, genre2, flavor2, version2, expected_count2 in invalids:
-            api = LoggingConfigYaml(  # <-- dies here
-                self.package_dest_c,
-                self.fallback_package_base_folder,
+            api = LoggingConfigYaml(
+                package_name,
+                package_data_folder_start,
                 category=category2,
                 genre=genre2,
                 flavor=flavor2,
                 version_no=version2,
             )
-            args2 = (self.path_cwd,)
+            """CI/CD environment has both src and build/lib off package base
+            folder. Doubling file count. Don't pass in self.path_cwd
+            """
+            args2 = (self.path_package_src,)
             kwargs2 = {}
             gen = api.iter_yamls(*args2, **kwargs2)
             files = list(gen)

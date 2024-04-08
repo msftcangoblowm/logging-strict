@@ -34,6 +34,15 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-31:
+
+Version 1.2.31 — 2024-04-08
+---------------------------
+
+- chore(test-coverage.yml): pass in tagged version to build tarball and whl
+- test(test_logging_api.py): ci/cd env has both src and build/lib folders. 2x yaml file count
+- docs(logging_api.py): class LoggingConfigYaml.__init__ missing one param
+
 .. _changes_1-2-30:
 
 Version 1.2.30 — 2024-04-08

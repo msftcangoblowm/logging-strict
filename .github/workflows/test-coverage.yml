@@ -48,30 +48,39 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
+        with:
+          # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
+          fetch-depth: 0
+      # https://stackoverflow.com/questions/66349002/get-latest-tag-git-describe-tags-when-repo-is-cloned-with-depth-1
+      # echo "tag=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_OUTPUT
+      - name: Get latest tag
+        id: vars
+        run: |
+          echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
       - name: Set up Python ${{ matrix.python-version }}
         uses: "actions/setup-python@v5"
         with:
           python-version: "${{ matrix.python-version }}"
+          cache: pip
+          cache-dependency-path: 'requirements/*.pip'
           allow-prereleases: true
-      - name: "Show environment"
-        run: |
-          set -xe
-          python -VV
-          python -m site
-          # For extreme debugging:
-          # python -c "import urllib.request as r; exec(r.urlopen('https://bit.ly/pydoctor').read())"
-          env
-      - name: "Build/install logging-strict"
+      - name: "Install tools"
         run: |
           set -xe
           python -m pip install -r requirements/kit.pip
           python -m pip install -r requirements/prod.pip
-          python igor.py build_next "tag"
-          python -m pip install --disable-pip-version-check -q .
-      - name: "Install testing dependencies"
+          python -m pip install -r requirements/dev.pip
+      - name: "Build sdist and whl"
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
           set -xe
-          python -m pip install -r requirements/dev.pip
+          echo "python igor.py build_next $RELEASE_VERSION"
+          python igor.py build_next "$RELEASE_VERSION"
+      - name: "Install"
+        run: |
+          set -xe
+          python -m pip install --disable-pip-version-check -q .
       - name: "Run coverage"
         run : |
           set -xe
