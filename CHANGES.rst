@@ -34,6 +34,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-30:
+
+Version 1.2.30 — 2024-04-08
+---------------------------
+
+- chore(test-coverage.yml): install logging-strict package before coverage run/report
+
 .. _changes_1-2-29:
 
 Version 1.2.29 — 2024-04-08
