@@ -115,6 +115,7 @@ logging_strict.logging_yaml_validate.schema_logging_config py:class 1 code/yaml/
 logging_strict.logging_yaml_validate.validate_yaml_dirty py:function 1 code/yaml/logging_yaml_validate.html#$ -
 logging_strict.logging_yaml_validate.validate_yaml_dirty.params.yaml_snippet py:parameter 1 code/yaml/logging_yaml_validate.html#$ -
 logging_strict.logging_yaml_validate.validate_yaml_dirty.params.schema py:parameter 1 code/yaml/logging_yaml_validate.html#$ -
+logging_strict.tech_niques py:module 0 code/tech_niques/index.html -
 logging_strict.tech_niques.captureLogs py:function 1 code/tech_niques/logging_capture.html#$ -
 logging_strict.tech_niques.CaptureOutput py:class 1 code/tech_niques/stream_capture.html#module-$ -
 logging_strict.tech_niques.get_locals py:function 1 code/tech_niques/context_locals.html#$ -
@@ -130,7 +131,7 @@ logging_strict.tech_niques.is_class_attrib_kind py:function 1 code/tech_niques/i
 logging_strict.tech_niques.is_class_attrib_kind.params.cls py:parameter 1 code/tech_niques/index.html#module-$ -
 logging_strict.tech_niques.is_class_attrib_kind.params.str_m py:parameter 1 code/tech_niques/index.html#module-$ -
 logging_strict.tech_niques.is_class_attrib_kind.params.kind py:parameter 1 code/tech_niques/index.html#module-$ -
-logging_strict.tech_niques.context_locals py:module 0 code/tech_niques/context_locals.html#module-$ -
+logging_strict.tech_niques.context_locals py:module 0 code/tech_niques/context_locals.html#$ -
 logging_strict.tech_niques.context_locals.P py:data 1 code/tech_niques/context_locals.html#$ -
 logging_strict.tech_niques.context_locals.T py:class 1 code/tech_niques/context_locals.html#$ -
 logging_strict.tech_niques.context_locals.__all__ py:data 1 code/tech_niques/context_locals.html#$ -

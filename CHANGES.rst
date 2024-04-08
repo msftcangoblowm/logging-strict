@@ -32,7 +32,18 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - chore: add codecov config file
+
 .. scriv-start-here
+
+.. _changes_1-2-28:
+
+Version 1.2.28 — 2024-04-08
+---------------------------
+
+- docs(pyproject.toml): add homepage and documentation links. pypi.org show links
+- docs: inventories updates
+- docs: add threat model. Identify sewers; files which are targets for hackers
 
 .. _changes_1-2-27:
 

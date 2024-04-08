@@ -41,6 +41,10 @@ authors = [
     { name = "Dave Faulkmore", email = "faulkmore@telegram.org" },
 ]
 
+[project.urls]
+Homepage = "https://github.com/msftcangoblowm/logging-strict"
+Documentation = "https://logging-strict.readthedocs.io"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["logging_strict*"]

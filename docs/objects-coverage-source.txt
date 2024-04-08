@@ -3,4 +3,6 @@
 # Version: 7.4.0
 # The remainder of this file is compressed using zlib.
 coverage.control py:module 0 blob/b2b89a491bb607e958c432c17a5677b3abb6a952/coverage/control.py -
+coverage.control.Coverage.report_core py:module 0 blob/master/coverage/report_core.py -
 coverage.multiproc py:module 0 blob/b2b89a491bb607e958c432c17a5677b3abb6a952/coverage/multiproc.py -
+coverage.data.combine.parallel py:module 0 blob/5124586e92da3e69429002b2266ce41898b953a1/coverage/data.py#L94 -

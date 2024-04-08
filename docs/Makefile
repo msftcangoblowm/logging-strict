@@ -61,6 +61,9 @@ endif
 # sphobjinv convert -q zlib objects-strictyaml-source.txt objects-strictyaml-source.inv
 # sphobjinv convert -q zlib objects-strictyaml-docs.txt objects-strictyaml-docs.inv
 # sphobjinv convert -q zlib objects-textual-docs.txt objects-textual-docs.inv
+# sphobjinv convert -q zlib objects-textual-source.txt objects-textual-source.inv
+# sphobjinv convert -q zlib objects-coverage-docs.txt objects-coverage-docs.inv
+# sphobjinv convert -q zlib objects-coverage-source.txt objects-coverage-source.inv
 .PHONY: _objects
 _objects:
 ifeq ($(is_venv),1)
