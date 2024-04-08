@@ -7,7 +7,7 @@ logging-strict
 logging.config yaml Strict typing and editable
 
 |  |kit| |license| |versions|
-|  |test-status| |quality-status| |docs|
+|  |test-status| |codecov| |quality-status| |docs|
 |  |stars| |mastodon-msftcangoblowm|
 
 For logging.config yaml files, logging-strict does the following:
@@ -54,7 +54,7 @@ For logging.config yaml files, logging-strict does the following:
 
 sphinx object inventories; eliminate sphinx warnings; package logo; tox.ini;
 many .github/workflows; Tagged version on testpypi, pypi, and readthedocs;
-badges; VHS tapes;
+badges; VHS tapes; codecov badge;
 
 **New in 1.1.x:**
 
@@ -587,3 +587,6 @@ yaml security issues:
 .. |mastodon-msftcangoblowm| image:: https://img.shields.io/mastodon/follow/112019041247183249
     :target: https://mastodon.social/@msftcangoblowme
     :alt: msftcangoblowme on Mastodon
+.. |codecov| image:: https://codecov.io/gh/msftcangoblowm/logging-strict/graph/badge.svg?token=HCBC74IABR
+    :target: https://codecov.io/gh/msftcangoblowm/logging-strict
+    :alt: logging-strict coverage percentage

@@ -32,9 +32,15 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - chore: add codecov config file
-
 .. scriv-start-here
+
+.. _changes_1-2-29:
+
+Version 1.2.29 — 2024-04-08
+---------------------------
+
+- chore: add codecov config file and workflow
+- docs(README.rst): show codecov badge
 
 .. _changes_1-2-28:
 

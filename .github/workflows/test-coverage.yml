@@ -1,0 +1,83 @@
+# Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
+# For details: https://github.com/msftcangoblowm/logging-strict/blob/master/NOTICE.txt
+#
+# https://github.com/codecov/codecov-action
+# https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect
+
+name: "Codecov"
+
+on:
+  push:
+    branches:
+      - master
+      - msftcangoblowm/*
+  pull_request:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+  COVERAGE_IGOR_VERBOSE: 1
+  FORCE_COLOR: 1    # Get colored test output
+
+permissions:
+  contents: read
+
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{ github.ref_type }}-
+    ${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  codecov:
+    name: "${{ matrix.python-version }} on ${{ matrix.os }}"
+    runs-on: "${{ matrix.os }}-latest"
+    # Don't run tests if the branch name includes "-notests"
+    if: "!contains(github.ref, '-notests')"
+    strategy:
+      matrix:
+        os:
+          - ubuntu
+        python-version:
+          - "3.9"
+      fail-fast: false
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: "actions/setup-python@v5"
+        with:
+          python-version: "${{ matrix.python-version }}"
+          allow-prereleases: true
+      - name: "Show environment"
+        run: |
+          set -xe
+          python -VV
+          python -m site
+          # For extreme debugging:
+          # python -c "import urllib.request as r; exec(r.urlopen('https://bit.ly/pydoctor').read())"
+          env
+      - name: "Install dependencies"
+        run: |
+          set -xe
+          python -m pip install -r requirements/dev.pip
+      - name: run coverage
+        run : |
+          coverage run --omit="*.txt" -m unittest discover -t. -s tests -p "test_*.py" --locals
+          coverage xml -q
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          name: unittest-py3.9
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: msftcangoblowm/logging-strict
+          os: linux
+          flags: unittests
+          file: ./coverage.xml
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
+          verbose: true
