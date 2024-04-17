@@ -266,7 +266,7 @@ def validate_yaml_dirty(
     :param yaml_snippet: :py:mod:`logging.config` YAML str
     :type yaml_snippet: str
     :param schema: :py:mod:`strictyaml` strict typing schema
-    :type schema: :py:class:`strictyaml.Validator` or :py:data:`.schema_logging_config`
+    :type schema: strictyaml.Validator | :py:data:`.schema_logging_config`
     :returns: YAML object. Pass this to each worker
     :rtype: strictyaml.YAML | None
     :single-line-parameter-list:

@@ -27,6 +27,40 @@ BUILDDIR      := _build
 
 ##@ Build
 
+# Convert *.txt --> *.inv Base folder only
+# sphobjinv convert -q zlib objects-toc-strict.txt objects-toc-strict.inv
+.PHONY: build_inv
+build_inv:				## inventory base folder only .txt --> .inv
+ifeq ($(is_venv),1)
+	@while read f_path; do
+	  if [[ -f "$(SOURCEDIR)/$${f_path}.txt" ]]; then
+	    [[ ! -f "$(SOURCEDIR)/$${f_path}.inv" ]] && sphobjinv convert -q zlib "$(SOURCEDIR)/$${f_path}.txt" "$(SOURCEDIR)/$${f_path}.inv" ||:
+	  fi
+	done < <(/bin/find $(SOURCEDIR) -maxdepth 1 -type f -name "*.txt" -exec basename {} .txt \;)
+endif
+
+.PHONY: inv2txt
+inv2txt:				## .inv without .txt convert to .txt
+inv2txt: | _inv2txt clean_inv
+
+#  Revert *.inv --> .txt Base folder only. .inv without cooresponding .txt
+.PHONY: _inv2txt
+_inv2txt:
+	@while read f_path; do
+	  if [[ -f "$(SOURCEDIR)/$${f_path}.inv" ]] && [[ ! -f "$(SOURCEDIR)/$${f_path}.txt" ]]; then
+	    sphobjinv convert -q plain "$(SOURCEDIR)/$${f_path}.inv" "$(SOURCEDIR)/$${f_path}.txt" ||:
+	  fi
+	done < <(/bin/find $(SOURCEDIR) -maxdepth 1 -type f -name "*.inv" -exec basename {} .inv \;)
+
+# clean .inv that have cooresponding .txt
+.PHONY: clean_inv
+clean_inv:				## remove .inv files that have cooresponding .txt file
+	@while read f_path; do
+	  if [[ -f "$${f_path}.txt" ]]; then
+	    [[ -f "$(SOURCEDIR)/$${f_path}.inv" ]] && /bin/rm --preserve-root=all "$(SOURCEDIR)/$${f_path}.inv" ||:
+	  fi
+	done < <(/bin/find $(SOURCEDIR) -maxdepth 1 -type f -name "*.txt" -exec basename {} .txt \;)
+
 .PHONY: html
 html:				## Sphinx build html. Only whats been changed
 ifeq ($(is_venv),1)
@@ -34,7 +68,7 @@ ifeq ($(is_venv),1)
 endif
 
 .PHONY: htmlall
-htmlall:				## Sphinx build clean and build html
+htmlall: build_inv		## Sphinx build clean and build html
 ifeq ($(is_venv),1)
 	@$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html"
 endif
@@ -55,15 +89,6 @@ ifeq ($(is_venv),1)
 	@$(SPHINXBUILD) -b linkcheck "$(SOURCEDIR)" "$(BUILDDIR)" || echo "$(err_check_web_conn). exit code $$?"
 endif
 
-# sphobjinv convert -q zlib objects-black.txt objects-black.inv
-# sphobjinv convert -q zlib objects-logging-strict.txt objects-logging-strict.inv
-# sphobjinv convert -q zlib objects-setuptools-scm.txt objects-setuptools-scm.inv
-# sphobjinv convert -q zlib objects-strictyaml-source.txt objects-strictyaml-source.inv
-# sphobjinv convert -q zlib objects-strictyaml-docs.txt objects-strictyaml-docs.inv
-# sphobjinv convert -q zlib objects-textual-docs.txt objects-textual-docs.inv
-# sphobjinv convert -q zlib objects-textual-source.txt objects-textual-source.inv
-# sphobjinv convert -q zlib objects-coverage-docs.txt objects-coverage-docs.inv
-# sphobjinv convert -q zlib objects-coverage-source.txt objects-coverage-source.inv
 .PHONY: _objects
 _objects:
 ifeq ($(is_venv),1)
@@ -106,6 +131,12 @@ obj_strictyaml: override project_name := strictyaml
 obj_strictyaml: override usage := "make obj_strictyaml find=[dotted path]"
 obj_strictyaml:	_objects	## Query strictyaml Sphinx objects. make obj_strictyaml find="[dotted path]"
 obj_strictyaml:
+
+.PHONY: objects
+objects:				## Query Sphinx known objects. Limited by docs/_build/html/objects.inv
+ifeq ($(is_venv),1)
+	@$(VENV_BIN_PYTHON) -m sphinx.ext.intersphinx $(SOURCEDIR)/$(BUILDDIR)/html/objects.inv
+endif
 
 # Stubbornly insists on repeating on outdated files.
 # -T show tracebacks on Exception

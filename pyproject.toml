@@ -42,8 +42,12 @@ authors = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/msftcangoblowm/logging-strict"
 Documentation = "https://logging-strict.readthedocs.io"
+Changes = "https://raw.githubusercontent.com/msftcangoblowm/logging-strict/master/CHANGES.rst"
+"PyPI Releases" = "https://pypi.org/project/logging-strict"
+"Source code" = "https://github.com/msftcangoblowm/logging-strict"
+"Issue tracker" = "https://github.com/msftcangoblowm/logging-strict/issues"
+Chat = "https://mastodon.social/@msftcangoblowme"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -141,7 +145,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
     "sphinx_external_toc",
-    "sphinx_licenseinfo",
+    # "sphinx_licenseinfo",
 ]
 linkcheck_ignore = [
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/asyncio/base_events.py#L1894",  # asyncio.base_events._run_once
@@ -152,6 +156,8 @@ linkcheck_ignore = [
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L193",  # unittest.case._BaseTestCaseContext
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L816",  # unittest.case.assertLogs
     "https://stackoverflow.com/a/69994813",  # redirect
+    "https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/representation.py#L48",  # strictyaml.YAML
+    "https://github.com/psf/black/blob/ea66d40dd7f1eaa20256e6fccaf6d7b853ccc541/src/black/files.py#L57",  # black.files.find_project_root
 ]
 exclude_patterns = [
     "_build",

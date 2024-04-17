@@ -1,8 +1,4 @@
 """
-.. py:module:: logging_strict.logging_api
-   :platform: Unix
-   :synopsis: Extract and load logging.config
-
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
 ..
@@ -12,7 +8,7 @@ thread. And logging config is dirty, each logger, since it's a Singleton,
 stays around for the life of the app. So the app and workers need to be
 isolated from each other.
 
-**:py:class:`multiprocessing.pool.Pool` > ThreadPool**. Workers should
+:py:class:`multiprocessing.pool.Pool` > ThreadPool. Workers should
 exist as separate processes. The logging state ends along with the worker process.
 
 Another design consideration is avoiding blocking the main app thread.

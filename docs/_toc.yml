@@ -60,8 +60,6 @@ subtrees:
     - file: code/tech_niques/logging_capture
     - file: code/tech_niques/stream_capture
 - entries:
-  - file: license
-- entries:
   - file: threat-model
 - caption: Links
   entries:

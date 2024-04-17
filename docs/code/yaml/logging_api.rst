@@ -9,4 +9,5 @@ extract and setup of :py:mod:`logging.config` yaml files
 .. automodule:: logging_strict.logging_api
    :members:
    :undoc-members:
-   :noindex:
+   :platform: Unix
+   :synopsis: Extract and load logging.config

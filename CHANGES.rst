@@ -34,6 +34,22 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-2-32:
+
+Version 1.2.32 — 2024-04-17
+---------------------------
+
+- docs: generate intersphinx .inv files so only commit plain text files
+- docs(Makefile): add targets build_inv inv2txt clean_inv
+- docs: remove license.rst and sphinx-licenseinfo extension
+- ci(tox): docs call make build_inv afterwards call make clean_inv
+- ci(pre-commit): add remove-intersphinx-inventory-files
+- ci(igor.py): harden _update_file so doesnt fail on nonexistent file
+- ci(igor.py): from get_release_facts remove constants repo owner and github url
+- ci(igor.py): do_quietly add arg, cwd
+- refactor: semantic version separated into separate module
+- feat: harden version_semantic handling against version str prepended by v
+
 .. _changes_1-2-31:
 
 Version 1.2.31 — 2024-04-08

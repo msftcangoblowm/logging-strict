@@ -67,7 +67,7 @@ e.g. ``type[LoggingYamlType]``
 Exceptions
 -----------
 
-:ref:`[exc docs] <code/constants/exceptions:public api>`
+:ref:`[exc docs] <code/constants/exceptions:exceptions>`
 
 - LoggingStrictError
 

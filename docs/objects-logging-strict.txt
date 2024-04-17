@@ -35,25 +35,25 @@ logging_strict.exceptions.LoggingStrictGenreRequired py:exception 1 code/constan
 logging_strict.exceptions.LoggingStrictGenreRequired.params.msg py:parameter 1 code/constants/exceptions.html#module-$ -
 logging_strict.logging_api py:module 0 code/yaml/logging_api.html#module-$ -
 logging_strict.logging_api.__all__ py:data 1 code/yaml/logging_api.html#$ -
-logging_strict.logging_api.cb_true py:function 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml py:class 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.suffixes py:attribute 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.params.package_name py:parameter 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.params.package_data_folder_start py:parameter 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.params.category py:parameter 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.params.genre py:parameter 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.params.flavor py:parameter 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.params.version_no py:parameter 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.file_stem py:property 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.category py:property 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.genre py:property 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.flavor py:property 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.version py:property 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.file_suffix py:property 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.file_name py:property 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.package py:property 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.dest_folder py:property 1 code/yaml/logging_api.html#module-$ -
-logging_strict.logging_api.LoggingConfigYaml.extract py:method 1 code/yaml/logging_api.html#module-$ -
+logging_strict.logging_api.cb_true py:function 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml py:class 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.suffixes py:attribute 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.params.package_name py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.params.package_data_folder_start py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.params.category py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.params.genre py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.params.flavor py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.params.version_no py:parameter 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.file_stem py:property 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.category py:property 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.genre py:property 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.flavor py:property 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.version py:property 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.file_suffix py:property 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.file_name py:property 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.package py:property 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.dest_folder py:property 1 code/yaml/logging_api.html#$ -
+logging_strict.logging_api.LoggingConfigYaml.extract py:method 1 code/yaml/logging_api.html#$ -
 logging_strict.logging_api.LoggingConfigYaml.extract.params.path_relative_package_dir py:parameter 1 code/yaml/logging_api.html#$ -
 logging_strict.logging_api.setup_ui_other py:function 1 code/yaml/logging_api.html#module-$ -
 logging_strict.logging_api.setup_ui_other.params.package_name py:parameter 1 code/yaml/logging_api.html#$ -
@@ -155,14 +155,14 @@ logging_strict.tech_niques.logging_capture._normalize_level_name py:function 1 c
 logging_strict.tech_niques.logging_capture._normalize_level_name.params.logger_name py:parameter 1 code/tech_niques/logging_capture.html#module-$ -
 logging_strict.tech_niques.logging_capture._normalize_level py:function 1 code/tech_niques/logging_capture.html#module-$ -
 logging_strict.tech_niques.logging_capture._normalize_level.params.level py:paramater 1 code/tech_niques/logging_capture.html#module-$ -
-logging_strict.tech_niques.logging_capture._LoggingWatcher py:class 1 code/tech_niques/logging_capture.html#module-$ -
-logging_strict.tech_niques.logging_capture._LoggingWatcher.records py:attribute 1 code/tech_niques/logging_capture.html#module-$ -
-logging_strict.tech_niques.logging_capture._LoggingWatcher.output py:attribute 1 code/tech_niques/logging_capture.html#module-$ -
-logging_strict.tech_niques.logging_capture._LoggingWatcher.getHandlerByName py:method 1 code/tech_niques/logging_capture.html#module-$ -
-logging_strict.tech_niques.logging_capture._LoggingWatcher.getHandlerByName.params.name py:parameter 1 code/tech_niques/logging_capture.html#module-$ -
-logging_strict.tech_niques.logging_capture._LoggingWatcher.getHandlerNames py:method 1 code/tech_niques/logging_capture.html#module-$ -
-logging_strict.tech_niques.logging_capture._LoggingWatcher.getLevelNo py:method 1 code/tech_niques/logging_capture.html#module-$ -
-logging_strict.tech_niques.logging_capture._LoggingWatcher.getLevelNo.params.level_name 1 code/tech_niques/logging_capture.html#module-$ -
+logging_strict.tech_niques.logging_capture._LoggingWatcher py:class 1 code/tech_niques/logging_capture.html#module-logging_strict.tech_niques.logging_capture -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.records py:attribute 1 code/tech_niques/logging_capture.html#module-logging_strict.tech_niques.logging_capture -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.output py:attribute 1 code/tech_niques/logging_capture.html#module-logging_strict.tech_niques.logging_capture -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getHandlerByName py:method 1 code/tech_niques/logging_capture.html#module-logging_strict.tech_niques.logging_capture -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getHandlerByName.params.name py:parameter 1 code/tech_niques/logging_capture.html#module-logging_strict.tech_niques.logging_capture -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getHandlerNames py:method 1 code/tech_niques/logging_capture.html#module-logging_strict.tech_niques.logging_capture -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getLevelNo py:method 1 code/tech_niques/logging_capture.html#module-logging_strict.tech_niques.logging_capture -
+logging_strict.tech_niques.logging_capture._LoggingWatcher.getLevelNo.params.level_name 1 code/tech_niques/logging_capture.html#module-logging_strict.tech_niques.logging_capture -
 logging_strict.tech_niques.logging_capture._CapturingHandler py:class 1 code/tech_niques/logging_capture.html#$ -
 logging_strict.tech_niques.logging_capture._CapturingHandler.watcher py:attribute 1 code/tech_niques/logging_capture.html#$ -
 logging_strict.tech_niques.logging_capture._CapturingHandler.flush py:method 1 code/tech_niques/logging_capture.html#$ -
@@ -337,7 +337,6 @@ code/constants/exceptions std:doc -1 code/constants/exceptions.html Exceptions
 code/constants/exceptions:exceptions std:label -1 code/constants/exceptions.html#module-logging_strict.exceptions Exceptions
 code/constants/exceptions:module objects std:label -1 code/constants/exceptions.html#module-objects Module objects
 code/constants/exceptions:module private variables std:label -1 code/constants/exceptions.html#module-private-variables Module private variables
-code/constants/exceptions:public api std:label -1 code/constants/exceptions.html#public-api Public API
 code/constants/index std:doc -1 code/constants/index.html Constants
 code/constants/index:constants std:label -1 code/constants/index.html#constants Constants
 code/constants/version std:doc -1 code/constants/version.html Version

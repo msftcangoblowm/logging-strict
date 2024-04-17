@@ -2,10 +2,6 @@ aiologger==0.7.0
     # via -r docs/requirements.in
 alabaster==0.7.13
     # via sphinx
-apeye==1.4.1
-    # via sphinx-toolbox
-apeye-core==1.1.4
-    # via apeye
 attrs==23.2.0
     # via
     #   -c docs/../requirements/prod.pip
@@ -13,16 +9,8 @@ attrs==23.2.0
     #   referencing
     #   scriv
     #   sphobjinv
-autodocsumm==0.2.11
-    # via sphinx-toolbox
 babel==2.13.1
     # via sphinx
-beautifulsoup4==4.12.2
-    # via sphinx-toolbox
-cachecontrol[filecache]==0.13.1
-    # via
-    #   cachecontrol
-    #   sphinx-toolbox
 certifi==2023.11.17
     # via
     #   requests
@@ -38,44 +26,18 @@ click-log==0.4.0
     # via scriv
 colorama==0.4.6
     # via sphinx-autobuild
-cssutils==2.9.0
-    # via dict2css
-dict2css==0.3.0.post1
-    # via sphinx-toolbox
-dist-meta==0.8.0
-    # via sphinx-licenseinfo
 docutils==0.18.1
     # via
     #   sphinx
-    #   sphinx-licenseinfo
     #   sphinx-paramlinks
-    #   sphinx-tabs
-    #   sphinx-toolbox
 dom-toml==0.6.1
     # via sphinx-pyproject
 domdf-python-tools==3.7.0
     # via
-    #   apeye
-    #   apeye-core
-    #   dict2css
-    #   dist-meta
     #   dom-toml
-    #   pychoosealicense
-    #   sphinx-licenseinfo
     #   sphinx-pyproject
-    #   sphinx-toolbox
-filelock==3.13.1
-    # via
-    #   cachecontrol
-    #   sphinx-toolbox
-handy-archives==0.2.0
-    # via dist-meta
-html5lib==1.1
-    # via sphinx-toolbox
 idna==3.6
-    # via
-    #   apeye-core
-    #   requests
+    # via requests
 imagesize==1.4.1
     # via sphinx
 importlib-metadata==7.0.0
@@ -84,8 +46,6 @@ jinja2==3.1.2
     # via
     #   scriv
     #   sphinx
-    #   sphinx-jinja2-compat
-    #   sphinx-licenseinfo
 jsonschema==4.21.1
     # via sphobjinv
 jsonschema-specifications==2023.12.1
@@ -95,76 +55,43 @@ livereload==2.6.3
 markdown-it-py==3.0.0
     # via scriv
 markupsafe==2.1.3
-    # via
-    #   jinja2
-    #   sphinx-jinja2-compat
+    # via jinja2
 mdurl==0.1.2
     # via markdown-it-py
-msgpack==1.0.7
-    # via cachecontrol
 natsort==8.4.0
     # via domdf-python-tools
 packaging==23.2
-    # via
-    #   dist-meta
-    #   sphinx
-platformdirs==4.1.0
-    # via apeye
-pychoosealicense==2023.11.20
-    # via sphinx-licenseinfo
+    # via sphinx
 pygments==2.17.2
-    # via
-    #   sphinx
-    #   sphinx-prompt
-    #   sphinx-tabs
-python-frontmatter==1.0.1
-    # via pychoosealicense
+    # via sphinx
 pyyaml==6.0.1
-    # via
-    #   pychoosealicense
-    #   python-frontmatter
-    #   sphinx-external-toc
+    # via sphinx-external-toc
 referencing==0.33.0
     # via
     #   jsonschema
     #   jsonschema-specifications
 requests==2.31.0
     # via
-    #   apeye
-    #   cachecontrol
     #   scriv
     #   sphinx
 rpds-py==0.18.0
     # via
     #   jsonschema
     #   referencing
-ruamel-yaml==0.18.5
-    # via sphinx-toolbox
-ruamel-yaml-clib==0.2.8
-    # via ruamel-yaml
 scriv==1.5.1
     # via -r docs/requirements.in
 six==1.16.0
     # via
     #   -c docs/../requirements/prod.pip
-    #   html5lib
     #   livereload
 snowballstemmer==2.2.0
     # via sphinx
-soupsieve==2.5
-    # via beautifulsoup4
 sphinx==5.3.0
     # via
     #   -r docs/requirements.in
-    #   autodocsumm
     #   sphinx-autobuild
-    #   sphinx-autodoc-typehints
     #   sphinx-external-toc
-    #   sphinx-licenseinfo
     #   sphinx-paramlinks
-    #   sphinx-prompt
-    #   sphinx-tabs
-    #   sphinx-toolbox
     #   sphinxcontrib-applehelp
     #   sphinxcontrib-devhelp
     #   sphinxcontrib-htmlhelp
@@ -172,26 +99,12 @@ sphinx==5.3.0
     #   sphinxcontrib-serializinghtml
 sphinx-autobuild==2021.3.14
     # via -r docs/requirements.in
-sphinx-autodoc-typehints==1.23.0
-    # via sphinx-toolbox
 sphinx-external-toc==1.0.1
-    # via -r docs/requirements.in
-sphinx-jinja2-compat==0.2.0.post1
-    # via
-    #   sphinx-licenseinfo
-    #   sphinx-toolbox
-sphinx-licenseinfo==0.4.0
     # via -r docs/requirements.in
 sphinx-paramlinks==0.6.0
     # via -r docs/requirements.in
-sphinx-prompt==1.5.0
-    # via sphinx-toolbox
 sphinx-pyproject==0.3.0
     # via -r docs/requirements.in
-sphinx-tabs==3.4.4
-    # via sphinx-toolbox
-sphinx-toolbox==3.5.0
-    # via sphinx-licenseinfo
 sphinxcontrib-applehelp==1.0.7
     # via sphinx
 sphinxcontrib-devhelp==1.0.5
@@ -206,8 +119,6 @@ sphinxcontrib-serializinghtml==1.1.9
     # via sphinx
 sphobjinv==2.3.1
     # via -r docs/requirements.in
-tabulate==0.9.0
-    # via sphinx-toolbox
 toml==0.10.2
     # via dom-toml
 tornado==6.4
@@ -216,11 +127,7 @@ typing-extensions==4.9.0
     # via
     #   -c docs/../requirements/prod.pip
     #   domdf-python-tools
-    #   pychoosealicense
-    #   sphinx-toolbox
 urllib3==2.1.0
     # via requests
-webencodings==0.5.1
-    # via html5lib
 zipp==3.17.0
     # via importlib-metadata

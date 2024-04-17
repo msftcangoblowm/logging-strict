@@ -14,6 +14,8 @@ Adapted from
 
 """
 
+from __future__ import annotations
+
 import datetime
 import inspect
 import os
@@ -25,7 +27,6 @@ import sys
 import textwrap
 import types
 from pathlib import Path
-from typing import Optional
 
 try:
     from packaging.version import InvalidVersion
@@ -34,9 +35,15 @@ except ImportError:
     from setuptools.extern.packaging.version import InvalidVersion  # type: ignore
     from setuptools.extern.packaging.version import Version as Version  # type: ignore
 
+REPO_URI = "github.com"
+REPO_OWNER = "msftcangoblowm"
+g_app_name = "logging_strict"  # get from packaging, not hardcode
+PROJECT_NAME = g_app_name.replace("_", "-")
+REPO = f"{REPO_OWNER}/{PROJECT_NAME}"
+REPO_URL = f"https://{REPO_URI}/{REPO}"
+
 UNRELEASED = "Unreleased\n----------"
 SCRIV_START = ".. scriv-start-here\n\n"
-g_app_name = "logging_strict"  # get from packaging, not hardcode
 current_alias_default = "current"
 current_aliases = (
     "current",
@@ -45,7 +52,7 @@ current_aliases = (
 g_kinds = ("tag", "current", "now")
 
 
-def sanitize_kind(kind: Optional[str] = None) -> str:
+def sanitize_kind(kind: str | None = None) -> str:
     """Allow kind to be a version str, 'current', 'tag'"""
     if kind is None:
         # Fallback
@@ -114,11 +121,12 @@ def sanitize_tag(ver: str) -> str:
     return str_v
 
 
-def do_quietly(command):
+def do_quietly(command, cwd):
     """Run a noisy command in a shell to suppress the output"""
     proc = subprocess.run(
         command,
         shell=True,
+        cwd=cwd,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
@@ -133,7 +141,7 @@ def do_show_env() -> None:
         print(f"  {env} = {os.environ[env]!r}")
 
 
-def print_banner(label):
+def print_banner(label: str) -> None:
     """Print the version of Python."""
     try:
         impl = platform.python_implementation()
@@ -163,17 +171,21 @@ def print_banner(label):
     sys.stdout.flush()
 
 
-def _update_file(fname, pattern, replacement):
+def _update_file(fname: str, pattern: str, replacement: str) -> None:
     """Update the contents of a file, replacing pattern with replacement."""
-    with open(fname) as fobj:
-        old_text = fobj.read()
+    path_file = Path(fname)
+    if path_file.exists():
+        with open(fname) as fobj:
+            old_text = fobj.read()
 
-    new_text = re.sub(pattern, replacement, old_text, count=1)
+        new_text = re.sub(pattern, replacement, old_text, count=1)
 
-    if new_text != old_text:
-        print(f"Updating {fname}", file=sys.stderr)
-        with open(fname, "w") as fobj:
-            fobj.write(new_text)
+        if new_text != old_text:
+            print(f"Updating {fname}", file=sys.stderr)
+            with open(fname, "w") as fobj:
+                fobj.write(new_text)
+    else:
+        print(f"Cannot update nonexistent file, {fname}", file=sys.stderr)
 
 
 def get_release_facts(kind: str) -> types.SimpleNamespace:
@@ -195,7 +207,7 @@ def get_release_facts(kind: str) -> types.SimpleNamespace:
     facts.ver = clean_ver  # w/o final
 
     # lazy load
-    from logging_strict.constants import get_version
+    from logging_strict.version_semantic import get_version
 
     # mjr, mnr, mcr, rel, ser = facts.vi = logging_strict.constants.version_info
     # facts.dev = logging_strict.constants._dev
@@ -296,33 +308,30 @@ def do_cheats(kind: str):
     kind_: str = sanitize_kind(kind)
     facts = get_release_facts(kind_)
     pprint.pprint(facts.__dict__)
-    print(f"\n{g_app_name} version is {facts.ver}")
+    print(f"\n{PROJECT_NAME} version is {facts.ver}")
 
-    proj_name = g_app_name
-    repo = f"msftcangoblowm/{proj_name}"
-    github = f"https://github.com/{repo}"
-    egg = f"egg={proj_name}==0.0"  # to force a re-install
+    egg = f"egg={PROJECT_NAME}==0.0"  # to force a re-install
     print(
-        f"https://{g_app_name}.readthedocs.io/en/{facts.ver}/changes.html#changes-{facts.anchor}"
+        f"https://{PROJECT_NAME}.readthedocs.io/en/{facts.ver}/changes.html#changes-{facts.anchor}"
     )
 
     print(
         "\n## For GitHub commenting:\n"
         + "This is now released as part of "
-        + f"[{g_app_name} {facts.ver}](https://pypi.org/project/{g_app_name}/{facts.ver})."
+        + f"[{g_app_name} {facts.ver}](https://pypi.org/project/{PROJECT_NAME}/{facts.ver})."
     )
 
     print("\n## To run this code:")
-    if facts.branch == "master":
-        print(f"python3 -m pip install git+{github}#{egg}")
+    if facts.branch in ("master", "main"):
+        print(f"python3 -m pip install git+{REPO_URL}#{egg}")
     else:
-        print(f"python3 -m pip install git+{github}@{facts.branch}#{egg}")
-    print(f"python3 -m pip install git+{github}@{facts.sha[:20]}#{egg}")
+        print(f"python3 -m pip install git+{REPO_URL}@{facts.branch}#{egg}")
+    print(f"python3 -m pip install git+{REPO_URL}@{facts.sha[:20]}#{egg}")
 
     print(
         "\n## For other collaborators:\n"
-        + f"git clone {github}\n"
-        + f"cd {proj_name}\n"
+        + f"git clone {REPO_URL}\n"
+        + f"cd {PROJECT_NAME}\n"
         + f"git checkout {facts.sha}"
     )
 
@@ -336,7 +345,7 @@ def do_help() -> None:
             print(f"{name[3:]:<20}{value.__doc__}")
 
 
-def current_tag() -> Optional[str]:
+def current_tag() -> str | None:
     """Run git describe --tag"""
     cmd = ["/bin/git", "describe", "--tag"]
     path_cwd = Path.cwd()
@@ -357,7 +366,7 @@ def current_tag() -> Optional[str]:
     return str_out
 
 
-def scm_key(prog_name) -> str:
+def scm_key(prog_name: str) -> str:
     # hyphen --> underscore. Uppercase
     G_APP_NAME = prog_name.upper()
 
@@ -366,7 +375,7 @@ def scm_key(prog_name) -> str:
     return scm_override_key
 
 
-def _current_version() -> Optional[str]:
+def _current_version() -> str | None:
     path_cwd = Path.cwd()
     cmd = [sys.executable, "setup.py", "--version"]
     proc = subprocess.run(
@@ -398,7 +407,7 @@ def do_current_version() -> None:
         print(str_out)
 
 
-def _arbritary_version(next_version: str) -> Optional[str]:
+def _arbritary_version(next_version: str) -> str | None:
     path_cwd = Path.cwd()
     cwd_path = str(path_cwd)
     scm_override_key = scm_key(g_app_name)
@@ -435,7 +444,7 @@ def _arbritary_version(next_version: str) -> Optional[str]:
     return str_out
 
 
-def _tag_version(next_version="") -> Optional[str]:
+def _tag_version(next_version: str | None = "") -> str | None:
     """Get version potentially overriding it"""
     # empty str means take current tag version
     ret = _arbritary_version(next_version)
@@ -582,7 +591,7 @@ def _analyze_args(function: types.FunctionType) -> tuple[bool, int]:
     return bool(argspec.varargs), len(argspec.args)
 
 
-def main(args) -> int:
+def main(args: list[str]) -> int:
     """Main command-line execution for igor.
 
     Verbs are taken from the command line, and extra words taken as directed

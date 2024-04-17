@@ -1,61 +1,7 @@
 """
 .. moduleauthor:: Dave Faulkmore <faulkmore telegram>
 
-package constants.
-
-Safe import; avoids importing package __init__ module
-
-Release phases
----------------
-
-Without SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT environmental variable
-locals are included in version
-
-e.g. "0.1.1.dev0+g4b33a80.d20240129" local is "g4b33a80.d20240129"
-
-When releasing this is not what is wanted, so use
-SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT with the version
-
-- Current version
-
-  .. code-block:: shell
-
-     PYTHONWARNINGS="ignore" python setup.py --version
-
-
-- Release by tag aka final
-
-  .. code-block:: shell
-
-     PYTHONWARNINGS="ignore" SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="$(git describe --tag)" python setup.py --version
-     SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="$(git describe --tag)" python -m build
-
-
-- alpha: a, beta: b, or candidate: rc
-
-  .. code-block:: shell
-
-     PYTHONWARNINGS="ignore" SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1" python setup.py --version
-     SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1" python -m build
-
-
-- dev
-
-  .. code-block:: shell
-
-     PYTHONWARNINGS="ignore" SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1.dev1" python setup.py --version
-     SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1a1.dev1" python -m build
-
-
-Move the tag past post commits
-
-- post
-
-  .. code-block:: shell
-
-     PYTHONWARNINGS="ignore" SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1.post1" python setup.py --version
-     SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.1.1.post1" python -m build
-
+Seperate constants out so independent of any dependencies
 
 Module private variables
 -------------------------
@@ -170,28 +116,23 @@ Module objects
 from __future__ import annotations
 
 import logging  # noqa: F401 used by sphinx
-import types
 from enum import Enum
 from typing import Any  # noqa: F401 used by sphinx
 
-try:
-    from packaging.version import InvalidVersion
-    from packaging.version import Version as Version
-except ImportError:  # pragma: no cover
-    from setuptools.extern.packaging.version import InvalidVersion  # type: ignore
-    from setuptools.extern.packaging.version import Version as Version  # type: ignore
-
 from ._version import __version__
+from .version_semantic import (
+    readthedocs_url,
+    sanitize_tag,
+)
 
 __all__ = (
     "g_app_name",
     "__version_app",
+    "__url__",
     "PREFIX_DEFAULT",
     "LoggingConfigCategory",
     "LOG_FORMAT",
     "FALLBACK_LEVEL",
-    "sanitize_tag",
-    "get_version",
 )
 
 g_app_name = "logging_strict"
@@ -246,165 +187,6 @@ LOG_FMT_DETAILED = (
 LOG_FMT_SIMPLE = "%(name)-15s %(levelname)-8s %(processName)-10s %(message)s"
 LOG_LEVEL_WORKER = "INFO"
 
-_map_release = types.MappingProxyType({"alpha": "a", "beta": "b", "candidate": "rc"})
-
-
-def sanitize_tag(ver):
-    """Avoid reinventing the wheel, leverage Version
-
-    ``final`` is not valid
-
-    :param ver: raw semantic version
-    :type ver: str
-    :returns: Sanitized semantic version str
-    :rtype: str
-    :raises:
-
-       - :py:exc:`ValueError` -- Invalid token within Version str
-
-    """
-
-    try:
-        v = Version(ver)
-    except InvalidVersion:
-        # '0.1.dev0.d20240213'. Untagged version. Try remove from last period
-        is_problem = True
-    else:
-        is_problem = False
-
-    if is_problem:
-        lst = ver.split(".")
-        ver_try = ".".join(lst[:-1])
-        try:
-            v = Version(ver_try)
-        except InvalidVersion:
-            is_still_issue = True
-        else:  # pragma: no cover Do nothing
-            is_still_issue = False
-    else:  # pragma: no cover Do nothing
-        is_still_issue = False
-
-    if is_still_issue:
-        try:
-            v = Version(ver)
-        except InvalidVersion as e:
-            msg = f"Version contains invalid token. {e}"
-            raise ValueError(msg) from e
-    else:  # pragma: no cover Do nothing
-        pass
-
-    str_v = str(v)
-
-    # Strip epoch
-    try:
-        idx = str_v.index("!")
-    except ValueError:
-        # Contains no epoch
-        pass
-    else:
-        # strip it
-        str_v = str_v[idx + 1 :]
-
-    # Strip local
-    try:
-        idx = str_v.index("+")
-    except ValueError:
-        # Contains no epoch
-        pass
-    else:
-        str_v = str_v[:idx]
-
-    return str_v
-
-
-def _make_url_from_version(ver_orig):
-    """Avoid reinventing the wheel
-
-    :param ver_orig: semantic version string
-    :type ver_orig: str
-    :returns:
-
-       url to readthedocs.io for a semantic version of the docs, not necessarily the latest
-
-    :rtype: str
-    """
-    ver = sanitize_tag(ver_orig)
-    ret = f"https://{g_app_name}.readthedocs.io/en/{ver}"
-
-    return ret
-
-
-def get_version(ver, is_use_final=False):
-    """Semantic version string broken into parts
-
-    :param ver: A semantic version string
-    :type ver: str
-    :param is_use_final:
-
-       Default False. ``final`` is not normally valid within a semantic
-       version string. The use of final may be used to indicate intention of creating
-       a tagged release version. If all the stars are aligned and its
-       G'ds Will. If not, ``post release`` version(s) would occur and
-       ``final`` would be incorrect.
-
-       Don't create invalid semantic version strings cuz its convenient.
-       Don't use this feature!
-
-    :type is_use_final: bool
-    :returns:
-
-       Semantic version broken into parts: major, minor, micro,
-       release level, serial. And _dev
-
-    :rtype: tuple[tuple[int, int, int, str, int], int]
-    """
-    if is_use_final is None or not isinstance(is_use_final, bool):
-        is_use_final = False
-    else:  # pragma: no cover
-        pass
-
-    # epoch and locals ignored
-    _v = Version(ver)
-    _dev = _v.dev if _v.is_devrelease else 0
-
-    if not _v.is_prerelease and not _v.is_postrelease:
-        # ``final`` means intend to bump version. Not actually valid
-        releaselevel = "" if not is_use_final else "final"
-        serial = 0
-        _dev = 0
-    elif _v.is_prerelease and not _v.is_postrelease:
-        # Requires long
-        if _v.is_devrelease and _v.pre is None:
-            # dev
-            serial = 0
-            releaselevel = ""  # alpha??
-        else:
-            # alpha beta, candidate, a, b, or rc
-            t_pre = _v.pre
-            short = t_pre[0]
-            serial = t_pre[1]
-            for long_, short_ in _map_release.items():
-                if short_ == short:
-                    releaselevel = long_
-                else:  # pragma: no cover continue
-                    pass
-    elif not _v.is_prerelease and _v.is_postrelease:
-        releaselevel = "post"
-        serial = _v.post
-    elif _v.is_prerelease and _v.is_postrelease:  # pragma: no cover
-        # impossible
-        pass
-    else:  # pragma: no cover
-        pass
-
-    return (_v.major, _v.minor, _v.micro, releaselevel, serial), _dev
-
-
 # Removes epoch and local. Fixes version
 __version_app = sanitize_tag(__version__)
-
-# t_ver = get_version(__version__)
-# version_info = t_ver[0]
-# _dev = t_ver[1]
-
-__url__ = _make_url_from_version(__version__)
+__url__ = readthedocs_url(g_app_name, ver_=__version__)

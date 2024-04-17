@@ -4,3 +4,8 @@
 # The remainder of this file is compressed using zlib.
 strictyaml.docs py:module 0 index.html -
 strictyaml.compound_types py:module 0 using/alpha/compound -
+strictyaml.Any py:class 1 using/alpha/howto/without-a-schema -
+strictyaml.Bool py:class 1 using/alpha/scalar/boolean/ -
+strictyaml.Str py:class 1 using/alpha/scalar/string/ -
+strictyaml.YAML.as_yaml py:method 1 using/alpha/howto/roundtripping/ -
+strictyaml.load py:function 1 using/alpha/howto/roundtripping/ -
