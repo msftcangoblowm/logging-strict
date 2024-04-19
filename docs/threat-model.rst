@@ -159,3 +159,24 @@ Not planned
 - write to /tmp folders (not a threat)
 
 - Makefile(s). No known Python alternatives. Bash is a threat!
+
+pyyaml still?
+--------------
+
+pyyaml is a dependency of:
+
+- sphinx-external-toc-strict --> myst-parser --> pyyaml
+
+  sphinx --> myst-parser --> pyyaml
+
+- pytest-regressions --> pyyaml
+
+- pre-commit --> pyyaml
+
+How to reproduce
+^^^^^^^^^^^^^^^^^
+
+grep these folders for pyyaml:
+
+- docs/
+- requirements/

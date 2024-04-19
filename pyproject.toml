@@ -144,8 +144,8 @@ extensions = [
     "sphinx_paramlinks",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
-    "sphinx_external_toc",
-    # "sphinx_licenseinfo",
+    "sphinx_external_toc_strict",
+    "myst_parser",  # required by sphinx_external_toc_strict
 ]
 linkcheck_ignore = [
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/asyncio/base_events.py#L1894",  # asyncio.base_events._run_once
@@ -164,10 +164,13 @@ exclude_patterns = [
     "Thumbs.db",
     ".DS_Store",
 ]
+myst_enable_extensions = ["colon_fence", "html_image"]
+external_toc_exclude_missing = true
 doctest_show_successes = false
 doctest_test_doctest_blocks = "Yes please!"
 nitpicky = true
 autodoc_typehints = 'signature'
+todo_include_todos = true
 
 [tool.sphinx-pyproject.linkcheck_allowed_redirects]
 "https://stackoverflow.com/a/53677481" = "https://stackoverflow.com/questions/45110287/workaround-for-using-name-main-in-python-multiprocessing/53677481#53677481"

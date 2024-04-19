@@ -50,16 +50,15 @@ For logging.config yaml files, logging-strict does the following:
 
 * Python 3.9 through 3.12, and 3.13.0a3 and up.
 
+**New in 1.3.x:**
+
+resolve dependency conflict by pinning python-dateutil
+
 **New in 1.2.x:**
 
 sphinx object inventories; eliminate sphinx warnings; package logo; tox.ini;
 many .github/workflows; Tagged version on testpypi, pypi, and readthedocs;
 badges; VHS tapes; codecov badge;
-
-**New in 1.1.x:**
-
-Sphinx documentation;
-Public API changed. retired functions setup_worker and setup_ui. Split each into 2 or 3;
 
 Why?
 ------

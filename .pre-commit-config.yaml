@@ -46,16 +46,3 @@ repos:
         language: python
         require_serial: true
         pass_filenames: false
-
-      - id: remove-intersphinx-inventory-files
-        name: remove-intersphinx-inventory-files
-        entry: python igor.py quietly "make inv2txt" docs/
-        language: python
-        pass_filenames: false
-        description: >
-          Remove intersphinx .inv file that has corresponding .txt file
-        stages:
-        - commit
-        - merge-commit
-        - push
-        - manual

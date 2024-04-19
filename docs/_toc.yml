@@ -49,6 +49,7 @@ subtrees:
       - file: code/yaml/logging_api
       - file: code/yaml/logging_yaml_abc
       - file: code/yaml/logging_yaml_validate
+    - file: code/todo
 - entries:
   - file: code/tech_niques/index
     options:
@@ -63,7 +64,15 @@ subtrees:
   - file: threat-model
 - caption: Links
   entries:
-  - url: https://github.com/msftcangoblowm/logging-strict
-    title: GitHub Repository
-  - url: https://pypi.org/project/logging-strict
-    title: pypi.org
+  - title: PyPI
+    url: https://pypi.org/project/logging-strict
+  - title: Source code
+    url: https://github.com/msftcangoblowm/logging-strict
+  - title: Issue tracker
+    url: https://github.com/msftcangoblowm/logging-strict/issues
+  - title: Change log
+    url: https://raw.githubusercontent.com/msftcangoblowm/logging-strict/main/CHANGES.rst
+  - title: Contact
+    url: https://mastodon.social/@msftcangoblowme
+meta:
+  exclude_missing: true

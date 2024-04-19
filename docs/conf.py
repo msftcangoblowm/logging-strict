@@ -49,11 +49,11 @@ proj_master_doc = config.get("master_doc")
 # @@@ editable
 copyright = "2023–2024, Dave Faulkmore"
 # The short X.Y.Z version.
-version = "1.2.32"
+version = "1.3.0"
 # The full version, including alpha/beta/rc tags.
-release = "1.2.32"
+release = "1.3.0"
 # The date of release, in "monthname day, year" format.
-release_date = "April 17, 2024"
+release_date = "April 19, 2024"
 # @@@ end
 
 # release = config.version
@@ -89,7 +89,7 @@ latex_documents = [
         f"{slug}.tex",
         f"{proj_project} Documentation",
         proj_authors,
-        "manual",
+        "manual",  # manual, howto, jreport (Japanese)
     )
 ]
 man_pages = [

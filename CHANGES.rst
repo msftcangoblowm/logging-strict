@@ -34,6 +34,22 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-3-0:
+
+Version 1.3.0 — 2024-04-19
+---------------------------
+
+- ci: actions/setup-python remove option cache pip
+- docs: add todo page
+- ci(pre-commit): remove remove-intersphinx-inventory-files rtd needs docs/*.inv
+- ci(tox): in docs, remove calls to build_inv and clean_inv
+- docs(Makefile): build_inv and clean_inv use relative path
+- docs: add links to pypi github sissues changelog chat
+- docs: remove objects-python.txt too heavy. rtd needs docs/*.inv
+- docs: enable sphinx extensions sphinx-external-toc-strict and myst-parser
+- docs: requirement sphinx-external-toc --> sphinx-external-toc-strict
+- fix: python-dateutil version pinned. Resolve dependency conflict
+
 .. _changes_1-2-32:
 
 Version 1.2.32 — 2024-04-17

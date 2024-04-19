@@ -11,5 +11,7 @@ sphinx-pyproject
 sphinx-autobuild
 sphinx-paramlinks
 # sphinx-licenseinfo unmaintained; has maximum versions dependencies
-aiologger  # this is a testing dependency?!
-sphinx_external_toc # sphinxcontrib-fulltoc alternative
+# this is a testing dependency?!
+aiologger
+# alternative to: sphinxcontrib-fulltoc and sphinx_external_toc
+sphinx_external_toc_strict
