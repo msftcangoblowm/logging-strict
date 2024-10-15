@@ -10,16 +10,15 @@ Intuitive interface. Use within :code:`with` block
 :py:class:`multiprocessing.pool.Pool` workers have to capture
 both streams and logging output
 
-Module private variables
--------------------------
+**Module private variables**
+
 .. py:data:: __all__
    :type: tuple[str]
    :value: ("CaptureOutput",)
 
    This modules exports
 
-Module objects
----------------
+**Module objects**
 
 """
 
@@ -69,9 +68,9 @@ class CaptureOutput:
         """Context Manager teardown. Restores sys.stdout and sys.stderr previous state
 
         :param exc_type: Exception type
-        :type exc_type: type[Exception] | None
+        :type exc_type: type[BaseException] | None
         :param exc_value: Exception value
-        :type exc_value: typing.Any | None
+        :type exc_value: BaseException | None
         :param exc_tb: Exception traceback if an Exception occurred
         :type exc_tb: types.TracebackType | None
         """

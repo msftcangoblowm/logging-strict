@@ -1,19 +1,19 @@
-import sys
-import types
+from collections.abc import Iterator
 from enum import Enum
-from typing import Any
+from typing import (
+    Any,
+    Final,
+)
 
-if sys.version_info >= (3, 8):  # pragma: no cover
-    from typing import Final
-else:  # pragma: no cover
-    from typing_extensions import Final
-
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Iterator
-else:  # pragma: no cover
-    from typing import Iterator
-
-__all__: Final[tuple[str, str, str, str, str, str, str]]
+__all__ = (
+    "g_app_name",
+    "__version_app",
+    "__url__",
+    "PREFIX_DEFAULT",
+    "LoggingConfigCategory",
+    "LOG_FORMAT",
+    "FALLBACK_LEVEL",
+)
 
 g_app_name: Final[str]
 PREFIX_DEFAULT: Final[str]

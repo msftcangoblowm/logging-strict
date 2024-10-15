@@ -1,16 +1,20 @@
-packaging==23.2
+packaging==24.1
     # via setuptools-scm
 setuptools-scm==8.0.4
     # via -r requirements/pip.in
-tomli==2.0.1
-    # via setuptools-scm
-typing-extensions==4.9.0
-    # via setuptools-scm
+tomli==2.0.2 ; python_version < "3.11"
+    # via
+    #   -c requirements/pins.pip
+    #   setuptools-scm
+typing-extensions==4.12.2 ; python_version < "3.10"
+    # via
+    #   -c requirements/pins.pip
+    #   setuptools-scm
 
 # The following packages are considered to be unsafe in a requirements file:
 pip==23.3.2
     # via -r requirements/pip.in
-setuptools==69.0.3
+setuptools==69.1.1
     # via
     #   -r requirements/pip.in
     #   setuptools-scm

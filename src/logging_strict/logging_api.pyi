@@ -1,33 +1,28 @@
-from __future__ import annotations
-
 import sys
-import types
 from pathlib import Path
 from typing import Any
 
 from .constants import LoggingConfigCategory
-from .logging_yaml_abc import (
-    VERSION_FALLBACK,
-    YAML_LOGGING_CONFIG_SUFFIX,
-    LoggingYamlType,
-)
-
-if sys.version_info >= (3, 8):
-    from typing import Final
-else:
-    from typing_extensions import Final
+from .logging_yaml_abc import LoggingYamlType
 
 if sys.version_info >= (3, 11):
     from typing import Self
 else:
     from typing_extensions import Self
 
-__all__: Final[tuple[str, str, str, str, str, str]]
+__all__ = (
+    "LoggingConfigYaml",
+    "ui_yaml_curated",
+    "setup_ui_other",
+    "worker_yaml_curated",
+    "setup_worker_other",
+    "LoggingState",
+)
 
 def cb_true(x: Any) -> bool: ...
 
 class LoggingConfigYaml(LoggingYamlType):
-    suffixes: str = YAML_LOGGING_CONFIG_SUFFIX
+    suffixes: str = ...
 
     def __init__(
         self,
@@ -36,7 +31,7 @@ class LoggingConfigYaml(LoggingYamlType):
         category: LoggingConfigCategory | str | Any | None,
         genre: str | None = None,
         flavor: str | None = None,
-        version_no: Any | None = VERSION_FALLBACK,
+        version_no: Any | None = ...,
     ) -> None: ...
     @property
     def file_stem(self) -> str: ...
@@ -67,19 +62,19 @@ def setup_ui_other(
     package_name: str,
     genre: str,
     flavor: str,
-    version_no: Any = VERSION_FALLBACK,
+    version_no: Any = ...,
     package_start_relative_folder: Path | str | None = "",
 ) -> None: ...
 def ui_yaml_curated(
     genre: str,
     flavor: str,
-    version_no: Any | None = VERSION_FALLBACK,
+    version_no: Any | None = ...,
     package_start_relative_folder: Path | str | None = "",
 ) -> None: ...
 def worker_yaml_curated(
     genre: Any | None = "mp",
     flavor: Any | None = "asz",
-    version_no: Any | None = VERSION_FALLBACK,
+    version_no: Any | None = ...,
     package_start_relative_folder: Path | str | None = "",
 ) -> str: ...
 def setup_worker_other(
@@ -87,12 +82,12 @@ def setup_worker_other(
     package_data_folder_start: str,
     genre: str,
     flavor: str,
-    version_no: Any | None = VERSION_FALLBACK,
+    version_no: Any | None = ...,
     package_start_relative_folder: Path | str | None = "",
 ) -> str: ...
 
 class LoggingState:
-    __instance: "LoggingState" | None = None
+    __instance: Self | None = None
 
     def __new__(cls, is_state_app: Any | None = False) -> Self: ...
     @property

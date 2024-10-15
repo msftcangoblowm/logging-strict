@@ -5,7 +5,7 @@
 #   - tox: lint
 
 -c pins.pip
--c prod.pip
+-c prod.unlock
 
 black
 blackdoc
@@ -16,3 +16,4 @@ mypy
 coverage
 twine
 validate-pyproject
+get-pypi-latest-version

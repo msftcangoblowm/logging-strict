@@ -1,21 +1,12 @@
-from __future__ import annotations
-
 import abc
-import sys
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any
+from typing import (
+    Any,
+    Final,
+)
 
-if sys.version_info >= (3, 8):  # pragma: no cover
-    from typing import Final
-else:  # pragma: no cover
-    from typing_extensions import Final
-
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Iterator
-else:  # pragma: no cover
-    from typing import Iterator
-
-__all__: Final[tuple[str, str, str]]
+__all__ = ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", "setup_logging_yaml")
 
 YAML_LOGGING_CONFIG_SUFFIX: Final[str]
 PATTERN_DEFAULT: Final[str]
@@ -33,7 +24,7 @@ class LoggingYamlType(abc.ABC):
         category: str | None = None,
         genre: str | None = None,
         flavor: str | None = None,
-        version: str | None = VERSION_FALLBACK,
+        version: str | None = ...,
     ) -> str: ...
     def iter_yamls(
         self,
@@ -41,7 +32,7 @@ class LoggingYamlType(abc.ABC):
         category: str | None = None,
         genre: str | None = None,
         flavor: str | None = None,
-        version: str | None = VERSION_FALLBACK,
+        version: str | None = ...,
     ) -> Iterator[Path]: ...
     @classmethod
     def __subclasshook__(cls, C: Any) -> bool: ...

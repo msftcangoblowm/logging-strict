@@ -12,20 +12,21 @@ filelock==3.13.1
     # via
     #   tox
     #   virtualenv
-packaging==23.2
+packaging==24.1
     # via
     #   pyproject-api
     #   tox
-platformdirs==4.1.0
+platformdirs==4.3.6
     # via
     #   tox
     #   virtualenv
-pluggy==1.3.0
+pluggy==1.5.0
     # via tox
 pyproject-api==1.6.1
     # via tox
-tomli==2.0.1
+tomli==2.0.2 ; python_version < "3.11"
     # via
+    #   -c requirements/pins.pip
     #   pyproject-api
     #   tox
 tox==4.12.0

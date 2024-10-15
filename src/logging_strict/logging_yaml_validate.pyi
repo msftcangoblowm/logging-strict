@@ -1,21 +1,14 @@
 # once strictyaml implements type hints #90, this stub breaks
-from __future__ import annotations
-
-import sys
-
 from strictyaml import (
     YAML,
     Enum,
     Validator,
 )
-from strictyaml.validators import Validator
 
-if sys.version_info >= (3, 8):
-    from typing import Final
-else:
-    from typing_extensions import Final
-
-__all__: Final[tuple[str, str]]
+__all__ = (
+    "schema_logging_config",
+    "validate_yaml_dirty",
+)
 
 format_style: Enum
 format_style_default: str
@@ -33,5 +26,5 @@ schema_logging_config: Validator
 
 def validate_yaml_dirty(
     yaml_snippet: str,
-    schema: Validator | None = schema_logging_config,
+    schema: Validator | None = ...,
 ) -> YAML | None: ...

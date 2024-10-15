@@ -1,11 +1,4 @@
-from __future__ import annotations
-
-import sys
-
-if sys.version_info >= (3, 8):
-    from typing import Final
-else:
-    from typing_extensions import Final
+from typing import Final
 
 version: Final[str]
 __version__: Final[str]

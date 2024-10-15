@@ -1,11 +1,10 @@
 # Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
 # For details: https://github.com/msftcangoblowm/logging-strict/blob/master/NOTICE.txt
 
-# Version pins, for use as a constraints file.
-# myst-parser restricts docutils<0.21
-# To downgrade docutils --> 0.20.1
-# pip install --force-install -v "docutils==0.20.1"
-
 # strictyaml --> python-dateutil --> prod.pip
 # python -m piptools compile not see this postrelease. Instead chooses python-dateutil-2.8.2
-python-dateutil==2.9.0.post0
+python-dateutil>=2.9.0.post0
+
+typing-extensions; python_version<"3.10"
+
+tomli>=2.0.2; python_version<"3.11"

@@ -26,6 +26,7 @@ else
 is_venv = 1
 VENV_BIN := $(VIRTUAL_ENV)/bin
 VENV_BIN_PYTHON := python3
+PY_X_Y := $(shell $(VENV_BIN_PYTHON) -c 'import platform; t_ver = platform.python_version_tuple(); print(".".join(t_ver[:2]));')
 endif
 
 ifeq ($(is_venv),1)
@@ -84,7 +85,7 @@ sterile: clean			## Remove all non-controlled content, even if expensive.
 ##@ Build dependencies
 
 
-.PHONY: upgrade doc_upgrade diff_upgrade _upgrade
+.PHONY: upgrade diff_upgrade _upgrade
 PIP_COMPILE = $(VENV_BIN_PYTHON) -m piptools compile --allow-unsafe --resolver=backtracking
 
 upgrade:				## Update the *.pip files with the latest packages satisfying *.in files.
@@ -97,8 +98,8 @@ upgrade-one:			## Update the *.pip files for one package. `make upgrade-one pack
 _upgrade: export CUSTOM_COMPILE_COMMAND=make upgrade
 _upgrade:
 ifeq ($(is_venv),1)
-  ifeq ($(is_piptools), pip-tools)
-	@pip install --quiet --disable-pip-version-check --requirement requirements/pip-tools.pip
+	@if [[ "$(PY_X_Y)" = "3.9" ]]; then
+	pip install --quiet --disable-pip-version-check --requirement requirements/pip-tools.pip
 	$(PIP_COMPILE) -o requirements/pip-tools.pip requirements/pip-tools.in
 	$(PIP_COMPILE) -o requirements/pip.pip requirements/pip.in
 	$(PIP_COMPILE) -o requirements/kit.pip requirements/kit.in
@@ -107,16 +108,7 @@ ifeq ($(is_venv),1)
 	$(PIP_COMPILE) --no-strip-extras -o requirements/manage.pip requirements/manage.in
 	$(PIP_COMPILE) --no-strip-extras -o requirements/dev.pip requirements/dev.in
 	$(PIP_COMPILE) --no-strip-extras -o requirements/mypy.pip requirements/mypy.in
-  endif
-endif
-
-doc_upgrade: export CUSTOM_COMPILE_COMMAND=make doc_upgrade
-doc_upgrade: $(VENV_BIN)	## Update the doc/requirements.pip file
-ifeq ($(is_venv),1)
-  ifeq ($(is_piptools), pip-tools)
-	@$(VENV_BIN)/pip install --quiet --disable-pip-version-check --requirement requirements/pip-tools.pip
-	$(VENV_BIN)/$(PIP_COMPILE) -o docs/requirements.pip docs/requirements.in
-  endif
+	fi
 endif
 
 diff_upgrade:			## Summarize the last `make upgrade`
@@ -128,13 +120,15 @@ diff_upgrade:			## Summarize the last `make upgrade`
 	@#      +build==0.10.0
 	@/bin/git diff -U0 | /bin/grep -v '^@' | /bin/grep == | /bin/sort -k1.2,1.99 -k1.1,1.1r -u -V
 
-
 ##@ Testing
+
 
 #run all pre-commit checks
 .PHONY: pre-commit
 pre-commit:				## Run checks found in .pre-commit-config.yaml
+ifeq ($(is_venv),1)
 	@pre-commit run --all-files
+endif
 
 #--strict is on
 .PHONY: mypy

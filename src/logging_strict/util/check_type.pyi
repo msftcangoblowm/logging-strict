@@ -1,15 +1,13 @@
-from __future__ import annotations
-
-import sys
 from pathlib import Path
 from typing import Any
 
-if sys.version_info >= (3, 8):
-    from typing import Final
-else:
-    from typing_extensions import Final
-
-__all__: Final[tuple[str, str, str, str, str]]
+__all__ = (
+    "check_type_path",
+    "is_not_ok",
+    "is_ok",
+    "check_int_verbosity",
+    "check_start_folder_importable",
+)
 
 def check_type_path(
     module_path: Any | None,

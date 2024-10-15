@@ -16,7 +16,7 @@ coverage==7.4.1
     # via -r requirements/dev.in
 cryptography==42.0.5
     # via secretstorage
-docutils==0.20.1
+docutils==0.21.2
     # via readme-renderer
 fastjsonschema==2.19.1
     # via validate-pyproject
@@ -26,9 +26,13 @@ flake8==7.0.0
     #   flake8-pyproject
 flake8-pyproject==1.2.3
     # via -r requirements/dev.in
+get-pypi-latest-version==0.0.12
+    # via -r dev.in
+html5lib==1.1
+    # via get-pypi-latest-version
 idna==3.6
     # via requests
-importlib-metadata==7.0.1
+importlib-metadata==8.5.0
     # via
     #   keyring
     #   twine
@@ -58,62 +62,70 @@ mypy-extensions==1.0.0
     # via
     #   black
     #   mypy
-nh3==0.2.15
+nh3==0.2.18
     # via readme-renderer
-packaging==23.2
+packaging==24.1
     # via black
 pathspec==0.12.1
     # via
     #   black
     #   blackdoc
-pkginfo==1.9.6
+pkginfo==1.11.2
     # via twine
-platformdirs==4.1.0
+platformdirs==4.3.6
     # via black
 pycodestyle==2.11.1
     # via flake8
-pycparser==2.21
+pycparser==2.22
     # via cffi
 pyflakes==3.2.0
     # via flake8
-pygments==2.17.2
+pygments==2.18.0
     # via
     #   readme-renderer
     #   rich
-readme-renderer==43.0
+readme-renderer==44.0
     # via twine
-requests==2.31.0
+requests==2.32.3
     # via
+    #   get-pypi-latest-version
     #   requests-toolbelt
     #   twine
 requests-toolbelt==1.0.0
     # via twine
 rfc3986==2.0.0
     # via twine
-rich==13.7.0
+rich==13.9.2
     # via
     #   blackdoc
     #   twine
 secretstorage==3.3.3
     # via keyring
-tomli==2.0.1
+six==1.16.0
+    # via html5lib
+tomli==2.0.2 ; python_version < "3.11"
     # via
+    #   -c requirements/pins.pip
+    #   -c requirements/prod.unlock
     #   black
     #   blackdoc
     #   flake8-pyproject
     #   mypy
 twine==5.0.0
     # via -r requirements/dev.in
-typing-extensions==4.9.0
+typing-extensions==4.12.2 ; python_version < "3.10"
     # via
-    #   -c requirements/prod.pip
+    #   -c requirements/pins.pip
+    #   -c requirements/prod.unlock
     #   black
     #   mypy
-urllib3==2.2.1
+urllib3==2.2.3
     # via
     #   requests
     #   twine
 validate-pyproject==0.16
     # via -r requirements/dev.in
-zipp==3.17.0
+webencodings==0.5.1
+    # via html5lib
+zipp==3.20.2
     # via importlib-metadata

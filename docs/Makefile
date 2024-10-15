@@ -14,6 +14,7 @@ else
 is_venv = 1
 VENV_BIN := $(VIRTUAL_ENV)/bin
 VENV_BIN_PYTHON := python3
+PY_X_Y := $(shell $(VENV_BIN_PYTHON) -c 'import platform; t_ver = platform.python_version_tuple(); print(".".join(t_ver[:2]));')
 endif
 
 err_check_web_conn := Failed. Has issues or no web connection
@@ -25,10 +26,23 @@ SPHINXBUILD   := $(SPHINXBUILDNOOPT) $(SPHINXOPTS) $(O)
 SOURCEDIR     := .
 BUILDDIR      := _build
 
+##@ Build dependencies
+
+# requires pip-tools Sphinx sphinx-pyproject logging-strict sphinx-paramlinks sphinx-external-toc-strict
+.PHONY: doc_upgrade
+doc_upgrade: export CUSTOM_COMPILE_COMMAND=make doc_upgrade
+doc_upgrade: $(VENV_BIN)	## Update the doc/requirements.pip file
+ifeq ($(is_venv),1)
+	@if [[ "$(PY_X_Y)" = "3.10" ]]; then
+	$(VENV_BIN)/pip install --quiet --disable-pip-version-check -r ../requirements/pip-tools.pip
+	$(VENV_BIN)/$(PIP_COMPILE) -o requirements.pip requirements.in
+	fi
+endif
+
 ##@ Build
 
 # Convert *.txt --> *.inv Base folder only
-# sphobjinv convert -q zlib objects-toc-strict.txt objects-toc-strict.inv
+# sphobjinv convert -q zlib objects-logging-strict.txt objects-logging-strict.inv
 .PHONY: build_inv
 build_inv:				## inventory base folder only .txt --> .inv
 ifeq ($(is_venv),1)

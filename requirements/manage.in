@@ -4,8 +4,8 @@
 # packaging and kitting
 
 -c pins.pip
--c prod.pip
--c tox.pip
+-c prod.unlock
+-r tox.pip
 
 twine           # pypi.org
 pre-commit

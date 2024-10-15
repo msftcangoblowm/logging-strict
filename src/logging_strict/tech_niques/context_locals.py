@@ -177,8 +177,8 @@ else:
 
 __all__ = ("get_locals",)
 
-T = TypeVar("T")  # Can be anything
-P = ParamSpec("P")
+_T = TypeVar("_T")  # Can be anything
+_P = ParamSpec("_P")
 
 
 def _func(param_a: str, param_b: int | None = 10) -> str:
@@ -225,8 +225,8 @@ class MockFunction:
     def __call__(  # type: ignore[misc]  # missing self non-static method
         mock_instance: MagicMock,
         /,
-        *args: P.args,
-        **kwargs: P.kwargs,
+        *args: _P.args,
+        **kwargs: _P.kwargs,
     ) -> Any:
         """Mock modifies a target function.
         The locals are included into the :paramref:`mock_instance`.
@@ -239,16 +239,16 @@ class MockFunction:
            A generic module level function. Is modified and executed. piggy backing
            the module level function ``locals`` onto the return statement
 
-        :type mock_instance: collections.abc.Callable[P, T]
+        :type mock_instance: collections.abc.Callable[_P, _T]
         :param args: Generic positional args
-        :type args: P.args
+        :type args: _P.args
         :param kwargs: Generic keyword args
-        :type kwargs: P.kwargs
+        :type kwargs: _P.kwargs
         :returns:
 
             Module levels function normal return value
 
-        :rtype: T
+        :rtype: _T
 
         .. seealso::
 
@@ -307,7 +307,7 @@ def get_locals(
     :param kwargs: Optional (keyword) arguments
     :type kwargs: typing.ParamSpecKwargs
     :returns: Tuple containing return value and the locals
-    :rtype: tuple[logging_strict.tech_niques.context_locals.T, dict[str, typing.Any]]
+    :rtype: tuple[logging_strict.tech_niques.context_locals._T, dict[str, typing.Any]]
     """
     with patch(
         func_path,

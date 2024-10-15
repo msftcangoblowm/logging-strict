@@ -34,6 +34,17 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-3-1:
+
+Version 1.3.1 — 2024-10-15
+--------------------------
+
+- fix: unlock production dependencies
+- fix(pins.pip): unlock python-dateutil constraint
+- chore: update/bump requirements to latest
+- chore(tox.ini): sphinx is py310+ docs py39 --> py310
+- ci(test-coverage): pip requirements on same line
+
 .. _changes_1-3-0:
 
 Version 1.3.0 — 2024-04-19

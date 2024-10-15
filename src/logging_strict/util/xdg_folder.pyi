@@ -1,14 +1,6 @@
-from __future__ import annotations
-
-import sys
 from pathlib import Path
 
-if sys.version_info >= (3, 8):  # pragma: no cover
-    from typing import Final
-else:  # pragma: no cover
-    from typing_extensions import Final
-
-__all__: Final[tuple[str, str, str]]
+__all__ = ("DestFolderSite", "DestFolderUser", "_get_path_config")
 
 def _get_author(
     package: str,

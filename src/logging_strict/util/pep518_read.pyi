@@ -1,21 +1,12 @@
-from __future__ import annotations
-
-import sys
+from collections.abc import Sequence
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-if sys.version_info >= (3, 8):
-    from typing import Final
-else:
-    from typing_extensions import Final
-
-if sys.version_info >= (3, 9):
-    from collections.abc import Sequence
-else:
-    from typing import Sequence
-
-__all__: Final[tuple[str, str]]
+__all__ = (
+    "find_project_root",
+    "find_pyproject_toml",
+)
 
 @lru_cache
 def find_project_root(

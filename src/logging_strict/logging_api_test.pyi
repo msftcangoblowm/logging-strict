@@ -1,37 +1,23 @@
-from __future__ import annotations
-
-import sys
+from collections.abc import Callable
 from pathlib import Path
+from typing import Final
 
-from .logging_yaml_abc import (
-    VERSION_FALLBACK,
-    LoggingYamlType,
-)
+from .logging_yaml_abc import LoggingYamlType
 
-if sys.version_info >= (3, 8):
-    from typing import Final
-else:
-    from typing_extensions import Final
-
-if sys.version_info >= (3, 9):
-    from collections.abc import Callable
-else:
-    from typing import Callable
-
-__all__: Final[tuple[str]]
+__all__ = ("MyLogger",)
 
 g_package_second_party: Final[str]
 
 def file_stem(
     genre: str | None = "mp",
-    version: str | None = VERSION_FALLBACK,
-    flavor: str | None = g_package_second_party,
+    version: str | None = ...,
+    flavor: str | None = ...,
 ) -> str: ...
 def file_name(
     category: str | None = "worker",
     genre: str | None = "mp",
-    version: str | None = VERSION_FALLBACK,
-    flavor: str | None = g_package_second_party,
+    version: str | None = ...,
+    flavor: str | None = ...,
 ) -> str: ...
 
 class MyLogger(LoggingYamlType):

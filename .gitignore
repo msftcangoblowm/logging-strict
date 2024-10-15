@@ -46,3 +46,5 @@ src/logging_strict/_version.py
 
 # sphinx
 docs/_build/
+.doc
+.venv

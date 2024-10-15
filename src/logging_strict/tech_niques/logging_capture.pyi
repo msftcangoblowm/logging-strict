@@ -1,37 +1,15 @@
-from __future__ import annotations
-
 import contextlib
 import logging
-import sys
+from collections.abc import (
+    Iterator,
+    MutableSequence,
+    Sequence,
+)
 from typing import Any
 
 import attrs
 
-if sys.version_info >= (3, 8):  # pragma: no cover
-    from collections.abc import (
-        MutableSequence,
-        Sequence,
-    )
-    from typing import Final
-else:
-    from typing import (
-        MutableSequence,
-        Sequence,
-    )
-
-    from typing_extensions import Final
-
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Iterator
-else:  # pragma: no cover
-    from typing import Iterator
-
-from ..constants import (
-    FALLBACK_LEVEL,
-    LOG_FORMAT,
-)
-
-__all__: Final[tuple[str, str]]
+__all__ = ("captureLogs", "captureLogsMany")
 
 def is_assume_root(
     logger_name: Any | None,
@@ -46,28 +24,12 @@ def _normalize_logger(
     logger: logging.Logger | str | None,
 ) -> logging.Logger: ...
 def _normalize_formatter(
-    format_: Any | None = LOG_FORMAT,
+    format_: Any | None = ...,
 ) -> logging.Formatter: ...
 @attrs.define
 class _LoggingWatcher:
-    """Replaces collections.namedtuple"""
-
-    records: MutableSequence[logging.LogRecord] = attrs.field(
-        factory=list,
-        kw_only=False,
-        validator=attrs.validators.deep_iterable(
-            member_validator=attrs.validators.instance_of(logging.LogRecord),
-            iterable_validator=attrs.validators.instance_of(list),
-        ),
-    )
-    output: MutableSequence[str] = attrs.field(
-        factory=list,
-        kw_only=False,
-        validator=attrs.validators.deep_iterable(
-            member_validator=attrs.validators.instance_of(str),
-            iterable_validator=attrs.validators.instance_of(list),
-        ),
-    )
+    records: MutableSequence[logging.LogRecord] = ...
+    output: MutableSequence[str] = ...
 
     def getHandlerByName(self, name: str) -> type[logging.Handler]: ...
     def getHandlerNames(self) -> frozenset[str]: ...
@@ -80,26 +42,19 @@ class _CapturingHandler(logging.Handler):
 
 @attrs.define
 class _LoggerStoredState:
-    level_name: str = attrs.field(kw_only=False)
-    propagate: bool = attrs.field(kw_only=False)
-    handlers: list[type[logging.Handler]] = attrs.field(
-        kw_only=False,
-        factory=list,
-        validator=attrs.validators.deep_iterable(
-            member_validator=attrs.validators.instance_of(logging.Handler),
-            iterable_validator=attrs.validators.instance_of(list),
-        ),
-    )
+    level_name: str = ...
+    propagate: bool = ...
+    handlers: list[type[logging.Handler]] = ...
 
 @contextlib.contextmanager
 def captureLogs(
     logger: str | logging.Logger | None = None,
     level: str | int | None = None,
-    format_: str | None = LOG_FORMAT,
+    format_: str | None = ...,
 ) -> Iterator[_LoggingWatcher]: ...
 @contextlib.contextmanager
 def captureLogsMany(
     loggers: Sequence[str | logging.Logger] = (),
     levels: Sequence[str | int | None] = (),
-    format_: str | None = LOG_FORMAT,
+    format_: str | None = ...,
 ) -> Iterator[Sequence[_LoggingWatcher]]: ...

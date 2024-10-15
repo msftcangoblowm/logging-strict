@@ -1,33 +1,22 @@
-from __future__ import annotations
-
 import logging
-import sys
+from collections.abc import (
+    Callable,
+    Iterator,
+)
 from importlib.abc import Traversable
 from pathlib import Path
+from typing import (
+    Protocol,
+    runtime_checkable,
+)
 
-from ..constants import g_app_name
-
-if sys.version_info >= (3, 8):
-    from collections.abc import (
-        Callable,
-        Iterator,
-    )
-    from typing import (
-        Protocol,
-        runtime_checkable,
-    )
-else:
-    from typing import (
-        Callable,
-        Iterator,
-    )
-
-    from typing_extensions import (
-        Protocol,
-        runtime_checkable,
-    )
-
-__all__: tuple[str, str, str, str, str]
+__all__ = (
+    "filter_by_suffix",
+    "filter_by_file_stem",
+    "PackageResource",
+    "PartSuffix",
+    "PartStem",
+)
 
 is_module_debug: bool
 g_module: str

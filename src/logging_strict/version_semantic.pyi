@@ -1,12 +1,10 @@
-import sys
 import types
 
-if sys.version_info >= (3, 8):  # pragma: no cover
-    from typing import Final
-else:  # pragma: no cover
-    from typing_extensions import Final
-
-__all__: Final[tuple[str, str, str]]
+__all__ = (
+    "sanitize_tag",
+    "get_version",
+    "readthedocs_url",
+)
 
 _map_release: types.MappingProxyType[str, str]
 

@@ -67,9 +67,7 @@ jobs:
       - name: "Install tools"
         run: |
           set -xe
-          python -m pip install -r requirements/kit.pip
-          python -m pip install -r requirements/prod.pip
-          python -m pip install -r requirements/dev.pip
+          python -m pip install -r requirements/prod.unlock -r requirements/kit.pip -r requirements/dev.pip
       - name: "Build sdist and whl"
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}

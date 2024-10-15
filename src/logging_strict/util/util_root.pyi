@@ -1,22 +1,15 @@
 import logging
-import sys
+from collections.abc import Callable
 from pathlib import Path
 from typing import (
     Any,
-    ClassVar,
+    Final,
 )
 
-if sys.version_info >= (3, 8):
-    from typing import Final
-else:
-    from typing_extensions import Final
-
-if sys.version_info >= (3, 9):
-    from collections.abc import Callable
-else:
-    from typing import Callable
-
-__all__: Final[tuple[str, str]]
+__all__ = (
+    "IsRoot",
+    "check_python_not_old",
+)
 
 g_module: Final[str]
 _LOGGER: Final[logging.Logger]
@@ -27,7 +20,7 @@ def get_logname() -> str: ...
 def ungraceful_app_exit() -> None: ...
 
 class IsRoot:
-    __slots__: ClassVar[tuple[()]]
+    __slots__ = ()
 
     @staticmethod
     def is_root() -> bool: ...

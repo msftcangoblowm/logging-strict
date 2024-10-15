@@ -2,7 +2,8 @@
 # For details: https://github.com/msftcangoblowm/logging-strict/blob/master/NOTICE.txt
 
 -c ../requirements/pins.pip
--c ../requirements/prod.pip  # currently same venv
+-c ../requirements/prod.unlock
+-c myst-parser.in
 
 scriv       # for writing GitHub releases
 sphobjinv   # cross-references inventories, objects.inv

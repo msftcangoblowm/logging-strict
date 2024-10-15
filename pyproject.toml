@@ -68,7 +68,7 @@ exclude = [
 [tool.setuptools.dynamic]
 optional-dependencies.pip = { file = ["requirements/pip.pip"] }
 optional-dependencies.pip_tools = { file = ["requirements/pip-tools.pip"] }
-dependencies = { file = ["requirements/prod.pip"] }
+dependencies = { file = ["requirements/prod.unlock"] }
 optional-dependencies.dev = { file = ["requirements/dev.pip"] }
 optional-dependencies.manage = { file = ["requirements/manage.pip"] }
 optional-dependencies.docs = { file = ["docs/requirements.pip"] }
@@ -127,14 +127,14 @@ show_missing = true
 [tool.sphinx-pyproject]
 language = "en"
 needs_sphinx = "1.7"
+master_doc = "index"
 templates_path = ["_templates",]
 html_static_path = ["_static",]
-source_suffix = ".rst"
-master_doc = "index"
+source_suffix = [".md", ".rst"]
 pygments_style = "sphinx"
-html_theme = "alabaster"
+nitpicky = true
 numfig = true
-autosectionlabel_prefix_document = true
+html_theme = "alabaster"
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosectionlabel",
@@ -147,6 +147,13 @@ extensions = [
     "sphinx_external_toc_strict",
     "myst_parser",  # required by sphinx_external_toc_strict
 ]
+autodoc_typehints = 'signature'
+autosectionlabel_prefix_document = true
+todo_include_todos = true
+doctest_show_successes = false
+doctest_test_doctest_blocks = "Yes please!"
+external_toc_exclude_missing = true  # sphinx_external_toc_strict
+myst_enable_extensions = ["colon_fence", "html_image"]  # myst-parser
 linkcheck_ignore = [
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/asyncio/base_events.py#L1894",  # asyncio.base_events._run_once
     "https://github.com/csachs/pyproject-flake8/blob/16b9dd4d2f19dcf0bfb3a3110f98227627cd67fe/pflake8/__init__.py#L86",  # pyproject_flake8 FixFilenames.apply
@@ -164,13 +171,6 @@ exclude_patterns = [
     "Thumbs.db",
     ".DS_Store",
 ]
-myst_enable_extensions = ["colon_fence", "html_image"]
-external_toc_exclude_missing = true
-doctest_show_successes = false
-doctest_test_doctest_blocks = "Yes please!"
-nitpicky = true
-autodoc_typehints = 'signature'
-todo_include_todos = true
 
 [tool.sphinx-pyproject.linkcheck_allowed_redirects]
 "https://stackoverflow.com/a/53677481" = "https://stackoverflow.com/questions/45110287/workaround-for-using-name-main-in-python-multiprocessing/53677481#53677481"
