@@ -34,6 +34,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-3-2:
+
+Version 1.3.2 — 2024-10-15
+--------------------------
+
+- ci: bump sigstore/gh-action-sigstore-python to v3.0.0
+
 .. _changes_1-3-1:
 
 Version 1.3.1 — 2024-10-15
