@@ -34,6 +34,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-3-4:
+
+Version 1.3.4 — 2024-10-16
+--------------------------
+
+- docs(readthedocs): bump py39 --> py310
+
 .. _changes_1-3-3:
 
 Version 1.3.3 — 2024-10-16
