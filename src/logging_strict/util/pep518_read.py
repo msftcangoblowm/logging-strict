@@ -1,5 +1,5 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
@@ -30,8 +30,7 @@ These functions are lifted from the black project. With minor changes:
    Apply monkeypatch
    `FixFilenames.apply <https://github.com/csachs/pyproject-flake8/blob/16b9dd4d2f19dcf0bfb3a3110f98227627cd67fe/pflake8/__init__.py#L86>`_
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:attribute:: __all__
    :type: tuple[str]
@@ -39,8 +38,7 @@ Module private variables
 
    Exported objects from this module
 
-Module objects
----------------
+**Module objects**
 
 """
 

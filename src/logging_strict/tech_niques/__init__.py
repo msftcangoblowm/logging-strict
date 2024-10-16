@@ -1,12 +1,11 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
 Conveniently exports all technique helpers
 
-Module private variables
-----------------------------
+**Module private variables**
 
 .. py:data:: __all__
    :type: tuple[str, str, str, str, str, str, str]
@@ -15,8 +14,7 @@ Module private variables
 
    This modules exports
 
-Module objects
-----------------------------
+**Module objects**
 
 """
 

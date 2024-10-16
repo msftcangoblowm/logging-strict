@@ -1,12 +1,11 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
 Checks dealing with logging module
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:data:: __all__
    :type: tuple[str, str, str, str, str, str]
@@ -15,8 +14,7 @@ Module private variables
 
    Exported objects from this module
 
-Module objects
----------------
+**Module objects**
 
 """
 

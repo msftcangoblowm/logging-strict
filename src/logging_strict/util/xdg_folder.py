@@ -1,5 +1,5 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
@@ -13,8 +13,7 @@ to specify the correct author name
 
 Since the target platform is POSIX, not losing sleep over this issue
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:data:: __all__
    :type: tuple[str, str, str]
@@ -22,8 +21,7 @@ Module private variables
 
    Module exports
 
-Module objects
----------------
+**Module objects**
 
 """
 

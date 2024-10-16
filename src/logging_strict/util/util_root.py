@@ -1,5 +1,5 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
@@ -7,8 +7,7 @@ Lets write this only once (DRY principle)
 
 Returns messages thru callbacks. So do not print or log anything
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:data:: __all__
    :type: tuple[str, str]
@@ -38,8 +37,7 @@ Module private variables
 
     ``True`` if py38- otherwise ``False``
 
-Module objects
----------------
+**Module objects**
 
 """
 

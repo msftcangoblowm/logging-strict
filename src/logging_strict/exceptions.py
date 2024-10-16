@@ -1,5 +1,5 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 Custom exceptions
 
@@ -15,8 +15,7 @@ Usage
         LoggingStrictGenreRequired,
     )
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:data:: __all__
    :type: tuple[str, str, str, str, str]
@@ -26,8 +25,7 @@ Module private variables
 
    Module exports
 
-Module objects
----------------
+**Module objects**
 
 """
 

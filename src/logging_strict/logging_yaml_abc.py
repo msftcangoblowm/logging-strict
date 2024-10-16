@@ -1,5 +1,5 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 Base class of logging_yaml implementations
 
@@ -11,8 +11,7 @@ One for the app and another for worker(s).
 ``QA Tester`` can edit the yaml config files, **before using**,
 ensure validation passes!
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:data:: __all__
    :type: tuple[str, str, str]
@@ -33,8 +32,7 @@ Module private variables
 
    Initial version of :py:mod:`logging.config` YAML files
 
-Module objects
----------------
+**Module objects**
 
 """
 

@@ -1,10 +1,9 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 Seperate constants out so independent of any dependencies
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:data:: _map_release
    :type: types.MappingProxyType
@@ -20,8 +19,7 @@ Module private variables
 
    Module exports
 
-Module objects
----------------
+**Module objects**
 
 .. py:data:: g_app_name
    :type: str

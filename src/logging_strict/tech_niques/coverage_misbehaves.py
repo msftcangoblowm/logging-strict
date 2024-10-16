@@ -1,13 +1,12 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
 Detect runner to adjust logging level inconsistencies
 
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:data:: __all__
    :type: tuple[str]
@@ -15,8 +14,7 @@ Module private variables
 
    This modules exports
 
-Module objects
----------------
+**Module objects**
 
 """
 

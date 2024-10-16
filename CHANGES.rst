@@ -34,6 +34,15 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-3-3:
+
+Version 1.3.3 — 2024-10-16
+--------------------------
+
+- refactor(context_locals): T and P to private module variables _T and _P
+- docs: clean up toc remove headers module objects and module private variables
+- docs: author contact mastodon not telegram
+
 .. _changes_1-3-2:
 
 Version 1.3.2 — 2024-10-15

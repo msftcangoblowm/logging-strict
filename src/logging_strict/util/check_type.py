@@ -1,13 +1,12 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
 Check utility functions
 
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:attribute:: __all__
    :type: tuple[str, str, str, str, str]
@@ -16,8 +15,7 @@ Module private variables
 
    Exported objects from this module
 
-Module objects
--------------------------
+**Module objects**
 
 """
 

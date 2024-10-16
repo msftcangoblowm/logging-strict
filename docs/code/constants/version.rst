@@ -49,8 +49,7 @@ Install
 
    make install force=1
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:data:: __version__
    :type: str

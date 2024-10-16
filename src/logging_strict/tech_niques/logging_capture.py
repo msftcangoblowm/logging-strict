@@ -1,5 +1,5 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
@@ -163,8 +163,7 @@ More in-depth low level implementation notes
    https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L193
 
 
-Module private variables
--------------------------
+**Module private variables**
 
 .. py:data:: __all__
    :type: tuple[str, str]
@@ -172,8 +171,7 @@ Module private variables
 
    Exported objects from this module
 
-Module objects
----------------
+**Module objects**
 
 """
 

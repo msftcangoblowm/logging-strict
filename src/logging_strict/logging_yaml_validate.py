@@ -1,5 +1,11 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+.. py:data:: __all__
+   :type: tuple[str, str]
+   :value: ("schema_logging_config", "validate_yaml_dirty")
+
+   Module exports
 
 """
 

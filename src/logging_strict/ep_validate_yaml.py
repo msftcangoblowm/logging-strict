@@ -1,12 +1,11 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
 Entrypoint to validate :py:mod:`logging.config` yaml file(s)
 
-Module objects
----------------
+**Module objects**
 
 """
 

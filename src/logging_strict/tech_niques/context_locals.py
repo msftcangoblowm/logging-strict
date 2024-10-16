@@ -1,5 +1,5 @@
 """
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 ..
 
@@ -126,8 +126,7 @@ oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooah!
    `Credit <https://stackoverflow.com/a/56469201>`_
 
 
-Module private variables
-----------------------------
+**Module private variables**
 
 .. py:data:: __all__
    :type: tuple[str]
@@ -135,20 +134,19 @@ Module private variables
 
    This modules exports
 
-.. py:data:: T
+.. py:data:: _T
    :type: typing.TypeVar
-   :value: typing.TypeVar("T")
+   :value: typing.TypeVar("_T")
 
    Equivalent to :py:data:`~typing.Any`
 
-.. py:data:: P
+.. py:data:: _P
    :type: typing.ParamSpec
-   :value: typing_extensions.ParamSpec('P')
+   :value: typing_extensions.ParamSpec('_P')
 
    Equivalent to :py:data:`~typing.Any`
 
-Module objects
-----------------------------
+**Module objects**
 
 """
 
@@ -239,16 +237,16 @@ class MockFunction:
            A generic module level function. Is modified and executed. piggy backing
            the module level function ``locals`` onto the return statement
 
-        :type mock_instance: collections.abc.Callable[_P, _T]
+        :type mock_instance: collections.abc.Callable[logging_strict.tech_niques.context_locals._P, logging_strict.tech_niques.context_locals._T]
         :param args: Generic positional args
-        :type args: _P.args
+        :type args: logging_strict.tech_niques.context_locals._P.args
         :param kwargs: Generic keyword args
-        :type kwargs: _P.kwargs
+        :type kwargs: logging_strict.tech_niques.context_locals._P.kwargs
         :returns:
 
             Module levels function normal return value
 
-        :rtype: _T
+        :rtype: logging_strict.tech_niques.context_locals._T
 
         .. seealso::
 
