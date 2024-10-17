@@ -32,6 +32,7 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - test(util_root): on Windows, getpwnam become module level variable allow patch
    - fix(logging_yaml_validate): fix import to strictyaml.validators.MapValidator
    - fix(util_root): no pwd module on Windows. shutil.chown also not Windows
 

@@ -58,6 +58,11 @@ from typing import (
 
 from ..constants import g_app_name
 
+if platform.system().lower() != "windows":
+    from pwd import getpwnam
+else:
+    getpwnam = None
+
 __all__ = (
     "IsRoot",
     "check_python_not_old",
@@ -338,8 +343,6 @@ class IsRoot:
 
         if g_is_root and is_as_user is True and platform.system().lower() != "windows":
             # https://stackoverflow.com/questions/8086412/howto-determine-file-owner-on-windows-using-python-without-pywin32
-            from pwd import getpwnam
-
             session_user_name = get_logname()
             session_uid = getpwnam(session_user_name)[2]
             session_gid = getpwnam(session_user_name)[3]
