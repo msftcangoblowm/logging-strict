@@ -15,7 +15,7 @@ An advanced :py:mod:`unittest.mock` technique is used to patch a function
 that has one return statement; not yield, not raises something.
 
 All the nasty details are hidden. Can accomplish this in one function call,
-:ref:`get_locals <code/tech_niques/context_locals:module objects>`
+:ref:`get_locals <code/tech_niques/context_locals:top>`
 
 Function ``piggy_back``:
 

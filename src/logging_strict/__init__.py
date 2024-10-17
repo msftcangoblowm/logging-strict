@@ -35,7 +35,7 @@ Constants
 ----------
 
 - LoggingConfigCategory
-  :ref:`[constant docs] <code/constants/constants_general:module objects>`
+  :ref:`[constant docs] <code/constants/constants_general:top>`
 
 tl;dr; ^^ won't need this ^^
 
@@ -55,7 +55,7 @@ Types
 ------
 
 - LoggingYamlType
-  :ref:`[type docs] <code/yaml/logging_yaml_abc:module objects>`
+  :ref:`[type docs] <code/yaml/logging_yaml_abc:top>`
 
 tl;dr; ^^ won't need this ^^
 

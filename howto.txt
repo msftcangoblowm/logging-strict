@@ -44,10 +44,10 @@
     - Check that the docs build correctly:
         $ tox -e docs
         or
-        $ cd docs && make doctest && cd - &>/dev/null
-        $ cd docs && make linkcheck && cd - &>/dev/null
-        $ cd docs && make html && cd - &>/dev/null
-        $ cd docs && make pdf && cd - &>/dev/null
+        $ cd docs && make doctest; cd - &>/dev/null
+        $ cd docs && make linkcheck; cd - &>/dev/null
+        $ cd docs && make html; cd - &>/dev/null
+        $ cd docs && make pdf; cd - &>/dev/null
 - commit the release-prep changes
     $ make relcommit1
 - Generate new sample_html to get the latest, incl footer version number:

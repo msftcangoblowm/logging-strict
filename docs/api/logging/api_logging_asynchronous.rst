@@ -9,6 +9,7 @@ synchronous redirector (:ref:`api_synchronous_logging`) is not suitable for asyn
 
 Package :pypi_org:`aiologger` docs are authoritative, but sparse/terse.
 
+>>> from logging import Logger
 >>> import os
 >>> import unittest
 >>> import sys

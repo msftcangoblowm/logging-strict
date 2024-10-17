@@ -52,7 +52,8 @@ For logging.config yaml files, logging-strict does the following:
 
 **New in 1.3.x:**
 
-resolve dependency conflict by pinning python-dateutil
+resolve dependency conflict by pinning python-dateutil;
+fix pwd and shutil.chown are non-Windows;
 
 **New in 1.2.x:**
 

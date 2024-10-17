@@ -93,7 +93,8 @@ Binary files:
 
 .. seealso::
 
-  `CVE-2024-3094 <https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-3094>`_
+  CVE-2024-3094 (broken link)
+  https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-3094
 
    Discovered: 2024/03/29
 
