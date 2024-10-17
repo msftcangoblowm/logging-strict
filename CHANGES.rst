@@ -32,6 +32,9 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - fix(logging_yaml_validate): fix import to strictyaml.validators.MapValidator
+   - fix(util_root): no pwd module on Windows. shutil.chown also not Windows
+
 .. scriv-start-here
 
 .. _changes_1-3-4:

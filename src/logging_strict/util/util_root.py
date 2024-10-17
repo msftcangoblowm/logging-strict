@@ -51,7 +51,6 @@ from pathlib import (
     Path,
     PurePath,
 )
-from pwd import getpwnam
 from typing import (
     TYPE_CHECKING,
     ClassVar,
@@ -337,7 +336,10 @@ class IsRoot:
         else:  # pragma: no cover
             pass
 
-        if g_is_root and is_as_user is True:
+        if g_is_root and is_as_user is True and platform.system().lower() != "windows":
+            # https://stackoverflow.com/questions/8086412/howto-determine-file-owner-on-windows-using-python-without-pywin32
+            from pwd import getpwnam
+
             session_user_name = get_logname()
             session_uid = getpwnam(session_user_name)[2]
             session_gid = getpwnam(session_user_name)[3]

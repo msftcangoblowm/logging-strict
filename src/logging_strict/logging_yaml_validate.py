@@ -15,6 +15,7 @@ import sys
 from functools import partial
 
 import strictyaml as s
+from strictyaml.validators import MapValidator
 
 __all__ = (
     "schema_logging_config",
@@ -73,7 +74,7 @@ if sys.version_info >= (3, 12):  # pragma: no cover
                 s.OrValidator(s.Bool(), s.Str()),
                 format_style,
             ),
-            s.MapValidator({s.Str(): s.Any()}),  # defaults
+            MapValidator({s.Str(): s.Any()}),  # defaults
         ),
     )
 else:
