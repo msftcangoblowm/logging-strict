@@ -170,7 +170,7 @@ from logging_strict.util.check_type import is_not_ok
 
 if sys.version_info >= (3, 10):  # pragma: no cover
     from typing import ParamSpec
-else:
+else:  # pragma: no cover
     from typing_extensions import ParamSpec
 
 __all__ = ("get_locals",)

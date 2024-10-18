@@ -224,7 +224,8 @@ if sys.version_info < (3, 11):  # pragma: no cover py311 feature
 
     logging.getLevelNamesMapping = getLevelNamesMapping
 else:  # pragma: no cover
-    pass
+    # test_logging_capture imports getLevelNamesMapping
+    getLevelNamesMapping = logging.getLevelNamesMapping
 
 if sys.version_info < (3, 12):  # pragma: no cover py312 feature
     # Backport: logging.getHandlerByName and logging.getHandlerNames
@@ -275,7 +276,9 @@ if sys.version_info < (3, 12):  # pragma: no cover py312 feature
     logging.Logger.getChildren = getChildren
 
 else:  # pragma: no cover
-    pass
+    getHandlerByName = logging.getHandlerByName
+    getHandlerNames = logging.getHandlerNames
+    getChildren = logging.Logger.getChildren
 
 
 def _normalize_level(level):

@@ -8,6 +8,10 @@ Changelog
    Feature request
    .................
 
+   - remove get-pypi-latest-version
+     code to get the version w/o dependencies
+     https://gist.github.com/RhetTbull/478a1a2b90fcfa3a4cd3e14963799879
+
    - Run coverage, upload results, and display badge
 
      https://github.com/pytest-dev/pytest/blob/main/.github/workflows/test.yml
@@ -31,6 +35,14 @@ Changelog
 
    Commit items for NEXT VERSION
    ..............................
+
+   - ci(tox.ini): use testenv basepython to set each env python version
+   - ci(tox-test.ini): add seperate tests tox config file
+   - fix(logging_yaml_validate): MapValidator --> MapPattern
+   - feat(util_root): add detect evalavated privledge on Windows
+   - fix: remove unmaintained dependency get-pypi-latest-version
+   - fix(util_root): no os.getuid on windows
+   - ci(testsuite): turn on test platforms windows and macos
 
 .. scriv-start-here
 

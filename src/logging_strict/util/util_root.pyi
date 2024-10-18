@@ -13,9 +13,10 @@ __all__ = (
 
 g_module: Final[str]
 _LOGGER: Final[logging.Logger]
-g_is_root: Final[bool]
+g_is_root: bool
 is_python_old: Final[bool]
 
+def is_user_admin() -> bool: ...
 def get_logname() -> str: ...
 def ungraceful_app_exit() -> None: ...
 

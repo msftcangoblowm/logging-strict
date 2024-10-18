@@ -58,9 +58,9 @@ from typing import (
 
 from ..constants import g_app_name
 
-if platform.system().lower() != "windows":
+if platform.system().lower() != "windows":  # pragma: no cover
     from pwd import getpwnam
-else:
+else:  # pragma: no cover
     getpwnam = None
 
 __all__ = (
@@ -71,8 +71,6 @@ __all__ = (
 g_module = f"{g_app_name}.util.util_root"
 _LOGGER = logging.getLogger(g_module)
 
-g_is_root = os.geteuid() == 0
-
 is_python_old = sys.version_info < (3, 9)
 
 if TYPE_CHECKING:
@@ -80,6 +78,42 @@ if TYPE_CHECKING:
         from collections.abc import Callable  # noqa: F401 Used by sphinx
     else:  # pragma: no cover
         from typing import Callable  # noqa: F401 Used by sphinx
+
+
+def is_user_admin():  # pragma: no cover
+    """Detect if running with elevated permissions
+
+    The inner function fails unless you have Windows XP SP2 or
+    higher. The failure causes a traceback to be printed and this
+    function to return False.
+
+    :returns: True if the script run as root otherwise False
+    :rtype: bool
+
+    .. seealso::
+
+       https://stackoverflow.com/questions/19672352/how-to-run-script-with-elevated-privilege-on-windows
+       https://gist.github.com/sylvainpelissier/ff072a6759082590a4fe8f7e070a4952
+
+    """
+    if platform.system().lower() == "windows":
+        import ctypes
+        import traceback
+
+        # WARNING: requires Windows XP SP2 or higher!
+        try:
+            return ctypes.windll.shell32.IsUserAnAdmin()
+        except Exception:
+            traceback.print_exc()
+            msg_info = "Admin check failed, assuming not an admin."
+            _LOGGER.info(msg_info)
+            return False
+    else:
+        # Check for root on Posix
+        return os.getuid() == 0
+
+
+g_is_root = is_user_admin()
 
 
 def get_logname():
@@ -122,6 +156,8 @@ def get_logname():
     ret = getpass.getuser()
     if ret == "root":  # pragma: no cover
         ret = os.getlogin()
+    else:  # pragma: no cover
+        pass
 
     return ret
 

@@ -41,6 +41,8 @@ jobs:
       matrix:
         os:
           - ubuntu
+          - macos
+          - windows
         python-version:
           # When changing this list, be sure to check the [gh] list in
           # tox.ini so that tox will run properly. PYVERSIONS
@@ -52,8 +54,12 @@ jobs:
           - "3.11"
           - "3.12"
           - "3.13"
-          - "pypy-3.9"
-          - "pypy-3.10"
+          - "pypy3.9"
+          - "pypy3.10"
+        exclude:
+          # https://github.com/pypy/pypy/issues/4958
+          - os: windows
+            python-version: "pypy-3.9"
       fail-fast: false
 
     steps:
@@ -85,15 +91,26 @@ jobs:
           set -xe
           python -m pip install -r requirements/tox.pip
 
-      - name: "Run tox for ${{ matrix.python-version }}"
-        run: |
-          python -m tox -- -rfsEX
+      - name: "Setup testsuite"
+        run: tox run -c tox-test.ini -vv --notest --skip-missing-interpreters false
+        env:
+          TOX_GH_MAJOR_MINOR: ${{ matrix.env }}
 
+      # --skip-pkg-install
+      - name: "Run testsuite ${{ matrix.python-version }}"
+        env:
+          TOX_GH_MAJOR_MINOR: ${{ matrix.env }}
+        run: |
+          tox run -c tox-test.ini
+
+      #  --skip-pkg-install -- -rfsEX --lf -vvvvv && exit 1
       - name: "Retry tox for ${{ matrix.python-version }}"
+        env:
+          TOX_GH_MAJOR_MINOR: ${{ matrix.env }}
         if: failure()
         run: |
           # `exit 1` makes sure that the job remains red with flaky runs
-          python -m tox -- -rfsEX --lf -vvvvv && exit 1
+          tox run -c tox-test.ini -vvvvv && exit 1
 
   # This job aggregates test results. It's the required check for branch protection.
   # https://github.com/marketplace/actions/alls-green#why

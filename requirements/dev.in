@@ -16,4 +16,3 @@ mypy
 coverage
 twine
 validate-pyproject
-get-pypi-latest-version

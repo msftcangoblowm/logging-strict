@@ -26,10 +26,6 @@ flake8==7.0.0
     #   flake8-pyproject
 flake8-pyproject==1.2.3
     # via -r requirements/dev.in
-get-pypi-latest-version==0.0.12
-    # via -r dev.in
-html5lib==1.1
-    # via get-pypi-latest-version
 idna==3.6
     # via requests
 importlib-metadata==8.5.0
@@ -88,7 +84,6 @@ readme-renderer==44.0
     # via twine
 requests==2.32.3
     # via
-    #   get-pypi-latest-version
     #   requests-toolbelt
     #   twine
 requests-toolbelt==1.0.0

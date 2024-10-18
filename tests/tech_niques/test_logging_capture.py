@@ -1,11 +1,5 @@
 """
-.. module:: tests.test_logging_capture
-   :platform: Unix
-   :synopsis: Unittest for logging_capture module
-
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
-
-..
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 Unittest for logging_capture module
 
@@ -38,6 +32,7 @@ from logging_strict.tech_niques import (
     detect_coverage,
 )
 from logging_strict.tech_niques.logging_capture import (
+    _LoggingWatcher,
     _normalize_formatter,
     _normalize_level,
     _normalize_level_name,
@@ -408,6 +403,13 @@ class TestsLoggingCapture(unittest.TestCase):
             yield from []
 
         def is_a_worker(logger_name: Optional[Any]) -> bool:
+            """Check if logger name in Sequence workers.
+
+            :param logger_name: logger name
+            :type logger_name: typing.Any | None
+            :returns: True if logger_name in workers otherwise False
+            :rtype: bool
+            """
             return (
                 logger_name is not None
                 and isinstance(logger_name, str)
@@ -758,6 +760,19 @@ class TestsLoggingCapture(unittest.TestCase):
         ):
             msg_exc = "Oh no! This is bad"
             raise RuntimeError(msg_exc)
+
+    def test_logger_watcher(self):
+        """Test _LoggingWatcher seperately."""
+        records = []
+        output = []
+        WORKER_BOTH = "foo"
+        watcher = _LoggingWatcher(records, output)
+        logger_both = logging.getLogger(WORKER_BOTH)  # noqa: F841
+        name = WORKER_BOTH
+        handler = watcher.getHandlerByName(name)
+        self.assertIsNone(handler)
+        handler_names = watcher.getHandlerNames()
+        self.assertIsInstance(handler_names, frozenset)
 
 
 class DocumentAssertLogs(unittest.TestCase):

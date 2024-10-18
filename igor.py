@@ -291,17 +291,6 @@ def do_bump_version(kind: str) -> None:
         f"{UNRELEASED}\n\nNothing yet.\n\n\n" + SCRIV_START,
     )
 
-    """
-    file_path = f"src/{g_app_name}/constants.py"
-    next_version = f"version_info = {facts.next_vi}\n_dev = 1".replace("'", '"')
-    _update_file(
-        file_path,
-        r"(?m)^version_info = .*\n_dev = \d+$",
-        next_version,
-    )
-    """
-    pass
-
 
 def do_cheats(kind: str):
     """Show a cheatsheet of useful things during releasing."""
