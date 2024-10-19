@@ -4,6 +4,7 @@
 # packaging and kitting
 
 -c pins.pip
+-c pins-cffi.in
 -c prod.unlock
 -r tox.pip
 

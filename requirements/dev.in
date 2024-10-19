@@ -5,7 +5,9 @@
 #   - tox: lint
 
 -c pins.pip
+-c pins-cffi.in
 -c prod.unlock
+
 
 black
 blackdoc
