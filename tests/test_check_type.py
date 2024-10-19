@@ -1,16 +1,11 @@
 """
-.. module:: tests.test_check_type
-   :platform: Unix
-   :synopsis: Unittest for check_type module
-
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
-
-..
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 Unittest for check_type module
 
 """
 
+import platform
 import tempfile
 import unittest
 from pathlib import (
@@ -151,8 +146,9 @@ class RarelyUsedChecks(unittest.TestCase):
             self.assertFalse(check_start_folder_importable(target_relative))
 
         # In actual folder, __init__.py not found within folder. Not a package
-        path_folder_not_package = Path("/etc")
-        self.assertFalse(check_start_folder_importable(path_folder_not_package))
+        if platform.system().lower() != "windows":
+            path_folder_not_package = Path("/etc")
+            self.assertFalse(check_start_folder_importable(path_folder_not_package))
 
         # Insane person created a folder or symlink named, __init__.py
         class TempFolder:

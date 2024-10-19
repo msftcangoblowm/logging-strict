@@ -1,11 +1,5 @@
 """
-.. module:: tests.test_docs_sync_log_capture
-   :platform: Unix
-   :synopsis: Demonstrate synchronous logging capture
-
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
-
-..
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
 Demonstrate synchronous logging capture
 

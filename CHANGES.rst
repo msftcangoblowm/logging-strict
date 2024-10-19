@@ -41,6 +41,7 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - test: fix windows and macos specific errors
    - ci(tox-test.ini): give tox-gh-actions a try
    - ci(tox.ini): use testenv basepython to set each env python version
    - ci(tox-test.ini): add seperate tests tox config file

@@ -33,7 +33,7 @@ concurrency:
 
 jobs:
   tests:
-    name: "${{ matrix.python-version }} on ${{ matrix.os }}"
+    name: "${{ matrix.python-version }} on ${{ matrix.platform }}"
     runs-on: "${{ matrix.platform }}"
     # Don't run tests if the branch name includes "-notests"
     if: "!contains(github.ref, '-notests')"

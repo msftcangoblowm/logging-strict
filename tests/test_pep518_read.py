@@ -1,11 +1,7 @@
 """
-.. module:: tests.util.test_pep518_read
-   :platform: Unix
-   :synopsis: pyproject.toml read table sections
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-.. moduleauthor:: Dave Faulkmore <faulkmore telegram>
-
-..
+pyproject.toml read table sections
 
 .. seealso::
 
@@ -19,6 +15,7 @@
 # del sys.modules["logging_strict"]
 # import coverage
 
+import platform
 import sys
 import tempfile
 import unittest
@@ -212,11 +209,12 @@ class Pep518Sections(unittest.TestCase):
                 self.assertIsNone(find_pyproject_toml(srcs, stdin_filename))
 
             # PermissionError, **not** testing a filesystem base folder
-            srcs = ("/root",)
-            stdin_filename = None
-            with self.assertRaises(PermissionError):
-                find_project_root(srcs)
-            self.assertIsNone(find_pyproject_toml(srcs, stdin_filename))
+            if platform.system().lower() == "linux":
+                srcs = ("/root",)
+                stdin_filename = None
+                with self.assertRaises(PermissionError):
+                    find_project_root(srcs)
+                self.assertIsNone(find_pyproject_toml(srcs, stdin_filename))
 
 
 if __name__ == "__main__":  # pragma: no cover

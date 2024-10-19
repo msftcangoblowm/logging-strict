@@ -579,7 +579,8 @@ def _extract_folder(package):
     :returns: cache folder
     :rtype: str
     """
-    return DestFolderUser(package).cache_dir
+    ret = DestFolderUser(package).cache_dir
+    return ret
 
 
 def walk_tree_folders(traversable_root):
@@ -1316,10 +1317,11 @@ class PackageResource:
         pass
 
         # dest (base) folder
+        # On Windows, prevent FileNotFound for Cache folder. Windows needs parents=True?
         if not path_dest_dir.exists():
             path_dest_dir.mkdir(
                 mode=0o755,
-                parents=False,
+                parents=True,
                 exist_ok=True,
             )
             IsRoot.set_owner_as_user(

@@ -1,3 +1,10 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Extracting package data module
+
+"""
+
 import logging
 import os
 import platform
@@ -291,7 +298,11 @@ class PackageResourceMadness(unittest.TestCase):
                 path_relative_package_dir=_LOGGER2,  # --> "configs"
                 parent_count=1,
             )
-            self.assertEqual(str(path_out), "nonsense/digital_tox_default.ini")
+            if platform.system().lower() == "windows":
+                expected_relpath = "nonsense\\digital_tox_default.ini"
+            else:
+                expected_relpath = "nonsense/digital_tox_default.ini"
+            self.assertEqual(str(path_out), expected_relpath)
         del _LOGGER2
 
         # path_relative.path_relative_package_dir None --> "configs"
@@ -303,7 +314,11 @@ class PackageResourceMadness(unittest.TestCase):
                 path_relative_package_dir=None,
                 parent_count=1,
             )
-            self.assertEqual(str(path_out), "nonsense/digital_tox_default.ini")
+            if platform.system().lower() == "windows":
+                expected_relpath = "nonsense\\digital_tox_default.ini"
+            else:
+                expected_relpath = "nonsense/digital_tox_default.ini"
+            self.assertEqual(str(path_out), expected_relpath)
 
         # Want 2 parent folders
         for mixed_path in paths:
@@ -312,7 +327,11 @@ class PackageResourceMadness(unittest.TestCase):
                 path_relative_package_dir=None,
                 parent_count=2,
             )
-            self.assertEqual(str(path_out), "currency/nonsense/digital_tox_default.ini")
+            if platform.system().lower() == "windows":
+                expected_relpath = "currency\\nonsense\\digital_tox_default.ini"
+            else:
+                expected_relpath = "currency/nonsense/digital_tox_default.ini"
+            self.assertEqual(str(path_out), expected_relpath)
 
         # Want 3 parent folders, there is only two
         for mixed_path in paths:
@@ -321,7 +340,11 @@ class PackageResourceMadness(unittest.TestCase):
                 path_relative_package_dir=None,
                 parent_count=3,
             )
-            self.assertEqual(str(path_out), "currency/nonsense/digital_tox_default.ini")
+            if platform.system().lower() == "windows":
+                expected_relpath = "currency\\nonsense\\digital_tox_default.ini"
+            else:
+                expected_relpath = "currency/nonsense/digital_tox_default.ini"
+            self.assertEqual(str(path_out), expected_relpath)
 
         # Want 3 parent folders, there is only two. parent_count means want all
         for mixed_path in paths:
@@ -330,7 +353,11 @@ class PackageResourceMadness(unittest.TestCase):
                 path_relative_package_dir=None,
                 parent_count=None,
             )
-            self.assertEqual(str(path_out), "currency/nonsense/digital_tox_default.ini")
+            if platform.system().lower() == "windows":
+                expected_relpath = "currency\\nonsense\\digital_tox_default.ini"
+            else:
+                expected_relpath = "currency/nonsense/digital_tox_default.ini"
+            self.assertEqual(str(path_out), expected_relpath)
 
         # Want 0 parent folders
         for mixed_path in paths:
@@ -787,12 +814,14 @@ class PackageResourceMadness(unittest.TestCase):
         # nonexistant fallback to all package data folders
         # absolute path is ignored
         # :command:`openssl rand -hex 8`
-        paths = (
+        paths = [
             ("c8766a76e71756a47", 1),
             (Path("c8766a76e71756a47"), 1),
-            ("/etc/fstab", 1),
-            (Path("/etc/fstab"), 1),
-        )
+        ]
+        if not platform.system().lower() == "windows":
+            paths.append(("/etc/fstab", 1))
+            paths.append((Path("/etc/fstab"), 1))
+
         for start_dir, expected_count in paths:
             gen = pr.package_data_folders(
                 cb_suffix=cb_file_suffix,
