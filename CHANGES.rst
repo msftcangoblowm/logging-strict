@@ -8,6 +8,11 @@ Changelog
    Feature request
    .................
 
+   - tox-gh-matrix produces the version matrix from tox config file
+     this is then feed into gh matrix.
+
+     https://pypi.org/project/tox-gh-matrix/
+
    - remove get-pypi-latest-version
      code to get the version w/o dependencies
      https://gist.github.com/RhetTbull/478a1a2b90fcfa3a4cd3e14963799879
@@ -36,6 +41,7 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - ci(tox-test.ini): give tox-gh-actions a try
    - ci(tox.ini): use testenv basepython to set each env python version
    - ci(tox-test.ini): add seperate tests tox config file
    - fix(logging_yaml_validate): MapValidator --> MapPattern
