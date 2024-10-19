@@ -41,18 +41,23 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - chore: bump cffi to 1.17.1 add py313 and musllinux aarch64 support
-   - test: fix windows and macos specific errors
-   - ci(tox-test.ini): give tox-gh-actions a try
-   - ci(tox.ini): use testenv basepython to set each env python version
-   - ci(tox-test.ini): add seperate tests tox config file
-   - fix(logging_yaml_validate): MapValidator --> MapPattern
-   - feat(util_root): add detect evalavated privledge on Windows
-   - fix: remove unmaintained dependency get-pypi-latest-version
-   - fix(util_root): no os.getuid on windows
-   - ci(testsuite): turn on test platforms windows and macos
-
 .. scriv-start-here
+
+.. _changes_1-3-6:
+
+Version 1.3.6 — 2024-10-19
+--------------------------
+
+- chore: bump cffi to 1.17.1 add py313 and musllinux aarch64 support (#1)
+- test: fix windows and macos specific errors
+- ci(tox-test.ini): give tox-gh-actions a try
+- ci(tox.ini): use testenv basepython to set each env python version
+- ci(tox-test.ini): add seperate tests tox config file
+- fix(logging_yaml_validate): MapValidator --> MapPattern
+- feat(util_root): add detect evalavated privledge on Windows
+- fix: remove unmaintained dependency get-pypi-latest-version
+- fix(util_root): no os.getuid on windows
+- ci(testsuite): turn on test platforms windows and macos
 
 .. _changes_1-3-5:
 
