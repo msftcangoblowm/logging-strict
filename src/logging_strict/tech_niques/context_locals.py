@@ -218,6 +218,7 @@ class MockFunction:
     """
 
     def __init__(self, func: Callable[..., Any]) -> None:
+        """Class constructor"""
         self.func = func
 
     def __call__(  # type: ignore[misc]  # missing self non-static method

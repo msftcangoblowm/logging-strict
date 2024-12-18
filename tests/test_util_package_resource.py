@@ -3,6 +3,8 @@
 
 Extracting package data module
 
+Extract package resources. Can extract many, not just one at a time.
+
 """
 
 import logging
@@ -45,7 +47,10 @@ g_module = f"{g_app_name}.tests.test_util_package_resource"
 
 
 class PackageResourceMadness(unittest.TestCase):
+    """Class containing tests covering package resource extraction."""
+
     def setUp(self) -> None:
+        """Setup syncronous logging redirection and logging."""
         self.package_dest_c = g_app_name
         self.fallback_package_base_folder = "configs"
 
@@ -75,15 +80,16 @@ class PackageResourceMadness(unittest.TestCase):
         pass
 
     def tearDown(self) -> None:
-        # unittest will revert sys.stdout and sys.stderr after this
+        """unittest will revert sys.stdout and sys.stderr after this"""
         LoggerRedirector.reset_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,
         )
 
     def test_get_parent_paths(self) -> None:
-        """PartSuffix and PartStem are for type checking. Not needed
-        in a unit test, but would normally also be imported and
+        """PartSuffix and PartStem are for type checking.
+
+        Not needed in a unit test, but would normally also be imported and
         used to indicate type of cb_file_stem and cb_file_suffix
         """
         # Default folder :menuselection:`data --> config`
@@ -246,7 +252,9 @@ class PackageResourceMadness(unittest.TestCase):
         self.assertTrue(len(d_relative.keys()) == 0)
 
     def test_path_relative(self) -> None:
-        """:py:func:`path_relative` is normally called by
+        """Test PackageResource.path_relative
+
+        :py:func:`path_relative` is normally called by
         :py:func:`get_parent_paths`. Which processes unsuccessful
         lookups which causes Exceptions:
 
@@ -378,6 +386,7 @@ class PackageResourceMadness(unittest.TestCase):
                 )
 
     def test_filter_by_suffix(self) -> None:
+        """Test filter_by_suffix function"""
         # None
         cb_file_suffix = partial(filter_by_suffix, None)
         self.assertFalse(cb_file_suffix(".txt"))
@@ -396,7 +405,9 @@ class PackageResourceMadness(unittest.TestCase):
         self.assertFalse(cb_file_suffix(".html"))
 
     def test_resource_extract(self) -> None:
-        """resource_extract, as opposed to cache_extract. changeable dest folder
+        """Test PackageResource.resource_extract
+
+        As opposed to cache_extract; changeable dest folder.
 
         Can also be called by an installer, to install package
         data resources to privledged locations, changing
@@ -696,6 +707,7 @@ class PackageResourceMadness(unittest.TestCase):
                 self.assertTrue(data_files[0].is_file())
 
     def test_package_data_folders(self):
+        """Test PackageResource.package_data_folders"""
         pr = PackageResource(self.package_dest_c, self.fallback_package_base_folder)
         cb_file_stem = partial(filter_by_file_stem, "mp_1_asz")
         cb_file_suffix = partial(filter_by_suffix, ".worker.logging.config.yaml")
@@ -773,6 +785,7 @@ class PackageResourceMadness(unittest.TestCase):
                 list(generator_folder)
 
     def test_is_package_exists(self) -> None:
+        """Test module function is_package_exists"""
         self.assertTrue(is_package_exists(self.package_dest_c))
         package_name = "dsafdsafdsffdsdsa876d7f68745dfdsfy5rydsaf6r76f585dsaf"
         self.assertFalse(is_package_exists(package_name))
@@ -845,7 +858,10 @@ class PackageResourceMadness(unittest.TestCase):
 
 
 class PreviouslyUnitPath(unittest.TestCase):
+    """Previously named something else. So what right."""
+
     def test_msg_stem(self) -> None:
+        """Test module function msg_stem"""
         # None
         with self.assertRaises(ValueError):
             msg_stem(None)

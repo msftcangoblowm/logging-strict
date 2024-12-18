@@ -1,3 +1,10 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Check logging deals with confirming logging level int and logging level name.
+
+"""
+
 import logging
 import unittest
 
@@ -18,6 +25,8 @@ from logging_strict.util.check_logging import (
 
 
 class LoggingChecks(unittest.TestCase):
+    """Various logging attributes checks"""
+
     def test_str2int(self):
         """Convert a numeric str --> int"""
         valids = (

@@ -220,6 +220,15 @@ extend_ignore = [
 [tool.twine]
 sign = true
 
+[tool.interrogate]
+omit_covered_files = true
+fail_under = 100
+verbose = 2
+ignore_init_module = true
+exclude = [
+    "src/logging_strict/_version.py",
+]
+
 [tool.asz.unittest]
 "test_util_root.py" = 1
 "test_xdg_folders.py" = 2

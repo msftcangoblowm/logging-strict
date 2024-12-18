@@ -1,3 +1,25 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Rolled my own semantic versioning module rather than using package, packaging.
+
+Was ported from/to logging-strict and drain-swamp. Not DRY at all.
+drain-swamp implementation is more up-to-date. drain-swamp is not a base package,
+so consider versioning as vendored.
+
+``packaging`` has built-in design issue of differentiating between prerelease
+and non-prerelease versions. The maintainers know this is a problem. Would
+take a very brave soul to both understand the problem and rewrite the
+entire package.
+
+.. py:data:: testdata_v
+   :type tuple[tuple[str, str]]
+
+   Demonstrate removing prepended ``v`` in semantic version str.
+   Both logging-strict and drain-swamp downplay prepending a ``v``
+
+"""
+
 import unittest
 
 from logging_strict import LoggingConfigCategory
@@ -32,7 +54,10 @@ testdata_v = (
 
 
 class PackageVersioning(unittest.TestCase):
+    """Test semantic versioning functionality. drain-swamp is more definitive."""
+
     def setUp(self):
+        """Provide semantic versioning data to test against."""
         self.vals = (
             (
                 (0, 0, 1),
@@ -238,11 +263,13 @@ class PackageVersioning(unittest.TestCase):
             self.assertEqual(expect_info[-2], "post")
 
     def test_v_remove(self):
+        """Test function remove_v"""
         for v_in, expected in testdata_v:
             actual = remove_v(v_in)
             self.assertEqual(actual, expected)
 
     def test_readthedocs_package_name(self):
+        """test get rtd url given package name and semantic version str"""
         testdata_package_name = (
             ("this-that"),
             ("this_that"),
@@ -262,9 +289,15 @@ class PackageVersioning(unittest.TestCase):
 
 
 class EnhancedEnumFeature(unittest.TestCase):
+    """Test Generator LoggingConfigCategory.categories"""
+
     def test_enum_values(self):
+        """LoggingConfigCategory is types of logging config YAML files"""
         gen = LoggingConfigCategory.categories()
+        # execute Generator
         values = list(gen)
+
+        # verify
         self.assertIn("worker", values)
         self.assertIn("app", values)
         self.assertGreaterEqual(len(values), 2)

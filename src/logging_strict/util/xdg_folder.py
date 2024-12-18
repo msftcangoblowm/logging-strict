@@ -176,6 +176,7 @@ class DestFolderSite:
         version=None,
         multipath=False,
     ):
+        """Class constructor"""
         self.appname = appname
         self.appauthor = _get_author(
             appname,
@@ -266,6 +267,7 @@ class DestFolderUser:
         roaming=False,
         opinion=True,
     ):
+        """Class constructor"""
         self.appname = appname
         self.appauthor = _get_author(
             appname,

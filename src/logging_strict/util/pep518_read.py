@@ -1,7 +1,7 @@
 """
 .. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-..
+This module is obsoleted by ``wreck.pep518_read``
 
 These :pep:`518` (aka pyproject.toml) functions are **not** app specific
 
@@ -33,7 +33,7 @@ These functions are lifted from the black project. With minor changes:
 **Module private variables**
 
 .. py:attribute:: __all__
-   :type: tuple[str]
+   :type: tuple[str, str]
    :value: ("find_project_root", "find_pyproject_toml")
 
    Exported objects from this module
@@ -108,6 +108,11 @@ def find_project_root(srcs, stdin_filename=None):
     """
 
     def is_sequence_empty(some_sequence: Sequence[Any] | None) -> bool:
+        """Check empty sequence. Does not check if type str
+
+        :returns: True is a Sequence otherwise False
+        :rtype: bool
+        """
         ret = (
             some_sequence is not None
             and isinstance(some_sequence, Sequence)
@@ -116,10 +121,20 @@ def find_project_root(srcs, stdin_filename=None):
         return ret
 
     def is_none(arg: Any) -> bool:
+        """Checks if is None
+
+        :returns: True if is None otherwise False
+        :rtype: bool
+        """
         ret = arg is None
         return ret
 
     def is_sequence_none(some_sequence: Sequence[Any] | None) -> bool:
+        """Check if first item in Sequence value is None
+
+        :returns: True first item in Sequence value is None otherwise False
+        :rtype: bool
+        """
         ret = (
             some_sequence is not None
             and isinstance(some_sequence, Sequence)

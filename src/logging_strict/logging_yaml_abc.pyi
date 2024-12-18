@@ -6,14 +6,33 @@ from typing import (
     Final,
 )
 
-__all__ = ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", "setup_logging_yaml")
+__all__ = (
+    "LoggingYamlType",
+    "YAML_LOGGING_CONFIG_SUFFIX",
+    "after_as_str_update_package_name",
+    "setup_logging_yaml",
+)
 
 YAML_LOGGING_CONFIG_SUFFIX: Final[str]
 PATTERN_DEFAULT: Final[str]
 VERSION_FALLBACK: str
+PACKAGE_NAME_SRC: str
 
-def setup_logging_yaml(path_yaml: Any) -> None: ...
+def _to_package_case(val: str) -> str: ...
+def _update_logger_package_name(
+    d_config: dict[str, Any],
+    package_name: str | None = None,
+    target_logger_name: str | None = ...,
+) -> None: ...
+def setup_logging_yaml(
+    path_yaml: Any,
+    package_name: str | None = None,
+) -> None: ...
 def as_str(package_name: str, file_name: str) -> str: ...
+def after_as_str_update_package_name(
+    str_yaml: str,
+    logger_package_name: str | None = None,
+) -> str: ...
 
 class LoggingYamlType(abc.ABC):
     @staticmethod
@@ -54,4 +73,8 @@ class LoggingYamlType(abc.ABC):
         path_relative_package_dir: Path | str | None = "",
     ) -> str: ...
     def as_str(self) -> str: ...
-    def setup(self, str_yaml: str) -> None: ...
+    def setup(
+        self,
+        str_yaml: str,
+        package_name: str | None = None,
+    ) -> None: ...

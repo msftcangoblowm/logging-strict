@@ -26,7 +26,10 @@ from logging_strict.tech_niques import LoggerRedirector
 
 
 class SomeUnittestClass(unittest.TestCase):
+    """Example straight from the docs. Applicable to unittest, not pytest"""
+
     def setUp(self):
+        """Setup loggers redirect"""
         g_module_name = "test_docs_sync_log_capture"
         g_module = f"{g_app_name}.tests.tech_niques.{g_module_name}"
 
@@ -49,6 +52,7 @@ class SomeUnittestClass(unittest.TestCase):
         )
 
     def tearDown(self):
+        """Restore previous state for sys.stderr and sys.stdout"""
         LoggerRedirector.reset_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,

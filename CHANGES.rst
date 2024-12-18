@@ -41,6 +41,11 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - fix: yaml logger package_name placeholder replace with target package name
+   - ci(testsuite): fix lack hyphen between pypi and version
+   - chore: configure interrogate in pyproject.toml and pre-commit config
+   - docs: fill in missing in-code documentation
+
 .. scriv-start-here
 
 .. _changes_1-3-6:
@@ -54,7 +59,7 @@ Version 1.3.6 — 2024-10-19
 - ci(tox.ini): use testenv basepython to set each env python version
 - ci(tox-test.ini): add seperate tests tox config file
 - fix(logging_yaml_validate): MapValidator --> MapPattern
-- feat(util_root): add detect evalavated privledge on Windows
+- feat(util_root): add detect elevated privledge on Windows
 - fix: remove unmaintained dependency get-pypi-latest-version
 - fix(util_root): no os.getuid on windows
 - ci(testsuite): turn on test platforms windows and macos

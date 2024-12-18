@@ -1,3 +1,15 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Gaining access to use standard folders. The user standard folders are
+useful. The system standard folders would require write permissions.
+Normally only have read access to system folders.
+
+These standard folders are normally on-disk, not in-memory.
+Important to have an option to override to instead specify a temp folder.
+
+"""
+
 import platform
 import unittest
 from pathlib import Path
@@ -11,6 +23,8 @@ from logging_strict.util.xdg_folder import (
 
 
 class XdgFolders(unittest.TestCase):
+    """Platform mostly independent standard folders"""
+
     def test_get_author(self):
         """Honour dependency authors"""
         commas = "Guido-van-Rossum-Jukka-Lehtosalo-Łukasz-Langa-Michael-Lee"

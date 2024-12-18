@@ -1,3 +1,10 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Docs example of capturing log messages
+
+"""
+
 import logging
 import unittest
 
@@ -5,9 +12,11 @@ from logging_strict.constants import LOG_FORMAT
 from logging_strict.tech_niques import captureLogs
 
 
-class SuppressPackageLogging(unittest.TestCase):
+class DocsExampleLoggingCapture(unittest.TestCase):
+    """Docs example of captureLogs usage"""
+
     def test_logging_capture(self):
-        """Docs example. Confirms levelname and message, not others"""
+        """Confirms levelname and message, not others"""
         msg0 = "first msg"
         msg1 = "second msg"
         # "%(levelname)s %(module)s %(funcName)s: %(lineno)d: %(message)s"

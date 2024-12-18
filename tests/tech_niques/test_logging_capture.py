@@ -129,7 +129,7 @@ class AppLoggingStateSafe(unittest.TestCase):
         )
 
     def tearDown(self) -> None:
-        # unittest will revert sys.stdout and sys.stderr after this
+        """unittest will revert sys.stdout and sys.stderr after this"""
         LoggerRedirector.reset_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,
@@ -332,6 +332,8 @@ class AppLoggingStateSafe(unittest.TestCase):
 
 
 class TestsLoggingCapture(unittest.TestCase):
+    """Logging capture tests"""
+
     def setUp(self):
         """Ensure root logger"""
         self.root = logging.getLogger("")
@@ -367,6 +369,7 @@ class TestsLoggingCapture(unittest.TestCase):
         def get_captured(
             logger_names: Sequence[Any], levels: Sequence[str | int | Any | None]
         ) -> Generator[Sequence[Any, Sequence[str]], None, None]:
+            """Demonstrate captureLogs context manager"""
             nonlocal WORKER_0
             nonlocal WORKER_1
             nonlocal MSG_0
@@ -776,7 +779,10 @@ class TestsLoggingCapture(unittest.TestCase):
 
 
 class DocumentAssertLogs(unittest.TestCase):
+    """Show unittest way of capturing all log output"""
+
     def test_assert_logging_output(self):
+        """Test has logging output"""
         with self.assertLogs("foo", level="INFO") as cm:
             logging.getLogger("foo").info("first message")
             logging.getLogger("foo.bar").error("second message")

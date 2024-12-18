@@ -1,3 +1,11 @@
+exclude: >
+    (?x)^(
+      \.vscode/settings\.json|
+      tests/.*xml|
+      tests/.*txt|
+      src/logging_strict/\_version\.py|
+    )$
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -46,3 +54,10 @@ repos:
         language: python
         require_serial: true
         pass_filenames: false
+
+  - repo: https://github.com/econchick/interrogate
+    rev: 1.7.0  # or master if you're bold
+    hooks:
+      - id: interrogate
+        args: ["-v", "--fail-under=100", "--omit-covered-files", "--exclude", "src/logging_strict/_version.py", "tests", "src"]
+        pass_filenames: false  # needed if excluding files with pyproject.toml

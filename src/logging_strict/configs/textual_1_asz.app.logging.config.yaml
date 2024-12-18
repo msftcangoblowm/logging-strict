@@ -11,7 +11,7 @@ handlers:
     formatter: simple
     level: WARNING
 loggers:
-  asz:
+  package_name:
     handlers: [console_ui]
     propagate: true
     level: INFO

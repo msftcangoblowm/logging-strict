@@ -218,8 +218,13 @@ __all__ = ("captureLogs", "captureLogsMany")
 # ####################
 
 if sys.version_info < (3, 11):  # pragma: no cover py311 feature
-    # Backport: getLevelNamesMapping
+
     def getLevelNamesMapping() -> dict[str, int]:
+        """Backport: getLevelNamesMapping
+
+        :returns: mapping of logging level name to int value
+        :rtype: dict[str, int]
+        """
         return logging._nameToLevel.copy()
 
     logging.getLevelNamesMapping = getLevelNamesMapping
@@ -253,6 +258,13 @@ if sys.version_info < (3, 12):  # pragma: no cover py312 feature
         """
 
         def _hierlevel(logger):
+            """From logger root child hierarchy level
+
+            :param logger: logger instance. Counts periods plus 1
+            :type logger: logging.Logger
+            :returns: loggers hierarchy level
+            :rtype: int
+            """
             if logger is logger.manager.root:
                 return 0
             return 1 + logger.name.count(".")
@@ -534,6 +546,7 @@ class _CapturingHandler(logging.Handler):
     """A logging handler capturing all (raw and formatted) logging output."""
 
     def __init__(self):
+        """Class constructor"""
         logging.Handler.__init__(self)
         self.watcher = _LoggingWatcher([], [])
 
@@ -555,6 +568,16 @@ class _CapturingHandler(logging.Handler):
 
 @attrs.define
 class _LoggerStoredState:
+    """Stores logger state
+
+    :ivar level_name: logging level name
+    :vartype level_name: str
+    :ivar propagate: True to propagate logging errors
+    :vartype propagate: bool
+    :ivar handlers: logging handlers
+    :vartype handlers: list[type[logging.Handler]]
+    """
+
     level_name: str = attrs.field(kw_only=False)
     propagate: bool = attrs.field(kw_only=False)
     handlers: list[type[logging.Handler]] = attrs.field(

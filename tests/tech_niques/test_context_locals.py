@@ -1,3 +1,11 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Must know technique for peering into the function under test and inspecting
+the functions locals
+
+"""
+
 from __future__ import annotations
 
 import unittest
@@ -56,6 +64,8 @@ def piggy_back(
 
 
 class CaptureLocals(unittest.TestCase):
+    """Super useful testing algo to get all local variables values"""
+
     def test_capture_locals(self):
         """Capture locals from a module-level function, not where exception occurs
 

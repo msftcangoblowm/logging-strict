@@ -16,6 +16,8 @@ _P = ParamSpec("_P")
 
 __all__ = ("get_locals",)
 
+def _func(param_a: str, param_b: int | None = 10) -> str: ...
+
 class MockFunction:
     def __init__(self, func: Callable[..., Any]) -> None: ...
     def __call__(  # type: ignore[misc]  # missing self non-static method

@@ -14,8 +14,9 @@ ensure validation passes!
 **Module private variables**
 
 .. py:data:: __all__
-   :type: tuple[str, str, str]
-   :value: ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", "setup_logging_yaml")
+   :type: tuple[str, str, str, str]
+   :value: ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", \
+   "after_as_str_update_package_name", "setup_logging_yaml")
 
    Module exports
 
@@ -32,6 +33,13 @@ ensure validation passes!
 
    Initial version of :py:mod:`logging.config` YAML files
 
+.. py:data:: PACKAGE_NAME_SRC
+   :type: str
+   :value: "asz"
+
+   In a ``.logging.config.yaml``, under ``loggers``, default package name.
+   Should be a generic replacable name, ``package_name``
+
 **Module objects**
 
 """
@@ -41,6 +49,7 @@ from __future__ import annotations
 import abc
 import glob
 import logging.config
+import re
 from pathlib import (
     Path,
     PurePath,
@@ -60,20 +69,89 @@ from .util.check_type import (
 )
 from .util.xdg_folder import _get_path_config
 
-__all__ = ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", "setup_logging_yaml")
+__all__ = (
+    "LoggingYamlType",
+    "YAML_LOGGING_CONFIG_SUFFIX",
+    "after_as_str_update_package_name",
+    "setup_logging_yaml",
+)
 
 YAML_LOGGING_CONFIG_SUFFIX = ".logging.config.yaml"
 VERSION_FALLBACK = "1"
+PACKAGE_NAME_SRC = "package_name"
 
 
-def setup_logging_yaml(path_yaml):
+def _to_package_case(val):
+    """Takes lowercase and converts non-alphanumeric characters to underscore
+
+    :param val:
+
+       An arbitrary str. Expected non-alphanumeric chars hyphen
+       period and underscore. Although will convert all non-alphanumeric chars
+
+    :type val: str
+    :returns: valid package name containing only alphanumeric and underscore chars
+    :rtype: str
+    """
+    ret = re.sub("[^a-z0-9]+", "_", val.lower())
+
+    return ret
+
+
+def _update_logger_package_name(
+    d_config,
+    package_name=None,
+    target_logger_name=PACKAGE_NAME_SRC,
+):
+    """Rename logger package name from PACKAGE_NAME_SRC --> package_name
+
+    :param d_config: logging config dict. Should have already been validated
+    :type d_config: dict[str, typing.Any]
+    :param package_name:
+
+       Set logger to the intended package name. Default None which leaves as-is
+
+    :type package_name: str | None
+    :param target_logger_name: in logger config dict, logger name to replace
+    :type target_logger_name: str | None
+    """
+    if is_not_ok(target_logger_name):
+        target_logger_name = PACKAGE_NAME_SRC
+    else:  # pragma: no cover
+        pass
+
+    if is_ok(package_name):
+        logger_keys = d_config["loggers"].keys()
+        #    ensure package_name contains only underscores
+        valid_package_name = _to_package_case(package_name)
+        is_different = target_logger_name != valid_package_name
+        is_in_logger_keys = target_logger_name in logger_keys
+        if is_different and is_in_logger_keys:
+            # rename logger
+            #   copy default package logger setting
+            d_logger_package_src = d_config["loggers"][target_logger_name]
+            #   delete default package logger setting
+            del d_config["loggers"][target_logger_name]
+            #   use different logger package name with same logger settings
+            d_config["loggers"][valid_package_name] = d_logger_package_src
+        else:  # pragma: no cover
+            pass
+    else:
+        pass
+
+
+def setup_logging_yaml(path_yaml, package_name=None):
     """Loads :py:mod:`logging.config` configuration.
 
     Can pass in a path or a the YAML str
 
     :param path_yaml: :py:mod:`logging.config` YAML file path
     :type path_yaml: typing.Any
+    :param package_name:
 
+       Set logger to the intended package name. Default None which leaves as-is
+
+    :type package_name: str | None
     :raises:
 
        - :py:exc:`strictyaml.YAMLValidationError` -- Invalid.
@@ -105,6 +183,10 @@ def setup_logging_yaml(path_yaml):
         # QA Tester is responsible to test the logging.config yaml file
         # A broken yaml config file will crash the app here
         d_config = yaml_config.data
+
+        # Rename logger from PACKAGE_NAME_SRC --> package_name
+        _update_logger_package_name(d_config, package_name=package_name)
+
         logging.config.dictConfig(d_config)  # test: defang
     else:  # pragma: no cover
         pass
@@ -157,6 +239,42 @@ def as_str(package_name, file_name):
         raise FileNotFoundError(msg_err)
 
     return str_yaml
+
+
+def after_as_str_update_package_name(
+    str_yaml,
+    logger_package_name=None,
+    target_logger_name=PACKAGE_NAME_SRC,
+):
+    """Validation already occurred. In yaml, replace logger package name
+
+    :param str_yaml: validated yaml that needs some adjustments
+    :type str_yaml: str
+    :param logger_package_name:
+
+       Set logger to the intended package name. Default None which leaves as-is
+
+    :type logger_package_name: str | None
+    :param target_logger_name: in logger config dict, logger name to replace
+    :type target_logger_name: str | None
+    :returns: yaml str after adjustments
+    :rtype: str
+    """
+    if is_ok(logger_package_name):
+        yaml_config = validate_yaml_dirty(str_yaml)
+        d_config = yaml_config.data
+        _update_logger_package_name(
+            d_config,
+            package_name=logger_package_name,
+            target_logger_name=target_logger_name,
+        )
+        # convert dict --> yaml str
+        text_yaml = s.YAML(d_config).text
+        ret = str(text_yaml)
+    else:
+        ret = str_yaml
+
+    return ret
 
 
 class LoggingYamlType(abc.ABC):
@@ -469,7 +587,7 @@ class LoggingYamlType(abc.ABC):
 
         return ret
 
-    def setup(self, str_yaml):  # pragma: no cover dangerous
+    def setup(self, str_yaml, package_name=None):  # pragma: no cover dangerous
         """Only called by app, not worker. For worker, is a 2 step
         process, not 1.
 
@@ -481,8 +599,14 @@ class LoggingYamlType(abc.ABC):
 
         :param str_yaml: :py:mod:`logging.config` yaml str
         :type str_yaml: str
+        :param package_name:
+
+           In logger dict, instead of the default package name, set a package name.
+           Always desirable.
+
+        :type: str | None
         """
         if is_ok(str_yaml):
-            setup_logging_yaml(str_yaml)
+            setup_logging_yaml(str_yaml, package_name=package_name)
         else:  # pragma: no cover
             pass

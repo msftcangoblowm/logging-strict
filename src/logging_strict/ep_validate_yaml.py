@@ -33,7 +33,12 @@ from .logging_yaml_validate import validate_yaml_dirty
 from .util.check_type import is_not_ok
 
 
-def _process_args() -> tuple[tuple[Path, ...], bool]:
+def _process_args():
+    """parse args
+
+    :returns: cli arguments
+    :rtype: tuple[tuple[pathlib.Path, ...], bool]
+    """
     desc = "Validate .[worker|app].logging.config.yaml files"
     prog = f"{g_app_name}_validate_yaml"
     epilog = f"""Validation of `*.[app|worker].logging.config.yaml` file(s)

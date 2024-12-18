@@ -64,18 +64,21 @@ def setup_ui_other(
     flavor: str,
     version_no: Any = ...,
     package_start_relative_folder: Path | str | None = "",
+    logger_package_name: str | None = None,
 ) -> None: ...
 def ui_yaml_curated(
     genre: str,
     flavor: str,
     version_no: Any | None = ...,
     package_start_relative_folder: Path | str | None = "",
+    logger_package_name: str | None = None,
 ) -> None: ...
 def worker_yaml_curated(
     genre: Any | None = "mp",
     flavor: Any | None = "asz",
     version_no: Any | None = ...,
     package_start_relative_folder: Path | str | None = "",
+    logger_package_name: str | None = None,
 ) -> str: ...
 def setup_worker_other(
     package_name: str,
@@ -84,6 +87,7 @@ def setup_worker_other(
     flavor: str,
     version_no: Any | None = ...,
     package_start_relative_folder: Path | str | None = "",
+    logger_package_name: str | None = None,
 ) -> str: ...
 
 class LoggingState:

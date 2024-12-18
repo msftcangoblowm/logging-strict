@@ -1,3 +1,13 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Module util_root assumes package or script can be run with root privledges.
+Which is not a good idea.
+
+For this test module, basic logging is setup.
+
+"""
+
 import logging
 import os
 import sys
@@ -27,20 +37,23 @@ logging.basicConfig(
 
 
 class UtilRoot(unittest.TestCase):
+    """Module util_root tests"""
+
     def setUp(self) -> None:
-        # unittest has reassigned sys.stdout and sys.stderr by this point
+        """On setup, redirect sys.stdout and sys.stderr"""
         LoggerRedirector.redirect_loggers(
             fake_stdout=sys.stdout, fake_stderr=sys.stderr
         )
 
     def tearDown(self) -> None:
-        # unittest will revert sys.stdout and sys.stderr after this
+        """On tear down, revert redirect of sys.stdout and sys.stderr."""
         LoggerRedirector.reset_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,
         )
 
     def test_path_home_root(self) -> None:
+        """Test IsRoot.path_home_root"""
         path_home_root = IsRoot.path_home_root()
 
         # _LOGGER.info(f"path_home_root: {type(path_home_root)}")
@@ -109,14 +122,16 @@ class UtilRoot(unittest.TestCase):
 @patch(f"{g_app_name}.util.util_root.g_is_root", False)
 @patch(f"{g_app_name}.util.util_root.ungraceful_app_exit", lambda: None)
 class AsUser(unittest.TestCase):
+    """Run tests with user privledges. Not root privledges."""
+
     def setUp(self) -> None:
-        # unittest has reassigned sys.stdout and sys.stderr by this point
+        """On setup, redirect sys.stdout and sys.stderr"""
         LoggerRedirector.redirect_loggers(
             fake_stdout=sys.stdout, fake_stderr=sys.stderr
         )
 
     def tearDown(self) -> None:
-        # unittest will revert sys.stdout and sys.stderr after this
+        """On tear down, revert redirect of sys.stdout and sys.stderr."""
         LoggerRedirector.reset_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,
@@ -151,6 +166,7 @@ class AsUser(unittest.TestCase):
         del _LOGGER2
 
     def test_assert_root(self) -> None:
+        """Test IsRoot.is_root"""
         self.assertFalse(IsRoot.is_root())
         # Neither raise nor exit, therefore does nothing
         _LOGGER2 = logging.getLogger(f"{g_app_name}.sdafsadfsadfsdf")
@@ -179,20 +195,23 @@ class AsUser(unittest.TestCase):
 @patch(f"{g_app_name}.util.util_root.g_is_root", True)
 @patch(f"{g_app_name}.util.util_root.ungraceful_app_exit", lambda: None)
 class AsRoot(unittest.TestCase):
+    """Run tests as fake root privledges. Not user level privledges."""
+
     def setUp(self) -> None:
-        # unittest has reassigned sys.stdout and sys.stderr by this point
+        """On setup, redirect sys.stdout and sys.stderr"""
         LoggerRedirector.redirect_loggers(
             fake_stdout=sys.stdout, fake_stderr=sys.stderr
         )
 
     def tearDown(self) -> None:
-        # unittest will revert sys.stdout and sys.stderr after this
+        """On tear down, revert redirect of sys.stdout and sys.stderr."""
         LoggerRedirector.reset_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,
         )
 
     def test_assert_not_root(self):
+        """Test IsRoot.check_not_root"""
         is_app_exits = (
             None,
             False,
@@ -246,20 +265,23 @@ class AsRoot(unittest.TestCase):
 @patch(f"{g_app_name}.util.util_root.is_python_old", True)
 @patch(f"{g_app_name}.util.util_root.ungraceful_app_exit", lambda: None)
 class UnsupportedPython(unittest.TestCase):
+    """Test check for detecting usage old python interpretor."""
+
     def setUp(self) -> None:
-        # unittest has reassigned sys.stdout and sys.stderr by this point
+        """On setup, redirect sys.stdout and sys.stderr"""
         LoggerRedirector.redirect_loggers(
             fake_stdout=sys.stdout, fake_stderr=sys.stderr
         )
 
     def tearDown(self) -> None:
-        # unittest will revert sys.stdout and sys.stderr after this
+        """On tear down, revert redirect of sys.stdout and sys.stderr."""
         LoggerRedirector.reset_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,
         )
 
     def test_check_python_not_old(self) -> None:
+        """Test check_python_not_old"""
         _LOGGER2 = logging.getLogger(f"{g_app_name}.sdafsadfsadfsdf")
         unsupported = (
             None,
@@ -293,20 +315,23 @@ class UnsupportedPython(unittest.TestCase):
 @patch(f"{g_app_name}.util.util_root.is_python_old", False)
 @patch(f"{g_app_name}.util.util_root.ungraceful_app_exit", lambda: None)
 class SupportedPython(unittest.TestCase):
+    """Test check showing current python interpretor is still supported version."""
+
     def setUp(self) -> None:
-        # unittest has reassigned sys.stdout and sys.stderr by this point
+        """On setup, redirect sys.stdout and sys.stderr"""
         LoggerRedirector.redirect_loggers(
             fake_stdout=sys.stdout, fake_stderr=sys.stderr
         )
 
     def tearDown(self) -> None:
-        # unittest will revert sys.stdout and sys.stderr after this
+        """On tear down, revert redirect of sys.stdout and sys.stderr."""
         LoggerRedirector.reset_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,
         )
 
     def test_check_python_not_old(self) -> None:
+        """Test check_python_not_old"""
         _LOGGER2 = logging.getLogger(f"{g_app_name}.sdafsadfsadfsdf")
         unsupported = (
             None,

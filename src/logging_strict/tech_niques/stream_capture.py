@@ -10,15 +10,11 @@ Intuitive interface. Use within :code:`with` block
 :py:class:`multiprocessing.pool.Pool` workers have to capture
 both streams and logging output
 
-**Module private variables**
-
 .. py:data:: __all__
    :type: tuple[str]
    :value: ("CaptureOutput",)
 
    This modules exports
-
-**Module objects**
 
 """
 
@@ -31,6 +27,19 @@ __all__ = ("CaptureOutput",)
 
 
 class CaptureOutput:
+    """Context manager to capture both :py:data:`sys.stdout` and
+    :py:data:`sys.stderr` streams
+
+    .. py:attribute:: __slots__
+       :type: tuple[str, str, str, str]
+       :value: ("_stdout_output", "_stderr_output", "_stdout", "_stderr")
+
+       Reduce class memory footprint
+
+    """
+
+    __slots__ = ("_stdout_output", "_stderr_output", "_stdout", "_stderr")
+
     def __enter__(self):
         """:pep:`343` with statement Context manager. For capturing
         - :py:data:`sys.stdout`

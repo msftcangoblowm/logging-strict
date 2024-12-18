@@ -322,6 +322,7 @@ class PartSuffix(Protocol):
         expected_suffix,
         test_suffix,
     ):  # pragma: no cover
+        """Empty Implementation. Protocol usage is as a type"""
         pass
 
 
@@ -361,6 +362,7 @@ class PartStem(Protocol):
         file_expected,
         test_file_stem,
     ):  # pragma: no cover
+        """Empty Implementation. Protocol usage is as a type"""
         pass
 
 
@@ -493,9 +495,23 @@ def filter_by_suffix(expected_suffix, test_suffix):
         suffix: str
 
     def is_empty(val: Any) -> bool:
+        """None or empty str
+
+        :param val: Value to check
+        :type val: typing.Any
+        :returns: True if passes check
+        :rtype: bool
+        """
         return val is None or isinstance(val, str) and len(val) == 0
 
     def is_not_empty(val: Any) -> bool:
+        """Not None and non-empty str
+
+        :param val: Value to check
+        :type val: typing.Any
+        :returns: True if passes check
+        :rtype: bool
+        """
         return val is not None and isinstance(val, str) and len(val) != 0
 
     if is_empty(expected_suffix) and is_empty(test_suffix):
@@ -675,6 +691,7 @@ class PackageResource:
     """
 
     def __init__(self, package, package_data_folder_start):
+        """Class constructor"""
         super().__init__()
         self._package = package
         self._package_data_folder_start = package_data_folder_start

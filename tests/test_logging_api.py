@@ -1,3 +1,10 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+logging API is called by the main entrypoint
+
+"""
+
 import sys
 import tempfile
 import unittest
@@ -34,7 +41,10 @@ else:  # pragma: no cover
 
 
 class LoggingApi(unittest.TestCase):
+    """Test logging api interface."""
+
     def setUp(self):
+        """Initialize variables for test base folder and package base folder."""
         if "__pycache__" in __file__:
             # cached
             path_tests = Path(__file__).parent.parent
@@ -53,11 +63,18 @@ class LoggingApi(unittest.TestCase):
 
         # No extracted file, so setup skipped
         def dummy() -> str:
+            """dummy function that has a local variable. Raises
+            FileNotFoundError and ends in a return statement.
+
+            Looks like a Frankensteign function meant for use with
+            ``get_locals``. Break get_locals when the Exception is raised.
+            """
             msg_err = "No yaml file found"
             raise FileNotFoundError(msg_err)
             return "within/package/relative/path/to/resource"
 
         def dummy_setup(str_yaml: str) -> bool:
+            """Dummy logging YAML config setup function."""
             return None
 
         m_extract = Mock(spec_set=dummy)
@@ -564,6 +581,8 @@ class SharedResourceLogger(unittest.TestCase):
         self.assertTrue(LoggingState() is LoggingState())
 
         class NonSingleton:
+            """A bare class with a dubious name"""
+
             pass
 
         self.assertTrue(LoggingState() is not NonSingleton())

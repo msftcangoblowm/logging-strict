@@ -65,6 +65,7 @@ from .logging_yaml_abc import (
     VERSION_FALLBACK,
     YAML_LOGGING_CONFIG_SUFFIX,
     LoggingYamlType,
+    after_as_str_update_package_name,
 )
 from .util.check_type import (
     is_not_ok,
@@ -226,6 +227,7 @@ class LoggingConfigYaml(LoggingYamlType):
         flavor=None,
         version_no=VERSION_FALLBACK,
     ):
+        """Class constructor"""
         super().__init__()
 
         if is_ok(package_name):
@@ -567,6 +569,7 @@ def setup_ui_other(
     flavor,
     version_no=VERSION_FALLBACK,
     package_start_relative_folder="",
+    logger_package_name=None,
 ) -> None:
     """Before creating an App instance, seemlessly extracts
     :py:mod:`logging.config` yaml file for app, but not worker(s)
@@ -608,6 +611,12 @@ def setup_ui_other(
 
 
     :type package_start_relative_folder: str | None
+    :param logger_package_name:
+
+       Default None. Update the dict to set a more appropriate logger package name.
+       Will always want to do this
+
+    :type logger_package_name: str | None
     """
     try:
         ui_yaml = LoggingConfigYaml(
@@ -633,7 +642,7 @@ def setup_ui_other(
 
     # LoggingConfigYaml.setup is a wrapper of setup_logging_yaml
     # Checks: is_ok
-    ui_yaml.setup(str_yaml)
+    ui_yaml.setup(str_yaml, package_name=logger_package_name)
 
 
 def ui_yaml_curated(
@@ -641,6 +650,7 @@ def ui_yaml_curated(
     flavor,
     version_no=VERSION_FALLBACK,
     package_start_relative_folder="",
+    logger_package_name=None,
 ):
     """Curated within |project_name| So do not have to provide package
     and package base data folder name
@@ -668,6 +678,12 @@ def ui_yaml_curated(
        with same file name
 
     :type package_start_relative_folder: str
+    :param logger_package_name:
+
+       In logger dict, instead of the default package name, set a package name.
+       Always desirable.
+
+    :type logger_package_name: str | None
     """
     package_name = g_app_name
     package_data_folder_start = "configs"
@@ -678,6 +694,7 @@ def ui_yaml_curated(
         flavor,
         version_no=version_no,
         package_start_relative_folder=package_start_relative_folder,
+        logger_package_name=logger_package_name,
     )
 
 
@@ -686,6 +703,7 @@ def worker_yaml_curated(
     flavor="asz",
     version_no=VERSION_FALLBACK,
     package_start_relative_folder="",
+    logger_package_name=None,
 ):
     """For multiprocessing workers, retrieve the yaml in this order:
 
@@ -731,6 +749,11 @@ def worker_yaml_curated(
        which contain file with the same file name
 
     :type package_start_relative_folder: pathlib.Path | str | None
+    :param logger_package_name:
+
+       Set logger to the intended package name. Default None which leaves as-is
+
+    :type logger_package_name: str | None
     :returns: yaml file contents
     :rtype: str
     :raises:
@@ -762,7 +785,13 @@ def worker_yaml_curated(
     except (FileNotFoundError, s.YAMLValidationError, AssertionError):
         raise
 
-    return str_yaml
+    # validation already occurred. In yaml, replace logger package name
+    ret = after_as_str_update_package_name(
+        str_yaml,
+        logger_package_name=logger_package_name,
+    )
+
+    return ret
 
 
 def setup_worker_other(
@@ -772,6 +801,7 @@ def setup_worker_other(
     flavor,
     version_no=VERSION_FALLBACK,
     package_start_relative_folder="",
+    logger_package_name=None,
 ):
     """worker_yaml_curated grabs the logging.config yaml from logging-strict.
     Use this if located in another package
@@ -825,6 +855,11 @@ def setup_worker_other(
        which contain file with the same file name
 
     :type package_start_relative_folder: pathlib.Path | str | None
+    :param logger_package_name:
+
+       Set logger to the intended package name. Default None which leaves as-is
+
+    :type logger_package_name: str | None
     :returns: yaml file contents
     :rtype: str
     :raises:
@@ -863,6 +898,12 @@ def setup_worker_other(
         str_yaml = ui_yaml.as_str()
     except (FileNotFoundError, s.YAMLValidationError, AssertionError):
         raise
+
+    # validation already occurred. In yaml, replace logger package name
+    str_yaml = after_as_str_update_package_name(
+        str_yaml,
+        logger_package_name=logger_package_name,
+    )
 
     return str_yaml
 

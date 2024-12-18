@@ -1,3 +1,10 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Test logging-strict main entrypoint.
+
+"""
+
 import argparse
 import io
 import sys
@@ -25,7 +32,10 @@ else:  # pragma: no cover
 
 
 class EntrypointStrictYAMLValidate(unittest.TestCase):
+    """Test entrypoint for strict yaml validation."""
+
     def setUp(self):
+        """Initialize variables for tests base folder and cwd."""
         if "__pycache__" in __file__:
             # cached
             path_tests = Path(__file__).parent.parent

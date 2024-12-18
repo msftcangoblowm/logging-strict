@@ -1,3 +1,24 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+strictyaml lacks proper unittests.
+
+Only one person on the planet gets away with that and that person is
+strictyaml author /nosarc
+
+The author has tests as-documentation. Which is brilliant!
+
+But this doesn't excuse the lack of old-school unittests. Also the
+as-documentation tests are too simplistic. Kept thinking, yeah **BUT**
+that is ``not a realistic example``.
+
+Without old school unittests and the as-documentation being found wanting,
+have to confirm strictyaml does what it advertising it does.
+
+That's what real unittests are for.
+
+"""
+
 import sys
 import unittest
 
@@ -19,8 +40,10 @@ else:  # pragma: no cover
 
 
 class YamlValidate(unittest.TestCase):
-    """Monkey/Chaos testing helps improve the schema, by finding out
-    where/why it breaks"""
+    """Monkey/Chaos testing helps to improve the schema.
+
+    Find out where/why it breaks.
+    """
 
     def test_version_required(self):
         """version is the only required field"""

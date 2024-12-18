@@ -5,16 +5,11 @@
 
 In unittest class, redirect stdout/stderr. Essential for synchronous logging
 
-
-**Module private variables**
-
 .. py:data: __all__
    :type: tuple[str]
    :value: ("LoggerRedirector",)
 
    This module exports
-
-**Module objects**
 
 """
 
@@ -26,13 +21,26 @@ __all__ = ("LoggerRedirector",)
 
 class LoggerRedirector:  # pragma: no cover
     """:mod:`unittest` redirects :code:`sys.stdout` and
-    :code:`sys.stderr`. Logging goes to the wrong IO
-    streams. Upon failure, there are no log messages.
+    :code:`sys.stderr`. Keep a reference to the real streams so we can
+    later be reverted. Logging goes to the wrong IO streams. Upon
+    failure, there are no log messages.
 
     Redirect to the correct IO streams.
 
     Required for the unittest discover command: ``--buffer``
     option
+
+    .. py:attribute:: _real_stdout
+       :noindex:
+
+       Hold :py:data:`sys.stdout` reference. Restores sys.stdout at the end of the
+       context manager
+
+    .. py:attribute:: _real_stderr
+       :noindex:
+
+       Hold :py:data:`sys.stderr` reference. Restores sys.stdout at the end of the
+       context manager
 
     Usage
 
@@ -81,8 +89,6 @@ class LoggerRedirector:  # pragma: no cover
 
     .. seealso::
 
-
-
        `LoggerRedirector source <https://stackoverflow.com/a/69202374>`_
 
        `LoggerRedirector author <https://stackoverflow.com/users/6248563/satyen-a>`_
@@ -93,7 +99,6 @@ class LoggerRedirector:  # pragma: no cover
 
     """
 
-    # Keep a reference to the real streams so we can revert
     _real_stdout = sys.stdout
     _real_stderr = sys.stderr
 

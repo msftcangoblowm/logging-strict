@@ -45,7 +45,8 @@ class LoggingStrictError(ValueError):
     :vartype msg: str
     """
 
-    def __init__(self, msg: str) -> None:
+    def __init__(self, msg):
+        """Exception class constructor"""
         super().__init__(msg)
 
 
@@ -56,7 +57,8 @@ class LoggingStrictPackageNameRequired(LoggingStrictError):
     :vartype msg: str
     """
 
-    def __init__(self, msg: str) -> None:
+    def __init__(self, msg):
+        """Exception class constructor"""
         super().__init__(msg)
 
 
@@ -67,7 +69,8 @@ class LoggingStrictPackageStartFolderNameRequired(LoggingStrictError):
     :vartype msg: str
     """
 
-    def __init__(self, msg: str) -> None:
+    def __init__(self, msg):
+        """Exception class constructor"""
         super().__init__(msg)
 
 
@@ -78,7 +81,8 @@ class LoggingStrictProcessCategoryRequired(LoggingStrictError):
     :vartype msg: str
     """
 
-    def __init__(self, msg: str) -> None:
+    def __init__(self, msg):
+        """Exception class constructor"""
         super().__init__(msg)
 
 
@@ -89,5 +93,6 @@ class LoggingStrictGenreRequired(LoggingStrictError):
     :vartype msg: str
     """
 
-    def __init__(self, msg: str) -> None:
+    def __init__(self, msg):
+        """Exception class constructor"""
         super().__init__(msg)

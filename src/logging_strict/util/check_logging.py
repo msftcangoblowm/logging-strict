@@ -42,9 +42,14 @@ __all__ = (
 # MONKEYPATCH logging module -- backporting py311 feature
 # ####################
 
-if sys.version_info < (3, 11):  # pragma: no cover py311 feature
-    # Backport: getLevelNamesMapping
+if sys.version_info < (3, 11):  # pragma: no cover
+
     def getLevelNamesMapping() -> dict[str, int]:
+        """Backport of py311 feature getLevelNamesMapping
+
+        :returns: Copy of mapping level names to level int values
+        :rtype: dict[str, int]
+        """
         return logging._nameToLevel.copy()
 
     logging.getLevelNamesMapping = getLevelNamesMapping
@@ -80,8 +85,8 @@ def is_assume_root(logger_name):
     - "root"
 
     :param logger_name: A logger name
-    :type logger_name: typing.Any | ``None``
-    :returns: ``True`` if should assume is root loger name otherwise ``False``
+    :type logger_name: typing.Any | None
+    :returns: True if should assume is root loger name otherwise False
     :rtype: bool
     """
     ret = (

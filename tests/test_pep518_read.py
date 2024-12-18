@@ -1,7 +1,8 @@
 """
 .. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-pyproject.toml read table sections
+Module ``pep518_read`` was ported to package, **wreck**. Might be time to
+leverage wreck.
 
 .. seealso::
 
@@ -37,7 +38,10 @@ else:  # pragma: no cover
 
 
 class Pep518Sections(unittest.TestCase):
+    """Test pep518_read module."""
+
     def setUp(self):
+        """Get test base folder and package base folder"""
         if "__pycache__" in __file__:
             # cached
             self.path_tests = Path(__file__).parent.parent

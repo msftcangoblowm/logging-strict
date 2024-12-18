@@ -1,3 +1,9 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Class inspection tool is_class_attrib_kind
+"""
+
 import unittest
 
 from logging_strict import LoggingYamlType
@@ -8,9 +14,11 @@ from logging_strict.tech_niques import (
 )
 
 
-class UncategorizedTricks(unittest.TestCase):
-    def test_is_classmethod(self):
-        """For testing ABC registering"""
+class InspectClassAttribute(unittest.TestCase):
+    """Inspection using is_class_attrib_kind"""
+
+    def test_is_class_attrib_kind(self):
+        """Inspect LoggingConfigYaml attributes, properties, and methods"""
         # These classmethods are required by the ABC's interface
         self.assertTrue(
             is_class_attrib_kind(
@@ -41,6 +49,7 @@ class UncategorizedTricks(unittest.TestCase):
             ),
         )
 
+        # Inherits from (subclass of) LoggingYamlType
         self.assertTrue(issubclass(LoggingConfigYaml, LoggingYamlType))
 
         # not a class
@@ -74,7 +83,7 @@ if __name__ == "__main__":  # pragma: no cover
 
        coverage run --data-file=".coverage-combine-42" \
        -m unittest discover -t. -s tests/tech_niques \
-       -p "test_uncategorized_underappreciated*.py" --locals
+       -p "test_is_class_attrib_kind*.py" --locals
 
        coverage report --include="**/tech_niques/__init__*" --no-skip-covered \
        --data-file=".coverage-combine-42"

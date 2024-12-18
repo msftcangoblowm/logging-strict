@@ -1,3 +1,11 @@
+"""
+.. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
+
+Demonstrate technique to capture steams using context manager,
+:py:class:`logging_strict.tech_niques.CaptureOutput`
+
+"""
+
 import sys
 import unittest
 
@@ -5,6 +13,8 @@ from logging_strict.tech_niques import CaptureOutput
 
 
 class PlayCaptureTheStreams(unittest.TestCase):
+    """Context manager to capture streams stdout and stderr"""
+
     def test_worker_capture_streams(self):
         """Capturing streams context manager. Used within multiprocess Worker"""
         msg_0 = "Hello"
