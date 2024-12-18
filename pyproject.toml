@@ -44,12 +44,12 @@ authors = [
 ]
 
 [project.urls]
-Documentation = "https://logging-strict.readthedocs.io"
-Changes = "https://raw.githubusercontent.com/msftcangoblowm/logging-strict/master/CHANGES.rst"
-"PyPI Releases" = "https://pypi.org/project/logging-strict"
-"Source code" = "https://github.com/msftcangoblowm/logging-strict"
-"Issue tracker" = "https://github.com/msftcangoblowm/logging-strict/issues"
-Chat = "https://mastodon.social/@msftcangoblowme"
+Documentation = 'https://logging-strict.readthedocs.io/en/stable'
+Changes = 'https://raw.githubusercontent.com/msftcangoblowm/logging-strict/master/CHANGES.rst'
+"PyPI Releases" = 'https://pypi.org/project/logging-strict'
+"Source code" = 'https://github.com/msftcangoblowm/logging-strict'
+"Issue tracker" = 'https://github.com/msftcangoblowm/logging-strict/issues'
+Mastodon = 'https://mastodon.social/@msftcangoblowme'
 
 [tool.setuptools.packages.find]
 where = ["src"]
