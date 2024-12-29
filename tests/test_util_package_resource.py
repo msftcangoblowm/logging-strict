@@ -824,7 +824,7 @@ class PackageResourceMadness(unittest.TestCase):
             with self.assertRaises(ImportError):
                 list(gen)  # Run the generator
 
-        # nonexistant fallback to all package data folders
+        # nonexistent fallback to all package data folders
         # absolute path is ignored
         # :command:`openssl rand -hex 8`
         paths = [

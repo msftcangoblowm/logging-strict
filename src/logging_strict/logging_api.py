@@ -480,6 +480,7 @@ class LoggingConfigYaml(LoggingYamlType):
 
         :raises:
 
+           - :py:exc:`ImportError` -- Cannot extract files. Install package then try again
            - :py:exc:`AssertionError` -- Expecting one yaml file, many found
            - :py:exc:`FileNotFoundError` -- No yaml files found
 
@@ -517,12 +518,20 @@ class LoggingConfigYaml(LoggingYamlType):
 
         pr = PackageResource(self.package, self._package_data_folder_start)
 
-        gen = pr.package_data_folders(
-            cb_suffix=cb_suffix,
-            cb_file_stem=cb_file_stem,
-            path_relative_package_dir=path_relative_package_dir,
-        )
-        folders = list(gen)
+        try:
+            gen = pr.package_data_folders(
+                cb_suffix=cb_suffix,
+                cb_file_stem=cb_file_stem,
+                path_relative_package_dir=path_relative_package_dir,
+            )
+            folders = list(gen)
+        except ImportError as exc:
+            msg_err = (
+                f"package {self.package} is not installed in venv. "
+                "Cannot extract files. Install package then try again"
+            )
+            raise ImportError(msg_err) from exc
+
         folder_count = len(folders)
         if folder_count > 1:
             msg_err = (
@@ -617,6 +626,23 @@ def setup_ui_other(
        Will always want to do this
 
     :type logger_package_name: str | None
+    :raises:
+
+       - :py:exc:`ImportError` -- package not installed in venv
+
+       - :py:exc:`FileNotFoundError` -- yaml file not found within package
+
+       - :py:exc:`strictyaml.exceptions.YAMLValidationError`
+         -- yaml file validation failed
+
+       - :py:exc:`AssertionError` -- Expecting one yaml file, many found
+
+       - :py:exc:`logging_strict.LoggingStrictPackageNameRequired`
+         -- Which package are the logging.config yaml in?
+
+       - :py:exc:`logging_strict.LoggingStrictPackageStartFolderNameRequired`
+         -- Within the provided package, the package base data folder name
+
     """
     try:
         ui_yaml = LoggingConfigYaml(
@@ -636,8 +662,13 @@ def setup_ui_other(
     # extract and validate
     try:
         ui_yaml.extract(path_relative_package_dir=package_start_relative_folder)
+    except ImportError:
+        raise
+    except (FileNotFoundError, AssertionError):
+        raise
+    try:
         str_yaml = ui_yaml.as_str()
-    except (FileNotFoundError, s.YAMLValidationError, AssertionError):
+    except s.YAMLValidationError:
         raise
 
     # LoggingConfigYaml.setup is a wrapper of setup_logging_yaml
@@ -765,7 +796,6 @@ def worker_yaml_curated(
 
        - :py:exc:`AssertionError` -- Expecting one yaml file, many found
 
-
     """
     package_name = g_app_name
     package_data_folder_start = "configs"
@@ -779,10 +809,14 @@ def worker_yaml_curated(
         version_no=version_no,
     )
 
+    # ImportError -- impossible. logging_strict package is installed
     try:
         ui_yaml.extract(path_relative_package_dir=package_start_relative_folder)
+    except (FileNotFoundError, AssertionError):
+        raise
+    try:
         str_yaml = ui_yaml.as_str()
-    except (FileNotFoundError, s.YAMLValidationError, AssertionError):
+    except s.YAMLValidationError:
         raise
 
     # validation already occurred. In yaml, replace logger package name
@@ -864,6 +898,8 @@ def setup_worker_other(
     :rtype: str
     :raises:
 
+       - :py:exc:`ImportError` -- package not installed in venv
+
        - :py:exc:`FileNotFoundError` -- yaml file not found within package
 
        - :py:exc:`strictyaml.exceptions.YAMLValidationError`
@@ -895,8 +931,13 @@ def setup_worker_other(
 
     try:
         ui_yaml.extract(path_relative_package_dir=package_start_relative_folder)
+    except ImportError:
+        raise
+    except (FileNotFoundError, AssertionError):
+        raise
+    try:
         str_yaml = ui_yaml.as_str()
-    except (FileNotFoundError, s.YAMLValidationError, AssertionError):
+    except s.YAMLValidationError:
         raise
 
     # validation already occurred. In yaml, replace logger package name

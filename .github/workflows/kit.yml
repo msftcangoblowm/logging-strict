@@ -146,13 +146,13 @@ jobs:
           platforms: arm64
 
       - name: "Check out the repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
           fetch-depth: 0
 
       - name: "Install Python 3.9"
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.3.0
         with:
           # PYVERSIONS
           python-version: "3.9"
@@ -177,7 +177,7 @@ jobs:
           ls -al wheelhouse/
 
       - name: "Upload wheels"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.5.0
         with:
           name: dist-${{ env.MATRIX_ID }}
           path: wheelhouse/*.whl
@@ -188,7 +188,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Check out the repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
           fetch-depth: 0
@@ -201,7 +201,7 @@ jobs:
           echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
 
       - name: "Install Python 3.9"
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.3.0
         with:
           # PYVERSIONS
           python-version: "3.9"
@@ -224,7 +224,7 @@ jobs:
           ls -al dist/
 
       - name: "Upload sdist"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.5.0
         with:
           name: dist-sdist
           path: dist/*.tar.gz
@@ -235,13 +235,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Check out the repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
           fetch-depth: 0
 
       - name: "Install PyPy"
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: "pypy-3.9" # Minimum of PyPy PYVERSIONS
           cache: pip
@@ -265,7 +265,7 @@ jobs:
           ls -al dist/
 
       - name: "Upload wheels"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.5.0
         with:
           name: dist-pypy
           path: dist/*.whl
@@ -284,13 +284,13 @@ jobs:
       id-token: write
     steps:
       - name: "Download artifacts"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.8
         with:
           pattern: dist-*
           merge-multiple: true
 
       - name: "Sign artifacts"
-        uses: sigstore/gh-action-sigstore-python@v2.1.1
+        uses: sigstore/gh-action-sigstore-python@v3.0.0
         with:
           inputs: logging-strict-*.*
 
@@ -299,7 +299,7 @@ jobs:
           ls -alR
 
       - name: "Upload signatures"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.5.0
         with:
           name: signatures
           path: |

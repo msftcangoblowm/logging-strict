@@ -8,6 +8,13 @@ Changelog
    Feature request
    .................
 
+   - Framework classifier to advertise package contains unverified
+     logging config YAML files
+
+   - Within a package, centralized config file. With known file name and file format.
+     Lists logging config YAML files.
+     Would remove the need to specify relative path to package resource
+
    - tox-gh-matrix produces the version matrix from tox config file
      this is then feed into gh matrix.
 
@@ -41,12 +48,22 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - fix: yaml logger package_name placeholder replace with target package name
-   - ci(testsuite): fix lack hyphen between pypi and version
-   - chore: configure interrogate in pyproject.toml and pre-commit config
-   - docs: fill in missing in-code documentation
+   - fix(logging_api): extract from non-installed package raise ImportError (#2)
+   - fix(logging_api): in fcn worker_yaml_curated remove ImportError check
+   - ci: bump gha action versions
+   - ci: add templates for PR feature request and bug report
 
 .. scriv-start-here
+
+.. _changes_1-4-0:
+
+Version 1.4.0 — 2024-12-18
+--------------------------
+
+- fix: yaml logger package_name placeholder replace with target package name
+- ci(testsuite): fix lack hyphen between pypi and version
+- chore: configure interrogate in pyproject.toml and pre-commit config
+- docs: fill in missing in-code documentation
 
 .. _changes_1-3-6:
 
