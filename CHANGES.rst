@@ -48,12 +48,17 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - fix(logging_api): extract from non-installed package raise ImportError (#2)
-   - fix(logging_api): in fcn worker_yaml_curated remove ImportError check
-   - ci: bump gha action versions
-   - ci: add templates for PR feature request and bug report
-
 .. scriv-start-here
+
+.. _changes_1-4-1:
+
+Version 1.4.1 — 2024-12-29
+--------------------------
+
+- fix(logging_api): extract from non-installed package raise ImportError (#2)
+- fix(logging_api): in fcn worker_yaml_curated remove ImportError check
+- ci: bump gha action versions
+- ci: add templates for PR feature request and bug report
 
 .. _changes_1-4-0:
 

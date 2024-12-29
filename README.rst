@@ -52,7 +52,7 @@ For logging.config yaml files, logging-strict does the following:
 
 **New in 1.4.x:**
 
-yaml logger package_name placeholder;
+yaml logger package_name placeholder; noninstalled package raise ImportError;
 
 **New in 1.3.x:**
 
