@@ -51,10 +51,15 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - fix: package name to valid dotted path before package resource extraction (#3)
-   - chore(pre-commit): add mypy check
-
 .. scriv-start-here
+
+.. _changes_1-4-2:
+
+Version 1.4.2 — 2024-12-30
+--------------------------
+
+- fix: package name to valid dotted path before package resource extraction (#3)
+- chore(pre-commit): add mypy check
 
 .. _changes_1-4-1:
 
