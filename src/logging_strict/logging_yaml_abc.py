@@ -49,7 +49,6 @@ from __future__ import annotations
 import abc
 import glob
 import logging.config
-import re
 from pathlib import (
     Path,
     PurePath,
@@ -67,6 +66,7 @@ from .util.check_type import (
     is_not_ok,
     is_ok,
 )
+from .util.package_resource import _to_package_case
 from .util.xdg_folder import _get_path_config
 
 __all__ = (
@@ -79,23 +79,6 @@ __all__ = (
 YAML_LOGGING_CONFIG_SUFFIX = ".logging.config.yaml"
 VERSION_FALLBACK = "1"
 PACKAGE_NAME_SRC = "package_name"
-
-
-def _to_package_case(val):
-    """Takes lowercase and converts non-alphanumeric characters to underscore
-
-    :param val:
-
-       An arbitrary str. Expected non-alphanumeric chars hyphen
-       period and underscore. Although will convert all non-alphanumeric chars
-
-    :type val: str
-    :returns: valid package name containing only alphanumeric and underscore chars
-    :rtype: str
-    """
-    ret = re.sub("[^a-z0-9]+", "_", val.lower())
-
-    return ret
 
 
 def _update_logger_package_name(

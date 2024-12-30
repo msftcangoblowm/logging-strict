@@ -33,7 +33,6 @@ from logging_strict.logging_api_test import (
 from logging_strict.logging_yaml_abc import (
     PACKAGE_NAME_SRC,
     VERSION_FALLBACK,
-    _to_package_case,
     _update_logger_package_name,
     after_as_str_update_package_name,
 )
@@ -43,6 +42,7 @@ from logging_strict.tech_niques import (
     get_locals,
     is_class_attrib_kind,
 )
+from logging_strict.util.package_resource import _to_package_case
 
 if sys.version_info >= (3, 9):  # pragma: no cover
     from collections.abc import Iterator
@@ -536,19 +536,6 @@ class LoggingWorker(unittest.TestCase):
                 logger_package_name=invalid,
             )
             self.assertEqual(str_yaml_0, str_yaml_2)
-
-
-class SanitizePackageName(unittest.TestCase):
-    """Sanitizes package name.
-
-    Take lowercase then turns non-alphanumeric char into underscore"""
-
-    def test_to_package_case(self):
-        """Sanitize package name"""
-        t_package_names = (("dog-food_yum.py", "dog_food_yum_py"),)
-        for package_name, expected in t_package_names:
-            actual = _to_package_case(package_name)
-            self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -75,6 +75,7 @@ from .util.package_resource import (
     PackageResource,
     PartStem,
     PartSuffix,
+    _to_package_case,
     filter_by_file_stem,
     filter_by_suffix,
 )
@@ -230,13 +231,8 @@ class LoggingConfigYaml(LoggingYamlType):
         """Class constructor"""
         super().__init__()
 
-        if is_ok(package_name):
-            self._package_name = package_name
-        else:
-            msg_exc = (
-                "Package name required. Which package contains logging.config files?"
-            )
-            raise LoggingStrictPackageNameRequired(msg_exc)
+        # may raise LoggingStrictPackageNameRequired
+        self.package = package_name
 
         if is_ok(package_data_folder_start):
             self._package_data_folder_start = package_data_folder_start
@@ -457,6 +453,35 @@ class LoggingConfigYaml(LoggingYamlType):
         """
         return self._package_name
 
+    @package.setter
+    def package(self, val):
+        """Package name is supposed to be a dotted path.
+        Apply :py:func:`logging_strict.util.package_resource._to_package_case`
+
+        :param val: package name must be a dotted path
+        :type val: typing.Any
+
+        :raises:
+
+           - :py:exc:`LoggingStrictPackageNameRequired` -- Package name
+             required for determining destination folder
+
+        """
+        if is_ok(val):
+            """Expects a valid package name; a dotted path. Coerse into
+            a dotted path.
+
+            e.g. logging-strict --> logging_strict
+
+            Understandable mistake. Very hard to spot. Nearly correct.
+            """
+            self._package_name = _to_package_case(val)
+        else:
+            msg_exc = (
+                "Package name required. Which package contains logging.config files?"
+            )
+            raise LoggingStrictPackageNameRequired(msg_exc)
+
     @property
     def dest_folder(self):
         """Normally xdg user data dir. During testing, temp folder used instead
@@ -516,7 +541,8 @@ class LoggingConfigYaml(LoggingYamlType):
             file_suffix = self.file_suffix
             file_name = f"??.{file_suffix}" if file_stem is None else self.file_name
 
-        pr = PackageResource(self.package, self._package_data_folder_start)
+        package_name_dotted_path = self.package
+        pr = PackageResource(package_name_dotted_path, self._package_data_folder_start)
 
         try:
             gen = pr.package_data_folders(

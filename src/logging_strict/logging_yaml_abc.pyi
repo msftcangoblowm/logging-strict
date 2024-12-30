@@ -18,7 +18,6 @@ PATTERN_DEFAULT: Final[str]
 VERSION_FALLBACK: str
 PACKAGE_NAME_SRC: str
 
-def _to_package_case(val: str) -> str: ...
 def _update_logger_package_name(
     d_config: dict[str, Any],
     package_name: str | None = None,

@@ -39,6 +39,9 @@ Changelog
    Known regressions
    ..................
 
+   - LoggingConfigYaml.extract if package name is not a valid dotted path
+     e.g. logging-strict bombs and is hard to spot. Create an Issue then a commit
+
    - strictyaml.scalar.Time does not exist. So field asTime can't be supported
    - strictyaml has no automated tests
    - strictyaml has no typing hint stubs. ignore_missing_imports
@@ -47,6 +50,9 @@ Changelog
 
    Commit items for NEXT VERSION
    ..............................
+
+   - fix: package name to valid dotted path before package resource extraction (#3)
+   - chore(pre-commit): add mypy check
 
 .. scriv-start-here
 

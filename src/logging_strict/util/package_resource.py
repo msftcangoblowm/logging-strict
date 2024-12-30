@@ -152,6 +152,7 @@ from __future__ import annotations
 
 import importlib.resources as importlib_resources  # py39+
 import logging
+import re
 import shutil
 import sys
 import traceback
@@ -654,8 +655,49 @@ def is_package_exists(package_name):
     return ret
 
 
+def _to_package_case(val):
+    """Sanitize package name to a valid dotted path
+
+    The ultimate test is
+    :py:func:`logging_strict.util.package_resource._get_package_data_folder`.
+    Which wraps :py:func:`importlib_resources.files`. Expects a dotted path.
+
+    If :py:func:`importlib_resources.files` doesn't get a valid dotted path,
+    returns None. Which can be unexpected.
+
+    Acts as a mitigation fix to allow for understandable simple human
+    errors.
+
+    :param val:
+
+       An arbitrary str. Unallowed chars will be converted into hyphens
+
+    :type val: str
+    :returns:
+
+       Valid package name can contain: alphanumeric, underscore, or period chars.
+       A period denotes a namespace package
+
+    :rtype: str
+    """
+    ret = re.sub("[^a-z0-9.]+", "_", val.lower())
+
+    return ret
+
+
 def _get_package_data_folder(dotted_path):
     """Helper that retrieves the package resource
+
+    If :py:func:`importlib_resources.files` doesn't get a valid dotted path,
+    returns None. Which can be unexpected.
+
+    Better UX would allow for understandable simple human errors.
+
+    Mitigate by fixing weird characters --> underscore. While allowing
+    namespace packages (e.g. ``zope.interface``).
+
+    With the mitigation fix, None means the package is not installed
+    rather than a hard to track down typo.
 
     :param dotted_path: package_name and optionally dotted path to a subfolder
     :type dotted_path: str
@@ -665,8 +707,9 @@ def _get_package_data_folder(dotted_path):
 
     :rtype: importlib.resources.abc.Traversable | None
     """
+    dotted_path_valid = _to_package_case(dotted_path)
     try:
-        trav_ret = importlib_resources.files(dotted_path)
+        trav_ret = importlib_resources.files(dotted_path_valid)
     except ModuleNotFoundError:
         # There is no such package or data folder
         trav_ret = None

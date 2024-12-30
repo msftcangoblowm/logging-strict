@@ -22,7 +22,34 @@ is_module_debug: bool
 g_module: str
 _LOGGER: logging.Logger
 
+def _extract_folder(package: str) -> str: ...
+def _get_package_data_folder(dotted_path: str) -> Traversable | None: ...
+def _to_package_case(val: str) -> str: ...
+def check_folder(
+    x: Traversable,
+    cb_suffix: Callable[[str], bool] | None = None,
+    cb_file_stem: Callable[[str], bool] | None = None,
+) -> Iterator[Traversable]: ...
+def filter_by_file_stem(
+    expected_file_name: str,
+    test_file_name: str,
+) -> bool: ...
+def filter_by_suffix(
+    expected_suffix: str | tuple[str, ...],
+    test_suffix: str,
+) -> bool: ...
+def is_package_exists(package_name: str) -> bool: ...
+def match_file(
+    y: Traversable,
+    /,
+    *,
+    cb_suffix: Callable[[str], bool] | None = None,
+    cb_file_stem: Callable[[str], bool] | None = None,
+) -> bool: ...
 def msg_stem(file_name: str) -> str: ...
+def walk_tree_folders(
+    traversable_root: Traversable,
+) -> Iterator[Traversable]: ...
 @runtime_checkable
 class PartSuffix(Protocol):
     def __call__(
@@ -38,33 +65,6 @@ class PartStem(Protocol):
         file_expected: str,
         test_file_stem: str,
     ) -> bool: ...
-
-def match_file(
-    y: Traversable,
-    /,
-    *,
-    cb_suffix: Callable[[str], bool] | None = None,
-    cb_file_stem: Callable[[str], bool] | None = None,
-) -> bool: ...
-def check_folder(
-    x: Traversable,
-    cb_suffix: Callable[[str], bool] | None = None,
-    cb_file_stem: Callable[[str], bool] | None = None,
-) -> Iterator[Traversable]: ...
-def filter_by_suffix(
-    expected_suffix: str | tuple[str, ...],
-    test_suffix: str,
-) -> bool: ...
-def filter_by_file_stem(
-    expected_file_name: str,
-    test_file_name: str,
-) -> bool: ...
-def _extract_folder(package: str) -> str: ...
-def walk_tree_folders(
-    traversable_root: Traversable,
-) -> Iterator[Traversable]: ...
-def is_package_exists(package_name: str) -> bool: ...
-def _get_package_data_folder(dotted_path: str) -> Traversable | None: ...
 
 class PackageResource:
     def __init__(

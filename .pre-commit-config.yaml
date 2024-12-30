@@ -46,6 +46,13 @@ repos:
     hooks:
       - id: isort
 
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.1
+    hooks:
+    - id: mypy
+      pass_filenames: false
+      entry: mypy src/logging_strict/
+
   - repo: local
     hooks:
       - id: validate-logging-config-yaml

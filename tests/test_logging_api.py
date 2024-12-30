@@ -81,22 +81,27 @@ class LoggingApi(unittest.TestCase):
         m_setup = Mock(spec=dummy_setup)
 
         """curated means in package logging_strict. Both are known:
-        package name or relative path"""
+        package name and relative path.
+
+        package name only to redirect path during testing
+        """
         valids = (
             (
                 worker_yaml_curated,
+                package_dest_c,
                 "mp",
                 "bob",
                 FileNotFoundError,
             ),
             (
                 ui_yaml_curated,
+                package_dest_c,
                 "textual",
                 "bob",
                 FileNotFoundError,
             ),
         )
-        for func, genre, flavor, expectation in valids:
+        for func, package_name, genre, flavor, expectation in valids:
             with (
                 tempfile.TemporaryDirectory() as fp,
                 patch(  # defang (redundant). extract_to_config
@@ -105,11 +110,11 @@ class LoggingApi(unittest.TestCase):
                 ),
                 patch(  # temp folder rather than :code:`$HOME/.local/share/[app]`
                     f"{g_app_name}.logging_yaml_abc._get_path_config",
-                    return_value=Path(fp).joinpath(package_dest_c),
+                    return_value=Path(fp).joinpath(package_name),
                 ),
                 patch(  # temp folder rather than :code:`$HOME/.local/share/[app]`
                     f"{g_app_name}.logging_api._get_path_config",
-                    return_value=Path(fp).joinpath(package_dest_c),
+                    return_value=Path(fp).joinpath(package_name),
                 ),
             ):
                 # path_dest = Path(fp).joinpath(g_app_name, LoggingConfigYaml.file_name)
@@ -222,36 +227,35 @@ class LoggingApi(unittest.TestCase):
         #    Will actual extract file, so package must be real
         #    Normally 2nd party, not 1st party package
         valids = (
-            (setup_ui_other, "textual", "asz"),
-            (setup_worker_other, "mp", "asz"),
+            (setup_ui_other, self.package_dest_c, "textual", "asz"),
+            (setup_worker_other, self.package_dest_c, "mp", "asz"),
         )
-        package_dest_c = self.package_dest_c
-        with (
-            tempfile.TemporaryDirectory() as fp,
-            patch(  # defang. extract_to_config
-                f"{g_app_name}.util.xdg_folder._get_path_config",
-                return_value=Path(fp),
-            ),
-            patch(  # defang
-                "logging.config.dictConfig",
-                return_value=True,
-            ),
-            patch(  # temp folder rather than :code:`$HOME/.local/share/[app]`
-                f"{g_app_name}.logging_yaml_abc._get_path_config",
-                return_value=Path(fp).joinpath(self.package_dest_c),
-            ),
-            patch(  # temp folder rather than :code:`$HOME/.local/share/[app]`
-                f"{g_app_name}.logging_api._get_path_config",
-                return_value=Path(fp).joinpath(self.package_dest_c),
-            ),
-            patch(  # defang setup
-                f"{g_app_name}.logging_yaml_abc.setup_logging_yaml",
-                new_callable=m_setup,
-            ) as mock_setup2,
-        ):
-            for func, genre, flavor in valids:
+        for func, package_name, genre, flavor in valids:
+            with (
+                tempfile.TemporaryDirectory() as fp,
+                patch(  # defang. extract_to_config
+                    f"{g_app_name}.util.xdg_folder._get_path_config",
+                    return_value=Path(fp),
+                ),
+                patch(  # defang
+                    "logging.config.dictConfig",
+                    return_value=True,
+                ),
+                patch(  # temp folder rather than :code:`$HOME/.local/share/[app]`
+                    f"{g_app_name}.logging_yaml_abc._get_path_config",
+                    return_value=Path(fp).joinpath(package_name),
+                ),
+                patch(  # temp folder rather than :code:`$HOME/.local/share/[app]`
+                    f"{g_app_name}.logging_api._get_path_config",
+                    return_value=Path(fp).joinpath(package_name),
+                ),
+                patch(  # defang setup
+                    f"{g_app_name}.logging_yaml_abc.setup_logging_yaml",
+                    new_callable=m_setup,
+                ) as mock_setup2,
+            ):
                 func(
-                    self.package_dest_c,
+                    package_name,
                     self.fallback_package_base_folder,
                     genre,
                     flavor,
@@ -259,9 +263,9 @@ class LoggingApi(unittest.TestCase):
                 )
                 mock_setup2.assert_called()
 
-                # category not provided so file_stem is cause problems
+                # category not provided so file_stem cause problems
                 api = LoggingConfigYaml(
-                    self.package_dest_c,
+                    package_name,
                     self.fallback_package_base_folder,
                     category=LoggingConfigCategory.UI,
                     genre=None,
@@ -271,9 +275,9 @@ class LoggingApi(unittest.TestCase):
                     path_relative_package_dir="",
                 )
 
-                # category not provided so file_suffix is cause problems
+                # category not provided so file_suffix cause problems
                 api = LoggingConfigYaml(
-                    self.package_dest_c,
+                    package_name,
                     self.fallback_package_base_folder,
                     None,
                     genre=genre,

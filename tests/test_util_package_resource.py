@@ -31,6 +31,7 @@ from logging_strict.util.package_resource import (  # noqa: F401 sphinx uses
     PackageResource,
     _extract_folder,
     _get_package_data_folder,
+    _to_package_case,
     filter_by_file_stem,
     filter_by_suffix,
     is_package_exists,
@@ -884,6 +885,30 @@ class PreviouslyUnitPath(unittest.TestCase):
         ret = msg_stem(mixed_path)
         self.assertIsInstance(ret, str)
         self.assertEqual(ret, "dsafdsaf")
+
+
+class SanitizePackageName(unittest.TestCase):
+    """Sanitizes package name."""
+
+    def test_to_package_case(self):
+        """Sanitize package name to a valid dotted path
+
+        The ultimate test is
+        :py:func:`logging_strict.util.package_resource._get_package_data_folder`.
+        Which wraps :py:func:`importlib_resources.files`. Expects a dotted path.
+
+        If :py:func:`importlib_resources.files` doesn't get a valid dotted path,
+        returns None. Can be unexpected leading to hard to spot and/or
+        track down issues.
+        """
+        t_package_names = (
+            ("dog%food#yum!py", "dog_food_yum_py"),  # weird chars --> underscore
+            ("dog-food_yum-py", "dog_food_yum_py"),  # hyphens --> underscore
+            ("zope.interface", "zope.interface"),  # namespace package
+        )
+        for package_name, expected in t_package_names:
+            actual = _to_package_case(package_name)
+            self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":  # pragma: no cover
