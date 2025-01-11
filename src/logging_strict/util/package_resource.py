@@ -887,7 +887,9 @@ class PackageResource:
         #####
         # Case: file in root folder
         #####
-        if last_folder_name == str(y.parent.name):
+        is_in_root_folder = len(last_folder_name) == 0
+        is_last_is_parent_folder = last_folder_name == str(y.parent.name)
+        if is_in_root_folder or is_last_is_parent_folder:
             return Path(file_name)
 
         ######

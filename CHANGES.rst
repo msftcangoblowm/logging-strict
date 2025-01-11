@@ -51,6 +51,11 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - feat: add yaml registry database. Breaking changes to api (#4)
+   - fix(logging_yaml_abc): apply to fcn after_as_str_update_package_name (#3)
+   - ci(test-coverage): to codecov action fix API breaking change
+   - docs: fix doctest in register_config
+
 .. scriv-start-here
 
 .. _changes_1-4-2:

@@ -63,6 +63,7 @@ exclude = [
 # https://github.com/abravalheri/experiment-setuptools-package-data
 [tool.setuptools.package-data]
 "*" = [
+    "logging_strict.yml",
     "*.app.logging.config.yaml",
     "*.worker.logging.config.yaml",
 ]
@@ -182,6 +183,7 @@ exclude_patterns = [
 "https://stackoverflow.com/a/75276342" = "https://stackoverflow.com/questions/75263023/how-can-i-use-pythons-concurrent-futures-to-queue-tasks-across-multiple-process/75276342#75276342"
 "https://stackoverflow.com/q/69200881" = "https://stackoverflow.com/questions/69200881/how-to-get-python-unittest-to-show-log-messages-only-on-failed-tests"
 "https://stackoverflow.com/q/66727458" = "https://stackoverflow.com/questions/66727458/warnings-filterwarningsignore-doesnt-ignore-logging-warning"
+"https://stackoverflow.com/a/11383064" = "https://stackoverflow.com/questions/11382919/relative-path-regular-expression/11383064#11383064"
 
 [tool.black]
 target_version = [

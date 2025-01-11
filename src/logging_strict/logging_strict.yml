@@ -1,0 +1,27 @@
+- file:
+    relative_path: configs/mp_1_asz.worker.logging.config.yaml
+    category: worker
+    genre: mp
+    flavor: asz
+    version_no: 1
+- file:
+    relative_path: configs/textual_1_asz.app.logging.config.yaml
+    category: app
+    genre: textual
+    flavor: asz
+    version_no: 1
+    is_test_file: false
+- file:
+    relative_path: bad_idea/folder0/mp_1_shared.worker.logging.config.yaml
+    category: worker
+    genre: mp
+    flavor: shared
+    version_no: 1
+    is_test_file: true
+- file:
+    relative_path: bad_idea/folder1/mp_1_shared.worker.logging.config.yaml
+    category: worker
+    genre: mp
+    flavor: shared
+    version_no: 1
+    is_test_file: true

@@ -49,6 +49,7 @@ subtrees:
       - file: code/yaml/logging_api
       - file: code/yaml/logging_yaml_abc
       - file: code/yaml/logging_yaml_validate
+      - file: code/yaml/register_config
     - file: code/todo
 - entries:
   - file: code/tech_niques/index

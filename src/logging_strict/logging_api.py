@@ -592,7 +592,7 @@ class LoggingConfigYaml(LoggingYamlType):
                 as_user=True,
             )
         )
-        str_ret = str(path_ret.relative_to(self.dest_folder))
+        str_ret = path_ret.relative_to(self.dest_folder).as_posix()
 
         return str_ret
 
@@ -605,7 +605,7 @@ def setup_ui_other(
     version_no=VERSION_FALLBACK,
     package_start_relative_folder="",
     logger_package_name=None,
-) -> None:
+):
     """Before creating an App instance, seemlessly extracts
     :py:mod:`logging.config` yaml file for app, but not worker(s)
 
@@ -652,6 +652,9 @@ def setup_ui_other(
        Will always want to do this
 
     :type logger_package_name: str | None
+    :returns: relative path to validated logging config YAML file and the yaml str
+    :rtype: tuple[str, str]
+
     :raises:
 
        - :py:exc:`ImportError` -- package not installed in venv
@@ -687,19 +690,30 @@ def setup_ui_other(
 
     # extract and validate
     try:
-        ui_yaml.extract(path_relative_package_dir=package_start_relative_folder)
+        f_relpath = ui_yaml.extract(
+            path_relative_package_dir=package_start_relative_folder
+        )
     except ImportError:
         raise
     except (FileNotFoundError, AssertionError):
         raise
     try:
-        str_yaml = ui_yaml.as_str()
+        str_yaml_raw = ui_yaml.as_str()
     except s.YAMLValidationError:
         raise
 
+    str_yaml = after_as_str_update_package_name(
+        str_yaml_raw,
+        logger_package_name=logger_package_name,
+    )
+
     # LoggingConfigYaml.setup is a wrapper of setup_logging_yaml
     # Checks: is_ok
-    ui_yaml.setup(str_yaml, package_name=logger_package_name)
+    ui_yaml.setup(str_yaml_raw, package_name=logger_package_name)
+
+    t_ret = (f_relpath, str_yaml)
+
+    return t_ret
 
 
 def ui_yaml_curated(
@@ -741,10 +755,15 @@ def ui_yaml_curated(
        Always desirable.
 
     :type logger_package_name: str | None
+    :returns:
+
+        relative destination path to validated logging config YAML file and the yaml str
+
+    :rtype: tuple[str, str]
     """
     package_name = g_app_name
     package_data_folder_start = "configs"
-    setup_ui_other(
+    t_ret = setup_ui_other(
         package_name,
         package_data_folder_start,
         genre,
@@ -753,6 +772,8 @@ def ui_yaml_curated(
         package_start_relative_folder=package_start_relative_folder,
         logger_package_name=logger_package_name,
     )
+
+    return t_ret
 
 
 def worker_yaml_curated(
@@ -811,8 +832,11 @@ def worker_yaml_curated(
        Set logger to the intended package name. Default None which leaves as-is
 
     :type logger_package_name: str | None
-    :returns: yaml file contents
-    :rtype: str
+    :returns:
+
+       relative destination path to validated logging config YAML file and the yaml str
+
+    :rtype: tuple[str, str]
     :raises:
 
        - :py:exc:`FileNotFoundError` -- yaml file not found within package
@@ -824,34 +848,21 @@ def worker_yaml_curated(
 
     """
     package_name = g_app_name
+    # no longer a safe assumption
     package_data_folder_start = "configs"
 
-    ui_yaml = LoggingConfigYaml(
+    # ImportError -- impossible. logging_strict package is installed
+    t_ret = setup_worker_other(
         package_name,
         package_data_folder_start,
-        LoggingConfigCategory.WORKER,
-        genre=genre,
-        flavor=flavor,
+        genre,
+        flavor,
         version_no=version_no,
-    )
-
-    # ImportError -- impossible. logging_strict package is installed
-    try:
-        ui_yaml.extract(path_relative_package_dir=package_start_relative_folder)
-    except (FileNotFoundError, AssertionError):
-        raise
-    try:
-        str_yaml = ui_yaml.as_str()
-    except s.YAMLValidationError:
-        raise
-
-    # validation already occurred. In yaml, replace logger package name
-    ret = after_as_str_update_package_name(
-        str_yaml,
+        package_start_relative_folder=package_start_relative_folder,
         logger_package_name=logger_package_name,
     )
 
-    return ret
+    return t_ret
 
 
 def setup_worker_other(
@@ -920,8 +931,11 @@ def setup_worker_other(
        Set logger to the intended package name. Default None which leaves as-is
 
     :type logger_package_name: str | None
-    :returns: yaml file contents
-    :rtype: str
+    :returns:
+
+       relative destination path to validated logging config YAML file and the yaml str
+
+    :rtype: tuple[str, str]
     :raises:
 
        - :py:exc:`ImportError` -- package not installed in venv
@@ -956,23 +970,27 @@ def setup_worker_other(
         raise
 
     try:
-        ui_yaml.extract(path_relative_package_dir=package_start_relative_folder)
+        f_relpath = ui_yaml.extract(
+            path_relative_package_dir=package_start_relative_folder
+        )
     except ImportError:
         raise
     except (FileNotFoundError, AssertionError):
         raise
     try:
-        str_yaml = ui_yaml.as_str()
+        str_yaml_raw = ui_yaml.as_str()
     except s.YAMLValidationError:
         raise
 
     # validation already occurred. In yaml, replace logger package name
     str_yaml = after_as_str_update_package_name(
-        str_yaml,
+        str_yaml_raw,
         logger_package_name=logger_package_name,
     )
 
-    return str_yaml
+    t_ret = (f_relpath, str_yaml)
+
+    return t_ret
 
 
 class LoggingState:

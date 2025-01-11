@@ -248,7 +248,7 @@ def after_as_str_update_package_name(
         d_config = yaml_config.data
         _update_logger_package_name(
             d_config,
-            package_name=logger_package_name,
+            package_name=_to_package_case(logger_package_name),
             target_logger_name=target_logger_name,
         )
         # convert dict --> yaml str

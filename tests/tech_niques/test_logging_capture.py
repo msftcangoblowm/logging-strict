@@ -114,12 +114,13 @@ class AppLoggingStateSafe(unittest.TestCase):
                 ),
             ):
                 # Step 1 -- in (worker) entrypoint
-                str_yaml = worker_yaml_curated(
+                t_ret = worker_yaml_curated(
                     genre="mp",
                     flavor="asz",
                     version_no="1",
                     package_start_relative_folder="",
                 )
+                f_relpath, str_yaml = t_ret
                 # Step 2 -- in worker
                 setup_logging_yaml(str_yaml)
 
