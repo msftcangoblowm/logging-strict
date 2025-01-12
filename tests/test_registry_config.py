@@ -17,6 +17,7 @@ import tempfile
 import unittest
 from collections.abc import Sequence
 from contextlib import nullcontext as does_not_raise
+from contextlib import suppress
 from pathlib import (
     Path,
     PurePath,
@@ -387,7 +388,8 @@ class TestExtractor(unittest.TestCase):
                 path_f = Path(fp.name)
                 path_alternative_dest_folder = path_f.parent
                 # delete the file. Want option to not delete the folder
-                path_f.unlink()
+                with suppress(OSError):
+                    path_f.unlink()
 
                 reg = ExtractorLoggingConfig(
                     package_name_raw,
@@ -443,7 +445,8 @@ class TestExtractor(unittest.TestCase):
                         # relpath uses pathlib.as_posix, not str
                         relpath_f = Path(logging_config_yaml_relpath)
                         abspath_f = path_alternative_dest_folder.joinpath(relpath_f)
-                        abspath_f.unlink()
+                        with suppress(OSError):
+                            abspath_f.unlink()
 
 
 if __name__ == "__main__":  # pragma: no cover
