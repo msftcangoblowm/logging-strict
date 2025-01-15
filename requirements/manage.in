@@ -5,6 +5,7 @@
 
 -c pins.pip
 -c pins-cffi.in
+-c pins-cve-2024-53899.in
 -c prod.unlock
 -r tox.pip
 

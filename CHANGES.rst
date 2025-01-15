@@ -51,6 +51,7 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+    - fix(requirements-dev): add nudge pin for package virtualenv to mitigate CVE-2024-53899
    - feat(register_config): separate extract and get registry into an optional two step process
    - test(test_registry_config): unlink file used by multiple processes suppress OSError
    - chore(setup.cfg): remove file

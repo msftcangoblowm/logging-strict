@@ -127,7 +127,7 @@ urllib3==2.2.3
     # via
     #   requests
     #   twine
-virtualenv==20.25.0
+virtualenv==20.28.1
     # via
     #   -r requirements/tox.pip
     #   pre-commit
