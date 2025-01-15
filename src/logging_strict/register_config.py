@@ -264,6 +264,22 @@ class ExtractorLoggingConfig:
         )
         return ret
 
+    @staticmethod
+    def clean_package_name(val):
+        """Set raw package name. Is sanitized so it's a valid package name
+
+        :param val: Should be a str. Raw package name
+        :type val: typing.Any
+        :returns: Clean package name
+        :rtype: str | None
+        """
+        if is_ok(val):
+            ret = _to_package_case(val)
+        else:  # pragma: no cover
+            ret = None
+
+        return ret
+
     @property
     def package_name(self):
         """Get sanitized package name
@@ -280,8 +296,10 @@ class ExtractorLoggingConfig:
         :param val: Should be a str. Raw package name
         :type val: typing.Any
         """
-        if is_ok(val):
-            self._package_name = _to_package_case(val)
+        cls = type(self)
+        package_name_clean = cls.clean_package_name(val)
+        if package_name_clean is not None:
+            self._package_name = package_name_clean
         else:  # pragma: no cover
             pass
 
@@ -378,14 +396,18 @@ class ExtractorLoggingConfig:
             # Failed query. In package, no such data file
             self._path_extracted_db = None
 
-    def get_db(self):
-        """Get database of logging config YAML file records. Which happens
+    def get_db(self, path_extracted_db=None):
+        """Get YAML registry of logging config YAML file records. Which happens
         also to be a YAML file.
 
         If package not installed, will emit INFO and WARNING log messages
 
-        :param package_name: raw name of package which should be installed in venv
-        :type package_name: str
+        :param path_extracted_db:
+
+           Default None. None extract registry otherwise restore previously
+           extracted YAML registry from file
+
+        :type path_extracted_db: pathlib.Path | None
         :returns: On success entire database. None if database file not found
         :rtype: collections.abc.Sequence[dict[str, dict[str, str]]] | None
         :raises:
@@ -394,7 +416,24 @@ class ExtractorLoggingConfig:
 
         """
         # On failure, :code:`self._path_extracted_db is None` and a warning is logged
-        self.extract_db()
+        if path_extracted_db is not None:
+            if (
+                issubclass(type(path_extracted_db), PurePath)
+                and path_extracted_db.exists()
+                and path_extracted_db.is_file()
+            ):
+                self._path_extracted_db = path_extracted_db
+                is_extract = False
+            else:
+                # unsupported type
+                is_extract = True
+        else:
+            is_extract = True
+
+        if is_extract is True:
+            self.extract_db()
+        else:  # pragma: no cover
+            pass
 
         path_f = self.path_extracted_db
         if path_f is None:

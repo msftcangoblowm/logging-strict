@@ -240,6 +240,46 @@ class TestExtractor(unittest.TestCase):
             self.assertIsInstance(reg._registry, Sequence)
             self.assertIsNone(reg.logging_config_yaml_str)
 
+    def test_query_two_step(self):
+        """Two step process. extract_db then pass path to get_db"""
+        # unsupported type --> extract_db called
+        #    logs INFO and WARNING messages. So capture at INFO level
+        with tempfile.TemporaryDirectory() as fp_0:
+            reg_0 = ExtractorLoggingConfig(
+                g_app_name,
+                path_alternative_dest_folder=Path(fp_0),
+                is_test_file=True,
+            )
+            with captureLogs(logger=None, level=20):
+                reg_0.get_db(path_extracted_db=0.12345)
+            ls_path_extracted_db = reg_0.path_extracted_db
+            self.assertIsNotNone(ls_path_extracted_db)
+            self.assertTrue(issubclass(type(ls_path_extracted_db), PurePath))
+            self.assertTrue(ls_path_extracted_db.is_file())
+            # cleanup
+            # with suppress(OSError):
+            #     fp_0.cleanup()
+
+        # two step
+        #    logs INFO and WARNING messages. So capture at INFO level
+        with tempfile.TemporaryDirectory() as fp_1:
+            reg_1 = ExtractorLoggingConfig(
+                g_app_name,
+                path_alternative_dest_folder=Path(fp_1),
+                is_test_file=True,
+            )
+            with captureLogs(logger=None, level=20):
+                reg_1.extract_db()
+            ls_path_extracted_db = reg_1.path_extracted_db
+            self.assertIsNotNone(ls_path_extracted_db)
+            self.assertTrue(issubclass(type(ls_path_extracted_db), PurePath))
+            self.assertTrue(ls_path_extracted_db.is_file())
+            reg_1.get_db(path_extracted_db=ls_path_extracted_db)
+            self.assertIsNotNone(reg_1._registry)
+            # cleanup
+            # with suppress(OSError):
+            #    fp_1.cleanup()
+
     def test_query_db_main(self):
         """Query the registry db extracts returns validated logging config as str"""
         testdata = (
@@ -467,6 +507,9 @@ if __name__ == "__main__":  # pragma: no cover
 
        python -m unittest tests.test_registry_config \
        -k TestExtractor.test_extract_db --locals --verbose
+
+       python -m unittest tests.test_registry_config \
+       -k TestExtractor.test_query_two_step --locals --verbose
 
     With coverage
 
