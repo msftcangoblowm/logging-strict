@@ -62,12 +62,12 @@ jobs:
         with:
           python-version: "${{ matrix.python-version }}"
           # cache: pip
-          # cache-dependency-path: 'requirements/*.pip'
+          # cache-dependency-path: 'requirements/*.lock'
           allow-prereleases: true
       - name: "Install tools"
         run: |
           set -xe
-          python -m pip install -r requirements/prod.unlock -r requirements/kit.pip -r requirements/dev.pip
+          python -m pip install -r requirements/prod.unlock -r requirements/kit.lock -r requirements/dev.lock
       - name: "Build sdist and whl"
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}

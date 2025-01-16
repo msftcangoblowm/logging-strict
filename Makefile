@@ -88,10 +88,10 @@ sterile: clean			## Remove all non-controlled content, even if expensive.
 .PHONY: upgrade diff_upgrade _upgrade
 PIP_COMPILE = $(VENV_BIN_PYTHON) -m piptools compile --allow-unsafe --resolver=backtracking
 
-upgrade:				## Update the *.pip files with the latest packages satisfying *.in files.
+upgrade:				## Update the *.lock files with the latest packages satisfying *.in files.
 	@$(MAKE) _upgrade COMPILE_OPTS="--upgrade"
 
-upgrade-one:			## Update the *.pip files for one package. `make upgrade-one package=...`
+upgrade-one:			## Update the *.lock files for one package. `make upgrade-one package=...`
 	@test -n "$(package)" || { echo "\nUsage: make upgrade-one package=...\n"; exit 1; }
 	$(MAKE) _upgrade COMPILE_OPTS="--upgrade-package $(package)"
 
@@ -99,15 +99,15 @@ _upgrade: export CUSTOM_COMPILE_COMMAND=make upgrade
 _upgrade:
 ifeq ($(is_venv),1)
 	@if [[ "$(PY_X_Y)" = "3.9" ]]; then
-	pip install --quiet --disable-pip-version-check --requirement requirements/pip-tools.pip
-	$(PIP_COMPILE) -o requirements/pip-tools.pip requirements/pip-tools.in
-	$(PIP_COMPILE) -o requirements/pip.pip requirements/pip.in
-	$(PIP_COMPILE) -o requirements/kit.pip requirements/kit.in
-	$(PIP_COMPILE) -o requirements/prod.pip requirements/prod.in
-	$(PIP_COMPILE) --no-strip-extras -o requirements/tox.pip requirements/tox.in
-	$(PIP_COMPILE) --no-strip-extras -o requirements/manage.pip requirements/manage.in
-	$(PIP_COMPILE) --no-strip-extras -o requirements/dev.pip requirements/dev.in
-	$(PIP_COMPILE) --no-strip-extras -o requirements/mypy.pip requirements/mypy.in
+	pip install --quiet --disable-pip-version-check --requirement requirements/pip-tools.lock
+	$(PIP_COMPILE) -o requirements/pip-tools.lock requirements/pip-tools.in
+	$(PIP_COMPILE) -o requirements/pip.lock requirements/pip.in
+	$(PIP_COMPILE) -o requirements/kit.lock requirements/kit.in
+	$(PIP_COMPILE) -o requirements/prod.lock requirements/prod.in
+	$(PIP_COMPILE) --no-strip-extras -o requirements/tox.lock requirements/tox.in
+	$(PIP_COMPILE) --no-strip-extras -o requirements/manage.lock requirements/manage.in
+	$(PIP_COMPILE) --no-strip-extras -o requirements/dev.lock requirements/dev.in
+	$(PIP_COMPILE) --no-strip-extras -o requirements/mypy.lock requirements/mypy.in
 	fi
 endif
 
@@ -175,8 +175,8 @@ endif
 REPO_OWNER := msftcangoblowm/logging-strict
 REPO := $(REPO_OWNER)/logging_strict
 
-.PHONY: edit_for_release cheats relbranch kit_check kit_build kit_upload
-.PHONY: test_upload kits_build kits_download github_releases
+.PHONY: edit_for_release cheats relbranch kit_build
+.PHONY: kits_build kits_download github_releases
 
 edit_for_release:		## Edit sources to insert release facts (see howto.txt)
 	python igor.py edit_for_release
@@ -187,19 +187,16 @@ cheats:					## Create some useful snippets for releasing (see howto.txt)
 relbranch:				## Create the branch for releasing (see howto.txt)
 	git switch -c $(REPO_OWNER)/release-$$(date +%Y%m%d)
 
-# Do not create a target(s) kit: or kits:
-kit_check:				## Check that dist/* are well-formed
-	python -m twine check dist/*
-	@echo $$(ls -1 dist | wc -l) distribution kits
-
 kit_build:				## Make the source distribution
 	python igor.py build_next ""
 
-kit_upload:				## Upload the built distributions to PyPI
-	twine upload --verbose dist/*
+#.PHONY: kit_upload
+#kit_upload:				## Upload the built distributions to PyPI
+#	twine upload --verbose dist/*
 
-test_upload:			## Upload the distributions to PyPI's testing server
-	twine upload --verbose --repository testpypi --password $$TWINE_TEST_PASSWORD dist/*
+#.PHONY: test_upload
+#test_upload:			## Upload the distributions to PyPI's testing server
+#	twine upload --verbose --repository testpypi --password $$TWINE_TEST_PASSWORD dist/*
 
 kits_build:				## Trigger GitHub to build kits
 	python ci/trigger_build_kits.py $(REPO_OWNER)

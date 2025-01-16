@@ -82,7 +82,7 @@ jobs:
 
       - name: "Install dependencies"
         run: |
-          python -m pip install -r requirements/tox.pip
+          python -m pip install -r requirements/tox.lock
 
       - name: "Run tox"
         run: |

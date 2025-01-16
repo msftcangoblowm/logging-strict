@@ -69,12 +69,12 @@ exclude = [
 ]
 
 [tool.setuptools.dynamic]
-optional-dependencies.pip = { file = ["requirements/pip.pip"] }
-optional-dependencies.pip_tools = { file = ["requirements/pip-tools.pip"] }
 dependencies = { file = ["requirements/prod.unlock"] }
-optional-dependencies.dev = { file = ["requirements/dev.pip"] }
-optional-dependencies.manage = { file = ["requirements/manage.pip"] }
-optional-dependencies.docs = { file = ["docs/requirements.pip"] }
+optional-dependencies.pip = { file = ["requirements/pip.lock"] }
+optional-dependencies.pip_tools = { file = ["requirements/pip-tools.lock"] }
+optional-dependencies.dev = { file = ["requirements/dev.lock"] }
+optional-dependencies.manage = { file = ["requirements/manage.lock"] }
+optional-dependencies.docs = { file = ["docs/requirements.lock"] }
 version = {attr = "logging_strict._version.__version__"}
 
 [project.scripts]
@@ -186,12 +186,6 @@ exclude_patterns = [
 "https://stackoverflow.com/a/11383064" = "https://stackoverflow.com/questions/11382919/relative-path-regular-expression/11383064#11383064"
 
 [tool.black]
-target_version = [
-    "py39",
-    "py310",
-    "py311",
-    "py312",
-]
 include = '\.pyi?$'
 
 [tool.blackdoc]
@@ -263,3 +257,22 @@ exclude = [
 "logging_yaml_validate" = [43]
 "ep_validate_yaml" = [44]
 "tech_niques/logging_capture" = [12, 30, 32]
+
+[[tool.venvs]]
+venv_base_path = '.venv'
+reqs = [
+    'requirements/dev',
+    'requirements/kit',
+    'requirements/pip',
+    'requirements/pip-tools',
+    'requirements/prod',
+    'requirements/manage',
+    'requirements/mypy',
+    'requirements/tox',
+]
+
+[[tool.venvs]]
+venv_base_path = '.doc/.venv'
+reqs = [
+    'docs/requirements',
+]

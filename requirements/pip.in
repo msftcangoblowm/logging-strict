@@ -1,9 +1,9 @@
 # Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
 # For details: https://github.com/msftcangoblowm/logging-strict/blob/master/NOTICE.txt
 
--c pins.pip
+-c pins.in
 
-# "make upgrade" turns this into requirements/pip.pip
+# "make upgrade" turns this into requirements/pip.lock
 
 pip
 setuptools

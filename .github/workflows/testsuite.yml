@@ -79,7 +79,7 @@ jobs:
           # 3.10 on Windows.  Commenting out the cache here fixed it.  Someday
           # try using the cache again.
           #cache: pip
-          #cache-dependency-path: 'requirements/*.pip'
+          #cache-dependency-path: 'requirements/*.lock'
 
       - name: "Show environment"
         run: |
@@ -93,7 +93,7 @@ jobs:
       - name: "Install dependencies"
         run: |
           set -xe
-          python -m pip install -r requirements/tox.pip
+          python -m pip install -r requirements/tox.lock
 
       - name: Test with tox
         run: tox -vv -c tox-test.ini

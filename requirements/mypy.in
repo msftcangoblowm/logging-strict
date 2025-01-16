@@ -3,6 +3,6 @@
 
 # called by tox.ini [testenv:mypy]
 
--c pins.pip
+-c pins.in
 
 mypy

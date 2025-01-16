@@ -3,12 +3,9 @@
 
 # packaging and kitting
 
--c pins.pip
+-c pins.in
 -c pins-cffi.in
--c pins-cve-2024-53899.in
+-c pins-virtualenv-cve-2024-53899.in
 -c prod.unlock
--r tox.pip
 
-twine           # pypi.org
 pre-commit
-restview        # viewer for vanilla ReStructuredText files (README.rst)

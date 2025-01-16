@@ -1,7 +1,7 @@
-appdirs
-attrs
+colorama>=0.4.6
 python-dateutil>=2.9.0.post0
-strictyaml
 tomli>=2.0.2; python_version<"3.11"
-typing-extensions
+tox
+tox-gh-actions
 typing-extensions; python_version<"3.10"
+virtualenv>=20.26.6

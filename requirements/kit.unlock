@@ -1,7 +1,10 @@
-appdirs
-attrs
+auditwheel
+build
+cibuildwheel
+colorama
 python-dateutil>=2.9.0.post0
-strictyaml
+setuptools
+setuptools-scm
 tomli>=2.0.2; python_version<"3.11"
-typing-extensions
 typing-extensions; python_version<"3.10"
+wheel

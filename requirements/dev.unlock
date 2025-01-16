@@ -1,7 +1,16 @@
 appdirs
 attrs
+black
+blackdoc
+cffi>=1.17.1
+coverage
+flake8
+flake8-pyproject
+isort
+mypy>=1.14.1
 python-dateutil>=2.9.0.post0
 strictyaml
 tomli>=2.0.2; python_version<"3.11"
 typing-extensions
 typing-extensions; python_version<"3.10"
+validate-pyproject

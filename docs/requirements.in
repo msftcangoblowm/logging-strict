@@ -1,7 +1,7 @@
 # Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
 # For details: https://github.com/msftcangoblowm/logging-strict/blob/master/NOTICE.txt
 
--c ../requirements/pins.pip
+-c ../requirements/pins.in
 -c ../requirements/prod.unlock
 -c myst-parser.in
 

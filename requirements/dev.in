@@ -4,10 +4,9 @@
 # dev tooling
 #   - tox: lint
 
--c pins.pip
+-c pins.in
 -c pins-cffi.in
 -c prod.unlock
-
 
 black
 blackdoc
@@ -16,5 +15,4 @@ flake8
 flake8-pyproject
 mypy
 coverage
-twine
 validate-pyproject

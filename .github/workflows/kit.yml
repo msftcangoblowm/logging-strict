@@ -157,11 +157,11 @@ jobs:
           # PYVERSIONS
           python-version: "3.9"
           # cache: pip
-          # cache-dependency-path: 'requirements/*.pip'
+          # cache-dependency-path: 'requirements/*.lock'
 
       - name: "Install tools"
         run: |
-          python -m pip install -r requirements/kit.pip
+          python -m pip install -r requirements/kit.lock
 
       - name: "Build wheels"
         env:
@@ -206,11 +206,11 @@ jobs:
           # PYVERSIONS
           python-version: "3.9"
           cache: pip
-          cache-dependency-path: 'requirements/*.pip'
+          cache-dependency-path: 'requirements/*.lock'
 
       - name: "Install tools"
         run: |
-          python -m pip install -r requirements/kit.pip
+          python -m pip install -r requirements/kit.lock
 
       - name: "Build sdist"
         env:
@@ -245,11 +245,11 @@ jobs:
         with:
           python-version: "pypy-3.9" # Minimum of PyPy PYVERSIONS
           cache: pip
-          cache-dependency-path: 'requirements/*.pip'
+          cache-dependency-path: 'requirements/*.lock'
 
       - name: "Install requirements"
         run: |
-          pypy3 -m pip install -r requirements/kit.pip
+          pypy3 -m pip install -r requirements/kit.lock
 
       - name: "Build wheel"
         env:

@@ -1,4 +1,4 @@
-cachetools==5.3.2
+cachetools==5.5.0
     # via tox
 chardet==5.2.0
     # via tox
@@ -6,13 +6,13 @@ colorama==0.4.6
     # via
     #   -r requirements/tox.in
     #   tox
-distlib==0.3.8
+distlib==0.3.9
     # via virtualenv
-filelock==3.13.1
+filelock==3.16.1
     # via
     #   tox
     #   virtualenv
-packaging==24.1
+packaging==24.2
     # via
     #   pyproject-api
     #   tox
@@ -22,18 +22,24 @@ platformdirs==4.3.6
     #   virtualenv
 pluggy==1.5.0
     # via tox
-pyproject-api==1.6.1
+pyproject-api==1.8.0
     # via tox
-tomli==2.0.2 ; python_version < "3.11"
+tomli==2.2.1 ; python_version < "3.11"
     # via
-    #   -c requirements/pins.pip
+    #   -c requirements/pins.in
     #   pyproject-api
     #   tox
-tox==4.12.0
+tox==4.23.2
     # via
     #   -r requirements/tox.in
-    #   tox-gh
+    #   tox-gh-actions
 tox-gh-actions==3.2.0
     # via -r requirements/tox.in
-virtualenv==20.28.1
-    # via tox
+typing-extensions==4.12.2 ; python_version < "3.10"
+    # via
+    #   -c requirements/pins.in
+    #   tox
+virtualenv==20.29.0
+    # via
+    #   -c requirements/pins-virtualenv-cve-2024-53899.in
+    #   tox

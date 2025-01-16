@@ -1,11 +1,11 @@
 # Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
 # For details: https://github.com/msftcangoblowm/logging-strict/blob/master/NOTICE.txt
 
--c pins.pip
--c pins-cve-2024-53899.in
+-c pins.in
+-c pins-virtualenv-cve-2024-53899.in
 
 # Just install tox, which will then install more things.
-# "make upgrade" turns this into requirements/tox.pip
+# "make upgrade" turns this into requirements/tox.lock
 
 tox
 tox-gh-actions

@@ -4,7 +4,7 @@ attrs==23.2.0
     # via -r requirements/prod.in
 python-dateutil==2.9.0.post0
     # via
-    #   -c requirements/pins.pip
+    #   -c requirements/pins.in
     #   strictyaml
 six==1.16.0
     # via python-dateutil
@@ -12,5 +12,5 @@ strictyaml==1.7.3
     # via -r requirements/prod.in
 typing-extensions==4.12.2 ; python_version < "3.10"
     # via
-    #   -c requirements/pins.pip
+    #   -c requirements/pins.in
     #   -r requirements/prod.in
