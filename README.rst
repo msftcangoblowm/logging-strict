@@ -50,15 +50,13 @@ For logging.config yaml files, logging-strict does the following:
 
 * Python 3.9 through 3.12, and 3.13.0a3 and up.
 
+**New in 1.5.x:**
+registry logging_strict.yml;
+
 **New in 1.4.x:**
 
 yaml logger package_name placeholder; noninstalled package raise ImportError;
 fix package name to valid dotted path (#3);
-
-**New in 1.3.x:**
-
-resolve dependency conflict by pinning python-dateutil;
-fix pwd and shutil.chown are non-Windows; Windows MacOS Pypy py313 support;
 
 Why?
 ------

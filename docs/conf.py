@@ -47,13 +47,13 @@ proj_master_doc = config.get("master_doc")
 # Version is dynamic. Dependent on git and this file is edited by ``igor.py``
 
 # @@@ editable
-copyright = "2023–2024, Dave Faulkmore"
+copyright = "2023–2025, Dave Faulkmore"
 # The short X.Y.Z version.
-version = "1.4.2"
+version = "1.5.0"
 # The full version, including alpha/beta/rc tags.
-release = "1.4.2"
+release = "1.5.0"
 # The date of release, in "monthname day, year" format.
-release_date = "December 30, 2024"
+release_date = "January 18, 2025"
 # @@@ end
 
 # release = config.version

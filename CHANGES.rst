@@ -11,10 +11,6 @@ Changelog
    - Framework classifier to advertise package contains unverified
      logging config YAML files
 
-   - Within a package, centralized config file. With known file name and file format.
-     Lists logging config YAML files.
-     Would remove the need to specify relative path to package resource
-
    - tox-gh-matrix produces the version matrix from tox config file
      this is then feed into gh matrix.
 
@@ -51,19 +47,24 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - refactor(Makefile): remove targets kit_check kit_upload test_upload
-   - feat(tox-req.ini): add wreck support
-   - fix(requirements-dev): add nudge pin for package virtualenv to mitigate CVE-2024-53899
-   - feat(register_config): separate extract and get registry into an optional two step process
-   - test(test_registry_config): unlink file used by multiple processes suppress OSError
-   - chore(setup.cfg): remove file
-   - ci(quality): target doc use py310
-   - feat: add yaml registry database. Breaking changes to api (#4)
-   - fix(logging_yaml_abc): apply to fcn after_as_str_update_package_name (#3)
-   - ci(test-coverage): to codecov action fix API breaking change
-   - docs: fix doctest in register_config
-
 .. scriv-start-here
+
+.. _changes_1-5-0:
+
+Version 1.5.0 — 2025-01-18
+--------------------------
+
+- refactor(Makefile): remove targets kit_check kit_upload test_upload
+- feat(tox-req.ini): add wreck support
+- fix(requirements-dev): add nudge pin for package virtualenv to mitigate CVE-2024-53899
+- feat(register_config): separate extract and get registry into an optional two step process
+- test(test_registry_config): unlink file used by multiple processes suppress OSError
+- chore(setup.cfg): remove file
+- ci(quality): target doc use py310
+- feat: add yaml registry database. Breaking changes to api (#4)
+- fix(logging_yaml_abc): apply to fcn after_as_str_update_package_name (#3)
+- ci(test-coverage): to codecov action fix API breaking change
+- docs: fix doctest in register_config
 
 .. _changes_1-4-2:
 
