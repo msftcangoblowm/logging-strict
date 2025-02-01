@@ -152,7 +152,7 @@ jobs:
           fetch-depth: 0
 
       - name: "Install Python 3.9"
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.4.0
         with:
           # PYVERSIONS
           python-version: "3.9"
@@ -177,7 +177,7 @@ jobs:
           ls -al wheelhouse/
 
       - name: "Upload wheels"
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: dist-${{ env.MATRIX_ID }}
           path: wheelhouse/*.whl
@@ -201,7 +201,7 @@ jobs:
           echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
 
       - name: "Install Python 3.9"
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.4.0
         with:
           # PYVERSIONS
           python-version: "3.9"
@@ -224,7 +224,7 @@ jobs:
           ls -al dist/
 
       - name: "Upload sdist"
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: dist-sdist
           path: dist/*.tar.gz
@@ -241,7 +241,7 @@ jobs:
           fetch-depth: 0
 
       - name: "Install PyPy"
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: "pypy-3.9" # Minimum of PyPy PYVERSIONS
           cache: pip
@@ -265,7 +265,7 @@ jobs:
           ls -al dist/
 
       - name: "Upload wheels"
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: dist-pypy
           path: dist/*.whl
@@ -299,7 +299,7 @@ jobs:
           ls -alR
 
       - name: "Upload signatures"
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: signatures
           path: |

@@ -258,7 +258,10 @@ exclude = [
 "ep_validate_yaml" = [44]
 "tech_niques/logging_capture" = [12, 30, 32]
 
-[[tool.venvs]]
+[tool.wreck]
+create_pins_unlock = false
+
+[[tool.wreck.venvs]]
 venv_base_path = '.venv'
 reqs = [
     'requirements/dev',
@@ -271,7 +274,7 @@ reqs = [
     'requirements/tox',
 ]
 
-[[tool.venvs]]
+[[tool.wreck.venvs]]
 venv_base_path = '.doc/.venv'
 reqs = [
     'docs/requirements',

@@ -2,7 +2,7 @@
 # For details: https://github.com/msftcangoblowm/logging-strict/blob/master/NOTICE.txt
 
 -c pins.in
--c pip.lock
+-c pip.unlock
 
 # "make upgrade-one package=pip-tools"
 # "make upgrade" turns this into requirements/pip-tools.lock

@@ -4,6 +4,6 @@ cffi>=1.17.1
 pre-commit
 python-dateutil>=2.9.0.post0
 strictyaml
-tomli>=2.0.2; python_version<"3.11"
+tomli; python_version<"3.11"
 typing-extensions; python_version<"3.11"
 virtualenv>=20.26.6

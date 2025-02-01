@@ -40,7 +40,7 @@ jobs:
         echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
 
     - name: Install py39
-      uses: actions/setup-python@v5.3.0
+      uses: actions/setup-python@v5.4.0
       with:
         python-version: 3.9
         # cache: pip
@@ -58,7 +58,7 @@ jobs:
         python igor.py build_next "$RELEASE_VERSION"
 
     - name: Store the distribution packages
-      uses: actions/upload-artifact@v4.5.0
+      uses: actions/upload-artifact@v4.6.0
       with:
         name: python-package-distributions
         path: ${{ env.DEST_FOLDER }}

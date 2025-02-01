@@ -47,6 +47,10 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - chore: update wreck support
+   - chore: bump requirements version
+   - ci: bump dependencies version
+
 .. scriv-start-here
 
 .. _changes_1-5-0:
