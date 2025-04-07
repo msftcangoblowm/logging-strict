@@ -72,6 +72,7 @@
       or for current (prerelease/postrelease) version, version is empty string.
       side effect _version.py changes)
       $ python igor.py build_next ""
+      $ SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="1.5.1.dev1" python -m build
     Trigger the kit GitHub Action (no CI integration yet)
         $ make kits_build (make debug=1 prep_kit)
 - Build and publish docs:

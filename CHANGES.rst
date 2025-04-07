@@ -47,6 +47,7 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - docs: add nitpick_ignore for missing python intersphinx references
    - chore: pep639 compliance
    - ci: bump dependencies version
    - feat(context_locals): get_locals_dynamic add support for staticmethod and classmethod

@@ -194,6 +194,17 @@ linkcheck_request_headers = {
     },
 }
 
+nitpick_ignore = [
+    ("py:class", "types.FunctionType"),
+    ("py:class", "types.MethodType"),
+    ("py:class", "types.BuiltinFunctionType"),
+    ("py:class", "types.BuiltinMethodType"),
+    ("py:class", "types.WrapperDescriptorType"),
+    ("py:class", "types.MethodWrapperType"),
+    ("py:class", "types.ClassMethodDescriptorType"),
+    ("py:class", "types.MethodDescriptorType"),
+]
+
 # latex_elements = {
 #     # The paper size ('letterpaper' or 'a4paper').
 #     #
