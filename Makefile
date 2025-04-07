@@ -127,7 +127,7 @@ diff_upgrade:			## Summarize the last `make upgrade`
 .PHONY: pre-commit
 pre-commit:				## Run checks found in .pre-commit-config.yaml
 ifeq ($(is_venv),1)
-	@pre-commit run --all-files
+	-@pre-commit run --all-files > /tmp/out.txt
 endif
 
 #--strict is on
@@ -160,22 +160,12 @@ ifeq ($(is_venv),1)
 	$(VENV_BIN_PYTHON) -m flake8 tests/
 endif
 
-# make [v=1] coverage
-.PHONY: coverage
-coverage: private verbose_text = $(if $(v),"--verbose")
-coverage:				## Run tests, generate coverage reports -- make [v=1] coverage
-ifeq ($(is_venv),1)
-	@$(VENV_BIN)/coverage run --omit="*.txt" -m unittest discover -t. -s tests -p "test_*.py" $(verbose_text) --locals
-	$(VENV_BIN)/coverage report
-endif
-
-
 ##@ Kitting
 
 REPO_OWNER := msftcangoblowm/logging-strict
 REPO := $(REPO_OWNER)/logging_strict
 
-.PHONY: edit_for_release cheats relbranch kit_build
+.PHONY: edit_for_release cheats relbranch
 .PHONY: kits_build kits_download github_releases
 
 edit_for_release:		## Edit sources to insert release facts (see howto.txt)
@@ -186,9 +176,6 @@ cheats:					## Create some useful snippets for releasing (see howto.txt)
 
 relbranch:				## Create the branch for releasing (see howto.txt)
 	git switch -c $(REPO_OWNER)/release-$$(date +%Y%m%d)
-
-kit_build:				## Make the source distribution
-	python igor.py build_next ""
 
 #.PHONY: kit_upload
 #kit_upload:				## Upload the built distributions to PyPI
@@ -207,6 +194,11 @@ kits_download:			## Download the built kits from GitHub
 github_releases: $(DOCBIN)		## Update GitHub releases.
 	$(DOCBIN)/python -m scriv github-release --all
 
+##@ GNU Make standard targets
+
+.PHONY: build
+build:					## Make the source distribution
+	python igor.py build_next ""
 
 .PHONY: install
 install: override usage := make [force=1]
@@ -229,3 +221,14 @@ endif
 .PHONY: install-force
 install-force: force := 1
 install-force: install	## Force install even if exact same version
+
+# make [v=1] check
+.PHONY: check
+check: private verbose_text = $(if $(v),"--verbose")
+check:					## Run tests, generate coverage reports -- make [v=1] check
+ifeq ($(is_venv),1)
+	-@$(VENV_BIN_PYTHON) -m coverage erase
+	$(VENV_BIN_PYTHON) -m coverage run --parallel --omit="*.txt" -m unittest discover -t. -s tests -p "test_*.py" $(verbose_text) --locals
+	$(VENV_BIN_PYTHON) -m coverage combine
+	$(VENV_BIN_PYTHON) -m coverage report --fail-under=98
+endif

@@ -47,9 +47,15 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - chore: pep639 compliance
+   - ci: bump dependencies version
+   - feat(context_locals): get_locals_dynamic add support for staticmethod and classmethod
+   - feat(context_locals): get_locals_dynamic drops arg func_path
+   - fix(util_root): process user id os.getuid --> session user id os.geteuid
+   - tests(util_root): add coverage for get_logname
+   - refactor(Makefile): GNU standard targets check and build
    - chore: update wreck support
    - chore: bump requirements version
-   - ci: bump dependencies version
 
 .. scriv-start-here
 

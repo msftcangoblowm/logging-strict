@@ -371,11 +371,6 @@ class TestsLoggingCapture(unittest.TestCase):
             logger_names: Sequence[Any], levels: Sequence[str | int | Any | None]
         ) -> Generator[Sequence[Any, Sequence[str]], None, None]:
             """Demonstrate captureLogs context manager"""
-            nonlocal WORKER_0
-            nonlocal WORKER_1
-            nonlocal MSG_0
-            nonlocal MSG_1
-            nonlocal formats
 
             for idx_a, logger_name in enumerate(logger_names):
                 for idx_b, level in enumerate(levels):

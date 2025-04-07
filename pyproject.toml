@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=69.0.2", "wheel", "build", "setuptools_scm>=8"]
+requires = ["setuptools>=77.0.3", "wheel", "build", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,7 +9,12 @@ dynamic = [
     "dependencies",
     "version",
 ]
-license = {file = "LICENSE.txt"}
+
+license = "Apache-2.0"
+license-files = [
+    "LICEN[CS]E*",
+    "NOTICE*",
+]
 description = "logging.config yaml strict typing and editable"
 keywords = [
     "strictyaml",
@@ -24,7 +29,6 @@ classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
-  "License :: OSI Approved :: Apache Software License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
@@ -124,7 +128,7 @@ precision = 2
 ignore_errors = true
 skip_covered = true
 skip_empty = true
-fail_under = 90
+fail_under = 98
 show_missing = true
 
 [tool.sphinx-pyproject]

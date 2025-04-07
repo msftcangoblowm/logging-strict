@@ -8,8 +8,9 @@ Conveniently exports all technique helpers
 **Module private variables**
 
 .. py:data:: __all__
-   :type: tuple[str, str, str, str, str, str, str]
-   :value: ("get_locals", "is_class_attrib_kind", "ClassAttribTypes", \
+   :type: tuple[str, str, str, str, str, str, str, str, str]
+   :value: ("FuncWrapper", "get_locals", "get_locals_dynamic", \
+   "is_class_attrib_kind", "ClassAttribTypes", \
    "LoggerRedirector", "captureLogs", "detect_coverage", "CaptureOutput")
 
    This modules exports
@@ -21,14 +22,20 @@ Conveniently exports all technique helpers
 import enum
 import inspect
 
-from .context_locals import get_locals
+from .context_locals import (
+    FuncWrapper,
+    get_locals,
+    get_locals_dynamic,
+)
 from .coverage_misbehaves import detect_coverage
 from .logger_redirect import LoggerRedirector
 from .logging_capture import captureLogs
 from .stream_capture import CaptureOutput
 
 __all__ = (
+    "FuncWrapper",
     "get_locals",
+    "get_locals_dynamic",
     "is_class_attrib_kind",
     "ClassAttribTypes",
     "LoggerRedirector",

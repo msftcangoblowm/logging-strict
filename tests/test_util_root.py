@@ -24,6 +24,7 @@ from logging_strict.tech_niques import LoggerRedirector
 from logging_strict.util.util_root import (
     IsRoot,
     check_python_not_old,
+    get_logname,
 )
 
 _LOGGER = logging.getLogger(f"{g_app_name}.tests.test_util_root")
@@ -51,6 +52,18 @@ class UtilRoot(unittest.TestCase):
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,
         )
+
+    def test_get_logname(self) -> None:
+        """when elevated privledges return root not current session user name"""
+        # Called without elevated privledges
+        out = get_logname()
+        self.assertIsInstance(out, str)
+        self.assertNotEqual(out, "root")
+
+        # Simulate have elevated privledges
+        with patch(f"{g_app_name}.util.util_root.getpass.getuser", return_value="root"):
+            out = get_logname()
+            self.assertIsInstance(out, str)
 
     def test_path_home_root(self) -> None:
         """Test IsRoot.path_home_root"""

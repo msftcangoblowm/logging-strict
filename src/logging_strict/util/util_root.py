@@ -102,15 +102,17 @@ def is_user_admin():  # pragma: no cover
 
         # WARNING: requires Windows XP SP2 or higher!
         try:
-            return ctypes.windll.shell32.IsUserAnAdmin()
+            ret = ctypes.windll.shell32.IsUserAnAdmin()
         except Exception:
             traceback.print_exc()
             msg_info = "Admin check failed, assuming not an admin."
             _LOGGER.info(msg_info)
-            return False
+            ret = False
     else:
         # Check for root on Posix
-        return os.getuid() == 0
+        ret = os.geteuid() == 0
+
+    return ret
 
 
 g_is_root = is_user_admin()
@@ -194,7 +196,9 @@ class IsRoot:
         :returns: ``True`` is root otherwise ``False``
         :rtype: bool
         """
-        return g_is_root
+        ret = g_is_root
+
+        return ret
 
     @classmethod
     def path_home_root(cls):
@@ -211,7 +215,9 @@ class IsRoot:
 
         is_not_root = not g_is_root
         logname = getpass.getuser()
-        return Path("/root") if is_not_root else Path(f"/{logname}")
+        ret = Path("/root") if is_not_root else Path(f"/{logname}")
+
+        return ret
 
     @classmethod
     def check_root(
