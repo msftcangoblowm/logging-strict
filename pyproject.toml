@@ -188,6 +188,7 @@ exclude_patterns = [
 "https://stackoverflow.com/q/69200881" = "https://stackoverflow.com/questions/69200881/how-to-get-python-unittest-to-show-log-messages-only-on-failed-tests"
 "https://stackoverflow.com/q/66727458" = "https://stackoverflow.com/questions/66727458/warnings-filterwarningsignore-doesnt-ignore-logging-warning"
 "https://stackoverflow.com/a/11383064" = "https://stackoverflow.com/questions/11382919/relative-path-regular-expression/11383064#11383064"
+"https://stackoverflow.com/a/25959545" = "https://stackoverflow.com/questions/3589311/get-defining-class-of-unbound-method-object-in-python-3/25959545#25959545"
 
 [tool.black]
 include = '\.pyi?$'

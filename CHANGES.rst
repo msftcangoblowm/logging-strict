@@ -47,6 +47,7 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - tests: ci does not like simulating elevated privledges
    - docs: add nitpick_ignore for missing python intersphinx references
    - chore: pep639 compliance
    - ci: bump dependencies version

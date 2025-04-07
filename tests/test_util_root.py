@@ -13,6 +13,7 @@ import os
 import sys
 import tempfile
 import unittest
+from contextlib import suppress
 from pathlib import (
     Path,
     PurePath,
@@ -62,7 +63,10 @@ class UtilRoot(unittest.TestCase):
 
         # Simulate have elevated privledges
         with patch(f"{g_app_name}.util.util_root.getpass.getuser", return_value="root"):
-            out = get_logname()
+            # github runners
+            # OSError: [Errno 25] Inappropriate ioctl for device
+            with suppress(OSError):
+                out = get_logname()
             self.assertIsInstance(out, str)
 
     def test_path_home_root(self) -> None:
