@@ -47,21 +47,24 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - fix: on windows is_user_admin return int not bool
-   - fix(context_locals): FuncWrapper inconsistency py310+ and py39
-   - tests: ci does not like simulating elevated privledges
-   - docs: add nitpick_ignore for missing python intersphinx references
-   - chore: pep639 compliance
-   - ci: bump dependencies version
-   - feat(context_locals): get_locals_dynamic add support for staticmethod and classmethod
-   - feat(context_locals): get_locals_dynamic drops arg func_path
-   - fix(util_root): process user id os.getuid --> session user id os.geteuid
-   - tests(util_root): add coverage for get_logname
-   - refactor(Makefile): GNU standard targets check and build
-   - chore: update wreck support
-   - chore: bump requirements version
-
 .. scriv-start-here
+
+.. _changes_1-6-0:
+
+Version 1.6.0 — 2025-04-08
+--------------------------
+
+- feat(context_locals): get_locals_dynamic add support for staticmethod and classmethod
+- feat(context_locals): get_locals_dynamic drops arg func_path
+- chore: pep639 compliance
+- chore: update wreck support
+- docs: add nitpick_ignore for missing python intersphinx references
+- fix: on windows is_user_admin return int not bool
+- fix(context_locals): FuncWrapper inconsistency py310+ and py39
+- fix(util_root): process user id os.getuid --> session user id os.geteuid
+- refactor(Makefile): GNU standard targets check and build
+- tests: ci does not like simulating elevated privledges
+- ci: bump dependencies version
 
 .. _changes_1-5-0:
 
