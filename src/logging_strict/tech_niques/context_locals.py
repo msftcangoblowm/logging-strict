@@ -310,15 +310,20 @@ class FuncWrapper:
         :return: the package name
         :rtype: str
         """
-        if self._module is not None:
-            ret = self._module.__package__
+        module = self.module
+        if module is not None:
+            ret = getattr(module, "__package__", "")
+            if ret is None:
+                str_ret = ""
+            else:
+                str_ret = ret
         else:
             """For functools.partial functions, on py310+ returns empty
             str. Do this consistently
             """
-            ret = ""
+            str_ret = ""
 
-        return ret
+        return str_ret
 
     @property
     def root_package_name(self):
@@ -327,10 +332,13 @@ class FuncWrapper:
         :returns: the root package name
         :rtype: str
         """
-        # self.package_name: str
-        ret = self.package_name.partition(".")[0]
+        pkg_name = self.package_name
+        if pkg_name is not None and isinstance(pkg_name, str):
+            str_ret = self.package_name.partition(".")[0]
+        else:
+            str_ret = ""
 
-        return ret
+        return str_ret
 
     @property
     def full_name(self):

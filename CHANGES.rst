@@ -47,6 +47,8 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - fix: on windows is_user_admin return int not bool
+   - fix(context_locals): FuncWrapper inconsistency py310+ and py39
    - tests: ci does not like simulating elevated privledges
    - docs: add nitpick_ignore for missing python intersphinx references
    - chore: pep639 compliance

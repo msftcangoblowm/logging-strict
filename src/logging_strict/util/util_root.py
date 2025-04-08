@@ -94,6 +94,7 @@ def is_user_admin():  # pragma: no cover
 
        https://stackoverflow.com/questions/19672352/how-to-run-script-with-elevated-privilege-on-windows
        https://gist.github.com/sylvainpelissier/ff072a6759082590a4fe8f7e070a4952
+       https://stackoverflow.com/questions/70300494/how-do-i-run-a-script-with-elevated-uac-permissions-using-ctypes
 
     """
     if platform.system().lower() == "windows":
@@ -102,7 +103,9 @@ def is_user_admin():  # pragma: no cover
 
         # WARNING: requires Windows XP SP2 or higher!
         try:
-            ret = ctypes.windll.shell32.IsUserAnAdmin()
+            int_ret = ctypes.windll.shell32.IsUserAnAdmin()
+            # 1 --> True; 0 --> False
+            ret = bool(int_ret)
         except Exception:
             traceback.print_exc()
             msg_info = "Admin check failed, assuming not an admin."

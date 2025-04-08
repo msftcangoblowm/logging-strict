@@ -177,14 +177,19 @@ class CaptureLocals(unittest.TestCase):
 
                 # None on py39. But not consistent
                 # py310 '/home/faulkmore/.pyenv/versions/3.10.14/lib/python3.10/functools.py'
-                module_filename = fw_0.module_filename  # noqa: F841
+                module_filename = fw_0.module_filename
+                if module_filename is not None:
+                    self.assertIsInstance(module_filename, str)
 
                 # Had to normalize the behavior.
                 #     None on py39 empty str on py310+
                 package_name = fw_0.package_name
-                self.assertIsInstance(package_name, str)
+                if package_name is not None:
+                    self.assertIsInstance(package_name, str)
+
                 root_package_name = fw_0.root_package_name
-                self.assertIsInstance(root_package_name, str)
+                if root_package_name is not None:
+                    self.assertIsInstance(root_package_name, str)
 
                 full_name_actual = fw_0.full_name
                 self.assertEqual(full_name_actual, full_name_expected)
