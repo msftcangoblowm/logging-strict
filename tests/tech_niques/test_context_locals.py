@@ -164,17 +164,30 @@ class CaptureLocals(unittest.TestCase):
     def test_func_wrapper(self):
         """Test class FuncWrapper"""
         # func created with :py:func:`functools.partial`
-        fcns = (piggy_back, _func)
+        fcns = (
+            (piggy_back, "piggy_back"),
+            (_func, "_func"),
+        )
         expectation = does_not_raise()
         args = ("A",)
-        for func_0 in fcns:
+        for func_0, full_name_expected in fcns:
             func_1 = partial(func_0, args)
             with expectation:
                 fw_0 = FuncWrapper(func_1)
-                self.assertIsNone(fw_0.module_filename)
-                self.assertIsNone(fw_0.package_name)
-                self.assertIsNone(fw_0.root_package_name)
-                self.assertIsInstance(fw_0.full_name, str)
+
+                # None on py39. But not consistent
+                # py310 '/home/faulkmore/.pyenv/versions/3.10.14/lib/python3.10/functools.py'
+                module_filename = fw_0.module_filename  # noqa: F841
+
+                # Had to normalize the behavior.
+                #     None on py39 empty str on py310+
+                package_name = fw_0.package_name
+                self.assertIsInstance(package_name, str)
+                root_package_name = fw_0.root_package_name
+                self.assertIsInstance(root_package_name, str)
+
+                full_name_actual = fw_0.full_name
+                self.assertEqual(full_name_actual, full_name_expected)
 
         # str.join
         FuncWrapper(str.join)
