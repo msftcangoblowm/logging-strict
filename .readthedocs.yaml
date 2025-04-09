@@ -21,6 +21,6 @@ formats:
 
 python:
   install:
-    - requirements: docs/requirements.pip
+    - requirements: docs/requirements.lock
     - method: pip
       path: .
