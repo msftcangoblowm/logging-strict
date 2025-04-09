@@ -49,6 +49,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-6-0-post2:
+
+Version 1.6.0.post2 — 2025-04-09
+---------------------------------
+
+- tests: avoid fail setuptools-scm version tuple test on post release
+
 .. _changes_1-6-0-post1:
 
 Version 1.6.0.post1 — 2025-04-09
