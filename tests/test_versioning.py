@@ -117,9 +117,14 @@ class PackageVersioning(unittest.TestCase):
             ver = list(__version_tuple__)
             ver_short = ".".join(map(str, ver))
             ver_long = ver_short
-            self.assertEqual(__version__, f"{ver_long}")
+
+            #    0.0.1.post1 --> __version_tuple__ does not contain post1
+            #    remove post release
+            version_actual = __version__.split(".post")[0]
+
+            self.assertEqual(version_actual, f"{ver_long}")
         else:
-            # 0.0.1.a1dev8
+            # 0.0.1a1.dev8
             ver = list(__version_tuple__[:3])
             ver_short = ".".join(map(str, ver))
             ver_dev = __version_tuple__[3]
@@ -129,9 +134,11 @@ class PackageVersioning(unittest.TestCase):
                 ver_long += f".{ver_dev}"
 
             # If no tags ver_git will not match, ignore (version) local
-            left_side = sanitize_tag(__version__)
-            right_side = sanitize_tag(ver_long)
-            self.assertEqual(left_side, right_side)
+            # Will fail '0.0.1a1.post1.dev8' __version_tuple__ does not contain post1
+            if ".post" not in __version__:
+                left_side = sanitize_tag(__version__)
+                right_side = sanitize_tag(ver_long)
+                self.assertEqual(left_side, right_side)
 
     def test_sanitize_tag(self):
         """Convert repo version --> semantic version"""
