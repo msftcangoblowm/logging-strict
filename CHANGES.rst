@@ -49,6 +49,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-6-0-post0:
+
+Version 1.6.0.post0 — 2025-04-09
+---------------------------------
+
+- ci(release.yml): remove setuptools pin from requirements/kit.lock
+
 .. _changes_1-6-0:
 
 Version 1.6.0 — 2025-04-08

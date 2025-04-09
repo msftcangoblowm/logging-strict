@@ -164,7 +164,3 @@ watchfiles==1.0.4
     # via sphinx-autobuild
 websockets==14.1
     # via sphinx-autobuild
-
-# The following packages are considered to be unsafe in a requirements file:
-pip==24.1.2
-    # via sphinx-external-toc-strict

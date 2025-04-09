@@ -5,9 +5,7 @@ click==8.1.8
 importlib-metadata==8.5.0
     # via build
 packaging==24.2
-    # via
-    #   -c requirements/pip.lock
-    #   build
+    # via build
 pip-tools==7.4.1
     # via -r requirements/pip-tools.in
 pyproject-hooks==1.2.0
@@ -17,20 +15,10 @@ pyproject-hooks==1.2.0
 tomli==2.2.1 ; python_version < "3.11"
     # via
     #   -c requirements/pins.in
-    #   -c requirements/pip.lock
+    #   -c requirements/pip.unlock
     #   build
     #   pip-tools
 wheel==0.45.1
     # via pip-tools
 zipp==3.21.0
     # via importlib-metadata
-
-# The following packages are considered to be unsafe in a requirements file:
-pip==24.3.1
-    # via
-    #   -c requirements/pip.lock
-    #   pip-tools
-setuptools==75.8.0
-    # via
-    #   -c requirements/pip.lock
-    #   pip-tools

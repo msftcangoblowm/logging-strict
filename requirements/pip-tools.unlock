@@ -1,8 +1,6 @@
-packaging
-pip-tools
 pip
+pip-tools
 python-dateutil>=2.9.0.post0
 setuptools-scm
-setuptools
 tomli; python_version<"3.11"
 typing-extensions; python_version<"3.11"
