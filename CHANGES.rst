@@ -49,6 +49,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-6-0-post1:
+
+Version 1.6.0.post1 — 2025-04-09
+---------------------------------
+
+- chore: fix rtd requirements file extension pip to lock
+
 .. _changes_1-6-0-post0:
 
 Version 1.6.0.post0 — 2025-04-09
