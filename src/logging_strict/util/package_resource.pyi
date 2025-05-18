@@ -2,6 +2,7 @@ import logging
 from collections.abc import (
     Callable,
     Iterator,
+    Sequence,
 )
 from importlib.abc import Traversable
 from pathlib import Path
@@ -117,3 +118,11 @@ class PackageResource:
         cb_file_stem: Callable[[str], bool] | None = None,
         is_overwrite: bool | None = False,
     ) -> Iterator[Path]: ...
+
+def get_package_data(
+    package_name: str,
+    file_name_stem: str,
+    suffix: Sequence[str] | str | None = ...,
+    convert_to_path: Sequence[str] | None = ...,
+    is_extract: bool | None = ...,
+) -> str: ...

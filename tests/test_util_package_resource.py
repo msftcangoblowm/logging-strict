@@ -14,12 +14,18 @@ import secrets
 import sys
 import tempfile
 import unittest
+from collections.abc import (
+    Generator,
+    Sequence,
+)
+from contextlib import nullcontext as does_not_raise
 from contextlib import suppress
 from functools import partial
 from pathlib import (
     Path,
     PurePath,
 )
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
 from logging_strict.constants import g_app_name
@@ -27,6 +33,7 @@ from logging_strict.tech_niques import (
     LoggerRedirector,
     captureLogs,
 )
+from logging_strict.util.check_type import is_ok
 from logging_strict.util.package_resource import (  # noqa: F401 sphinx uses
     PackageResource,
     _extract_folder,
@@ -34,15 +41,11 @@ from logging_strict.util.package_resource import (  # noqa: F401 sphinx uses
     _to_package_case,
     filter_by_file_stem,
     filter_by_suffix,
+    get_package_data,
     is_package_exists,
     msg_stem,
     walk_tree_folders,
 )
-
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Generator
-else:  # pragma: no cover
-    from typing import Generator
 
 g_module = f"{g_app_name}.tests.test_util_package_resource"
 
@@ -180,11 +183,10 @@ class PackageResourceMadness(unittest.TestCase):
         (relative to config folder) parent folders
         """
         d_expected = {file_name: ()}
-        _LOGGER2 = logging.getLogger(f"{g_app_name}.sdafsadfsadfsdf")
 
         paths = (
             None,
-            _LOGGER2,
+            does_not_raise,
             0.12345,
             pr.package_data_folder_start,
         )
@@ -199,9 +201,7 @@ class PackageResourceMadness(unittest.TestCase):
             for key, val in d_relative.items():
                 self.assertTrue(key in d_expected.keys())
                 self.assertIsInstance(val, tuple)
-                self.assertEqual(len(val), 0)  # there are no relative parent dirs
-
-        del _LOGGER2
+                self.assertTrue(not bool(val))  # there are no relative parent dirs
 
         # cb_suffix and cb_file_stem are required. Empty resultset
         # Should this be ValueError ??
@@ -252,6 +252,17 @@ class PackageResourceMadness(unittest.TestCase):
         self.assertIsInstance(d_relative, dict)
         self.assertTrue(len(d_relative.keys()) == 0)
 
+        # start and relative path are both useless
+        pr3 = PackageResource(self.package_dest_c, None)
+        d_relative = pr3.get_parent_paths(
+            cb_suffix=cb_file_suffix,
+            cb_file_stem=cb_file_stem,
+            path_relative_package_dir=None,
+            parent_count=1,
+        )
+        self.assertIsInstance(d_relative, dict)
+        self.assertTrue(len(d_relative.keys()) == 0)
+
     def test_path_relative(self) -> None:
         """Test PackageResource.path_relative
 
@@ -285,10 +296,9 @@ class PackageResourceMadness(unittest.TestCase):
         )
 
         # path_relative.y unsupported --> TypeError
-        _LOGGER2 = logging.getLogger(f"{self.package_dest_c}.sdafsadfsadfsdf")
         paths = (
             None,
-            _LOGGER2,
+            does_not_raise,
         )
         for mixed_path in paths:
             with self.assertRaises(TypeError):
@@ -304,7 +314,7 @@ class PackageResourceMadness(unittest.TestCase):
         for mixed_path in paths:
             path_out = pr.path_relative(
                 mixed_path,
-                path_relative_package_dir=_LOGGER2,  # --> "configs"
+                path_relative_package_dir=does_not_raise,  # --> "configs"
                 parent_count=1,
             )
             if platform.system().lower() == "windows":
@@ -312,7 +322,6 @@ class PackageResourceMadness(unittest.TestCase):
             else:
                 expected_relpath = "nonsense/digital_tox_default.ini"
             self.assertEqual(str(path_out), expected_relpath)
-        del _LOGGER2
 
         # path_relative.path_relative_package_dir None --> "configs"
         paths = (path_json_bad,)
@@ -885,6 +894,102 @@ class PreviouslyUnitPath(unittest.TestCase):
         ret = msg_stem(mixed_path)
         self.assertIsInstance(ret, str)
         self.assertEqual(ret, "dsafdsaf")
+
+
+class PackageData(unittest.TestCase):
+    """Often used module level function for retrieving package data"""
+
+    def test_get_package_data(self) -> None:
+        """Test module level function get_package_data"""
+        # python -m unittest tests.test_util_package_resource -k PackageData.test_get_package_data --locals --verbose
+        if TYPE_CHECKING:
+            package_name: str
+            module_name: str
+            convert_to_path: tuple[str, ...]
+            is_none_expected: bool
+            suffix: Sequence[str] | str | None
+            is_extract: bool
+
+        testdata = (
+            (
+                g_app_name,
+                "mp_1_asz",
+                (".worker", ".logging", ".config", ".yaml"),  # suffix Sequence[str]
+                ("configs",),
+                False,
+                False,
+            ),
+            (
+                g_app_name,
+                "textual_1_asz",
+                (".app", ".logging", ".config", ".yaml"),  # suffix Sequence[str]
+                ("configs",),
+                True,
+                False,
+            ),
+            (
+                g_app_name,
+                "textual_1_asz",
+                ".py",  # wrong suffix; suffix str
+                ("configs",),
+                None,  # None --> False
+                True,  # file does not exist in package
+            ),
+            (
+                g_app_name,
+                "textual_1_asz",
+                ".py",
+                ("data",),  # nonexistent parent folder
+                False,  # no extract
+                True,  # file does not exist in package
+            ),
+            (
+                g_app_name,
+                "textual_1_asz",
+                ".py",
+                ("data",),  # nonexistent parent folder
+                True,  # extract
+                True,  # file does not exist in package
+            ),
+            (
+                g_app_name,
+                "textual_1_asz",
+                "",  # no suffix --> .csv
+                ("configs",),  # nonexistent parent folder
+                False,  # extract
+                True,  # file does not exist in package
+            ),
+            (
+                g_app_name,
+                "textual_1_asz",
+                ".toml",  # nonexistent suffix
+                (),  # nonexistent parent folder
+                False,  # extract
+                True,  # file does not exist in package
+            ),
+        )
+        for t_data in testdata:
+            (
+                package_name,
+                module_name,
+                suffix,
+                convert_to_path,
+                is_extract,
+                is_none_expected,
+            ) = t_data
+
+            contents = get_package_data(
+                package_name,
+                module_name,
+                suffix=suffix,
+                convert_to_path=convert_to_path,
+                is_extract=is_extract,
+            )
+            if is_none_expected:
+                is_expected = not bool(contents)
+                self.assertTrue(is_expected)
+            else:
+                self.assertTrue(is_ok(contents))
 
 
 class SanitizePackageName(unittest.TestCase):

@@ -367,7 +367,7 @@ class IsRoot:
         if (
             path_file is not None
             and isinstance(path_file, str)
-            and len(path_file) != 0
+            and bool(path_file)
             and path_file != "."
         ):
             path_file = Path(path_file)

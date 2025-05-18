@@ -12,5 +12,5 @@ typing-extensions==4.12.2 ; python_version < "3.11"
     #   setuptools-scm
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==25.0.1
+pip==25.1.1
     # via -r requirements/pip.in

@@ -7,3 +7,5 @@ typing-extensions  # backporting latest greatest typing features
 strictyaml         # yaml spec subset validate and parse
 appdirs            # Adhere to XDG spec
 attrs
+importlib-metadata
+importlib-resources

@@ -118,9 +118,9 @@ Module private variables
 -------------------------
 
 .. py:data:: __all__
-   :type: tuple[str, str, str, str, str]
+   :type: tuple[str, str, str, str, str, str]
    :value: ("filter_by_suffix", "filter_by_file_stem", \
-   "PackageResource", "PartSuffix", "PartStem")
+   "PackageResource", "PartSuffix", "PartStem", "get_package_data")
 
    Module object exports
 
@@ -150,17 +150,20 @@ Module objects
 
 from __future__ import annotations
 
-import importlib.resources as importlib_resources  # py39+
 import logging
+import os
+import platform
 import re
 import shutil
 import sys
+import tempfile
 import traceback
-from contextlib import suppress  # py39+
-from importlib.metadata import (
-    PackageNotFoundError,
-    distribution,
+from collections.abc import (
+    Iterator,
+    Sequence,
 )
+from contextlib import suppress  # py39+
+from functools import partial
 from pathlib import (
     Path,
     PurePath,
@@ -168,7 +171,9 @@ from pathlib import (
 from typing import (
     TYPE_CHECKING,
     Any,
+    Protocol,
     cast,
+    runtime_checkable,
 )
 
 from ..constants import g_app_name
@@ -176,36 +181,38 @@ from .check_type import is_ok
 from .util_root import IsRoot
 from .xdg_folder import DestFolderUser
 
-if sys.version_info >= (3, 8):  # pragma: no cover
-    from collections.abc import (  # noqa: F401 sphinx uses
-        Callable,
-        Iterator,
-        Sequence,
-    )
-    from typing import (
-        Protocol,
-        runtime_checkable,
-    )
-else:  # pragma: no cover
-    from typing import (  # noqa: F401 sphinx uses
-        Callable,
-        Iterator,
-        Sequence,
-    )
+try:
+    import importlib_resources
+    from importlib_resources.abc import Traversable
 
-    from typing_extensions import (
-        Protocol,
-        runtime_checkable,
-    )
+    is_got_traversable = True
+except ImportError:  # pragma: no cover
+    # What CPython provides likely very dated
+    import importlib.resources as importlib_resources
 
-if sys.version_info >= (3, 9):  # pragma: no cover
+    is_got_traversable = False
+
+if not is_got_traversable:  # pragma: no cover
     try:
-        from importlib.resources.abc import Traversable  # py312+
+        # py312+
+        from importlib.resources.abc import Traversable  # noqa: F811
     except ImportError:  # pragma: no cover
-        from importlib.abc import Traversable  # py39+
+        # py39+
+        from importlib.abc import Traversable
 else:  # pragma: no cover
-    msg_exc = "Traversable py39+"
-    raise ImportError(msg_exc)
+    pass
+
+try:
+    from importlib_metadata import (
+        PackageNotFoundError,
+        distribution,
+    )
+except ImportError:  # pragma: no cover
+    # What CPython provides likely very dated
+    from importlib.metadata import (
+        PackageNotFoundError,
+        distribution,
+    )
 
 __all__ = (
     "filter_by_suffix",
@@ -213,6 +220,7 @@ __all__ = (
     "PackageResource",
     "PartSuffix",
     "PartStem",
+    "get_package_data",
 )
 
 is_module_debug = False
@@ -275,7 +283,7 @@ def msg_stem(file_name):
 
     if name_path is not None:
         lst_suffixes = path_name.suffixes
-        if len(lst_suffixes) == 0:
+        if not bool(lst_suffixes):
             ret = name_path
         else:
             suffix_all = "".join(lst_suffixes)
@@ -302,8 +310,8 @@ class PartSuffix(Protocol):
 
         from typing import TYPE_CHECKING
         from functools import partial
-        from logging_strict.package_resource import filter_by_suffix
-        from logging_strict.package_resource import PartSuffix
+        from logging_strict.util.package_resource import filter_by_suffix
+        from logging_strict.util.package_resource import PartSuffix
 
         if TYPE_CHECKING:
             cb_suffix: PartSuffix
@@ -503,7 +511,7 @@ def filter_by_suffix(expected_suffix, test_suffix):
         :returns: True if passes check
         :rtype: bool
         """
-        return val is None or isinstance(val, str) and len(val) == 0
+        return val is None or (isinstance(val, str) and not bool(val))
 
     def is_not_empty(val: Any) -> bool:
         """Not None and non-empty str
@@ -513,7 +521,7 @@ def filter_by_suffix(expected_suffix, test_suffix):
         :returns: True if passes check
         :rtype: bool
         """
-        return val is not None and isinstance(val, str) and len(val) != 0
+        return val is not None and isinstance(val, str) and bool(val)
 
     if is_empty(expected_suffix) and is_empty(test_suffix):
         # Both None or empty string
@@ -709,7 +717,7 @@ def _get_package_data_folder(dotted_path):
     """
     dotted_path_valid = _to_package_case(dotted_path)
     try:
-        trav_ret = importlib_resources.files(dotted_path_valid)
+        trav_ret = importlib_resources.files(anchor=dotted_path_valid)
     except ModuleNotFoundError:
         # There is no such package or data folder
         trav_ret = None
@@ -864,22 +872,28 @@ class PackageResource:
             msg_exc = f"In {operation}, expects an absolute Path"
             raise TypeError(msg_exc)
 
-        if path_relative_package_dir is None:
-            path_relative_package_dir = Path(self.package_data_folder_start)
-        else:  # pragma: no cover
-            pass
-
-        if path_relative_package_dir is not None and isinstance(
-            path_relative_package_dir, str
+        if (
+            path_relative_package_dir is None
+            and self.package_data_folder_start is not None
         ):
-            # Any str will work
-            path_relative_to = Path(path_relative_package_dir)
-        elif path_relative_package_dir is not None and issubclass(
-            type(path_relative_package_dir), PurePath
-        ):
-            path_relative_to = path_relative_package_dir
-        else:
             path_relative_to = Path(self.package_data_folder_start)
+        else:
+            if is_ok(path_relative_package_dir) and path_relative_package_dir not in (
+                ".",
+            ):
+                # Any str will work
+                path_relative_to = Path(path_relative_package_dir)
+            elif path_relative_package_dir is not None and issubclass(
+                type(path_relative_package_dir), PurePath
+            ):
+                path_relative_to = path_relative_package_dir
+            else:
+                # unsupported type
+                if self.package_data_folder_start is not None:
+                    path_relative_to = Path(self.package_data_folder_start)
+                else:
+                    # horrible fallback
+                    path_relative_to = Path(".")
 
         file_name = y.name
         last_folder_name = path_relative_to.name
@@ -887,7 +901,7 @@ class PackageResource:
         #####
         # Case: file in root folder
         #####
-        is_in_root_folder = len(last_folder_name) == 0
+        is_in_root_folder = not bool(last_folder_name)
         is_last_is_parent_folder = last_folder_name == str(y.parent.name)
         if is_in_root_folder or is_last_is_parent_folder:
             return Path(file_name)
@@ -924,7 +938,7 @@ class PackageResource:
             parents.extend(lst_playing)
         else:
             for num in range(0, parent_count):
-                if len(lst_playing) != 0:
+                if bool(lst_playing):
                     parents.append(lst_playing.pop(0))
 
         parents.reverse()
@@ -1013,20 +1027,25 @@ class PackageResource:
         d_files = {}
 
         # Fallback package folder
-        if path_relative_package_dir is None:
-            path_relative_package_dir = self.package_data_folder_start
-        else:  # pragma: no cover
-            pass
-
-        # path_relative_package_dir no longer None
-        if is_ok(path_relative_package_dir) and path_relative_package_dir not in (".",):
-            # Any str will work
-            path_relative_to = Path(path_relative_package_dir)
-        elif issubclass(type(path_relative_package_dir), PurePath):
-            path_relative_to = path_relative_package_dir
+        if (
+            path_relative_package_dir is None
+            and self.package_data_folder_start is not None
+        ):
+            path_relative_to = Path(self.package_data_folder_start)
         else:
-            # Unsupported type --> Fallback folder
-            path_relative_to = self.package_data_folder_start
+            if is_ok(path_relative_package_dir) and path_relative_package_dir not in (
+                ".",
+            ):
+                # Any str will work
+                path_relative_to = Path(path_relative_package_dir)
+            elif issubclass(type(path_relative_package_dir), PurePath):
+                path_relative_to = path_relative_package_dir
+            else:
+                # Unsupported type --> Fallback folder
+                if self.package_data_folder_start is not None:
+                    path_relative_to = Path(self.package_data_folder_start)
+                else:
+                    path_relative_to = Path(".").resolve()
 
         # Callable check?!
         if cb_suffix is None or cb_file_stem is None:
@@ -1039,7 +1058,7 @@ class PackageResource:
             path_relative_package_dir=path_relative_to,
         )
         lst_base_folders = list(base_folder_generator)
-        is_generator_empty = len(lst_base_folders) == 0
+        is_generator_empty = not bool(lst_base_folders)
         if is_generator_empty:
             # Query for package data files produced no results
             return d_files
@@ -1241,24 +1260,21 @@ class PackageResource:
             pass
         else:
             parts = path_adjusted.parts
-            if len(parts) != 0:
+            if bool(parts):
                 traversable_data_dir.joinpath(*parts)
             else:  # pragma: no cover
                 pass
 
         # Check the root folder
         #    root is ``data``. root relative to ``data`` is ````
-        if (
-            len(
-                list(
-                    check_folder(
-                        traversable_data_dir,
-                        cb_suffix=cb_suffix,
-                        cb_file_stem=cb_file_stem,
-                    )
+        if bool(
+            list(
+                check_folder(
+                    traversable_data_dir,
+                    cb_suffix=cb_suffix,
+                    cb_file_stem=cb_file_stem,
                 )
             )
-            != 0
         ):
             yield from check_folder(
                 traversable_data_dir,
@@ -1458,7 +1474,7 @@ class PackageResource:
                                         file=sys.stderr,
                                     )
                                 # Gracefully :py:meth:`Path.mkdir` dest folders
-                                if len(tuple_relative_folders) != 0:
+                                if bool(tuple_relative_folders):
                                     """In dest folder, gracefully create all
                                     needed sub-folders. Setting correct owner
                                     along the way.
@@ -1699,3 +1715,114 @@ class PackageResource:
             cb_file_stem=cb_file_stem,
             as_user=True,
         )
+
+
+def get_package_data(
+    package_name: str,
+    file_name_stem: str,
+    suffix=".csv",
+    convert_to_path: Sequence[str] = ("data",),
+    is_extract: bool | None = False,
+) -> str:
+    """Export and read one package file. Exports to
+    ``/run/user/[current session user id]``. This tmp folder inaccessible
+    to other users and contents automagically removed at system shutdown
+
+    :param file_name_stem: without any suffixes
+    :type file_name_stem: str
+    :param suffix: str or tuple. Target file suffixes
+    :type suffix: str | collections.abc.Sequence[str] | None
+    :param convert_to_path:
+
+       Default ``("data",)``. relative dotted path to subfolder, excluding package_name.
+
+    :type convert_to_path: collections.abc.Sequence[str] | None
+    :param is_extract:
+
+       Before reading file contents,
+
+       True -- extract to tmp folder
+
+       False -- read data file contents from within package
+
+    :type is_extract: bool
+    :returns: file contents or on failure None
+    :rtype: str | None
+    """
+    if (
+        suffix is not None
+        and isinstance(suffix, Sequence)
+        and not isinstance(suffix, str)
+        and bool(suffix)
+    ):
+        mixed_suffixes = tuple(suffix)
+    elif (
+        suffix is not None
+        and isinstance(suffix, str)
+        and bool(suffix)
+        and suffix.startswith(".")
+    ) or (suffix is not None and isinstance(suffix, tuple)):
+        mixed_suffixes = (suffix,)
+    else:
+        # msg_warn = f"param suffix unsupported type got {suffix!r}"
+        # raise TypeError(msg_warn)
+        mixed_suffixes = (".csv",)
+    suffixes = "".join(mixed_suffixes)
+    module_file_name = f"{file_name_stem}{suffixes}"
+
+    if is_extract is None or not isinstance(is_extract, bool):
+        bool_is_extract = False
+    else:
+        bool_is_extract = is_extract
+
+    if (
+        convert_to_path is not None
+        and isinstance(convert_to_path, Sequence)
+        and not isinstance(convert_to_path, str)
+        and bool(convert_to_path)
+    ):
+        relpath_package_data_subfolder = ".".join(convert_to_path)
+    else:
+        relpath_package_data_subfolder = ""
+
+    cb_suffix = partial(filter_by_suffix, mixed_suffixes)
+    cb_file_stem = partial(filter_by_file_stem, file_name_stem)
+    pr = PackageResource(package_name, None)
+    gen = pr.package_data_folders(
+        cb_suffix=cb_suffix,
+        cb_file_stem=cb_file_stem,
+        path_relative_package_dir=relpath_package_data_subfolder,
+    )
+    if not bool_is_extract:
+        # Do not want to extract model from package, just get it's absolute Path
+        path_parents = list(gen)
+        if bool(path_parents):
+            path_dir = path_parents[0]
+            path_f = path_dir.joinpath(module_file_name)
+        else:
+            path_f = None
+    else:
+        if platform.system().lower() == "linux":  # pragma: no cover
+            # inaccessible to other users (cold boot attack); automagically removed
+            path_dest_dir = Path("/run", "user", f"{os.geteuid()!s}")
+        else:  # pragma: no cover
+            path_dest_dir = Path(tempfile.gettempdir())
+
+        gen_paths = pr.resource_extract(
+            gen,
+            path_dest_dir,
+            cb_suffix=cb_suffix,
+            cb_file_stem=cb_file_stem,
+        )
+        paths = list(gen_paths)
+        if bool(paths):
+            path_f = paths[0]
+        else:
+            path_f = None
+
+    if path_f is None:
+        ret = ""
+    else:
+        ret = path_f.read_text()
+
+    return ret

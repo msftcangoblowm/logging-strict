@@ -324,7 +324,7 @@ def main() -> None:
             errors.append("\n".join(list(t_err)))
         else:
             count_succeed = count_succeed + 1
-        if is_fail_fast and len(errors) != 0:
+        if is_fail_fast and bool(errors):
             break
         else:  # pragma: no cover continue
             pass

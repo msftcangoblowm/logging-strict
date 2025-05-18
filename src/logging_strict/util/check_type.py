@@ -76,11 +76,7 @@ def check_type_path(module_path, *, msg_context=None):
     )
     msg_expanduser = """Home directory can’t be resolved"""
     msg_supplimentary = msg_context if is_ok else ""
-    if (
-        module_path is not None
-        and isinstance(module_path, str)
-        and len(module_path) != 0
-    ):
+    if module_path is not None and isinstance(module_path, str) and bool(module_path):
         try:
             """Do not know whether relative or absolute path, so no
             :py:func:`pathlib.Path.resolve`
@@ -123,7 +119,7 @@ def is_not_ok(test):
 
     if is_str:
         str_stripped = test.strip()
-        is_really_empty = len(str_stripped) == 0
+        is_really_empty = not bool(str_stripped)
         if is_really_empty:
             ret = True
         else:
@@ -145,14 +141,7 @@ def is_ok(test):
     :returns: ``True`` if non-empty str otherwise ``False``
     :rtype: bool
     """
-    ret = False
-    is_str = test is not None and isinstance(test, str)
-    if is_str:
-        # Edge case: contains only whitespace
-        str_stripped = test.strip()
-        ret = len(str_stripped) != 0
-    else:
-        ret = False
+    ret = test is not None and isinstance(test, str) and bool(test.strip())
 
     return ret
 

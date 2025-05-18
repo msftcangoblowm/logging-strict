@@ -116,7 +116,7 @@ def find_project_root(srcs, stdin_filename=None):
         ret = (
             some_sequence is not None
             and isinstance(some_sequence, Sequence)
-            and len(some_sequence) == 0
+            and not bool(some_sequence)
         )
         return ret
 
@@ -156,9 +156,9 @@ def find_project_root(srcs, stdin_filename=None):
         containing only whitespace"""
         srcs = [src for src in srcs if is_ok(src)]
 
-        if stdin_filename is not None and len(srcs) != 0:
+        if stdin_filename is not None and bool(srcs):
             srcs = list(stdin_filename if s == "-" else s for s in srcs)
-        elif stdin_filename is None and len(srcs) != 0:  # pragma: no cover
+        elif stdin_filename is None and bool(srcs):  # pragma: no cover
             # Added "-", but didn't supply :paramref:`stdin_filename`
             srcs = [s for s in srcs if s != "-"]
         else:  # pragma: no cover

@@ -1,5 +1,7 @@
 appdirs
 attrs
+importlib-metadata
+importlib-resources
 python-dateutil>=2.9.0.post0
 strictyaml
 tomli; python_version<"3.11"
