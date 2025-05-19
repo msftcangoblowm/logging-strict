@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=80.7.1", "wheel", "build", "setuptools_scm>=8"]
+requires = ["setuptools>=80.7.1", "wheel", "build", "setuptools_scm>=8.3.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -43,8 +43,12 @@ classifiers = [
   "Natural Language :: English",
   "Typing :: Typed",
 ]
+# Contact by mastodon please
 authors = [
-    { name = "Dave Faulkmore", email = "faulkmore@telegram.org" },
+    { name = "Dave Faulkmore", email = "faulkmore@protonmail.com" },
+]
+maintainers = [
+    {name = "Dave Faulkmore", email = "faulkmore@protonmail.com"},
 ]
 
 [project.urls]
@@ -93,7 +97,7 @@ generate_hashes = false  # From setuptools 69.0.2, parsing dependencies with has
 [tool.setuptools_scm]
 # can be empty if no extra settings are needed, presence enables setuptools_scm
 # SETUPTOOLS_SCM_PRETEND_VERSION_FOR_LOGGING_STRICT="0.0.1" python -m setuptools_scm
-fallback_version = "0.0.1"
+# fallback_version = "0.0.1"
 version_file = "src/logging_strict/_version.py"
 
 [tool.mypy]

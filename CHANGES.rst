@@ -47,6 +47,10 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - docs: use py313+ avoid ruamel.yaml clib package
+   - docs(context_locals): fix doctest for get_locals_dynamic
+   - chore: bump versions
+   - fix: click py39 uses 8.1.7 py310+ latest
    - feat(package_resource): add module level function get_package_data
    - refactor: in conditional expression use bool instead of len
 
@@ -76,7 +80,7 @@ Version 1.6.0.post0 — 2025-04-09
 .. _changes_1-6-0:
 
 Version 1.6.0 — 2025-04-08
-------------------------- 
+-------------------------
 
 - feat(context_locals): get_locals_dynamic add support for staticmethod and classmethod
 - feat(context_locals): get_locals_dynamic drops arg func_path

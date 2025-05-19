@@ -4,7 +4,8 @@ black==24.10.0
     #   blackdoc
 blackdoc==0.3.9
     # via -r requirements/dev.in
-click==8.1.8
+click==8.1.7; python_version < "3.10"
+click==8.2.0; python_version >= "3.10"
     # via black
 coverage==7.6.10
     # via -r requirements/dev.in
@@ -26,13 +27,13 @@ mdurl==0.1.2
     # via markdown-it-py
 more-itertools==10.6.0
     # via blackdoc
-mypy==1.14.1
+mypy==1.15.0
     # via -r requirements/dev.in
 mypy-extensions==1.0.0
     # via
     #   black
     #   mypy
-packaging==24.2
+packaging==25.0
     # via black
 pathspec==0.12.1
     # via
@@ -63,5 +64,5 @@ typing-extensions==4.12.2 ; python_version < "3.11"
     #   black
     #   mypy
     #   rich
-validate-pyproject==0.23
+validate-pyproject==0.24.1
     # via -r requirements/dev.in

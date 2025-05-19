@@ -58,7 +58,7 @@ jobs:
         run: |
           echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
       - name: Set up Python ${{ matrix.python-version }}
-        uses: "actions/setup-python@v5.5.0"
+        uses: "actions/setup-python@v5.6.0"
         with:
           python-version: "${{ matrix.python-version }}"
           # cache: pip
@@ -67,7 +67,7 @@ jobs:
       - name: "Install tools"
         run: |
           set -xe
-          python -m pip install -r requirements/prod.unlock -r requirements/kit.lock -r requirements/dev.lock
+          python -m pip install wheel build setuptools-scm -r requirements/prod.unlock -r requirements/kit.lock -r requirements/dev.lock
       - name: "Build sdist and whl"
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
@@ -86,7 +86,7 @@ jobs:
           python -m coverage combine
           coverage xml -q --fail-under=98
       - name: "Upload to Codecov"
-        uses: codecov/codecov-action@v5.4.0
+        uses: codecov/codecov-action@v5.4.3
         with:
           name: unittest-py3.9
           token: ${{ secrets.CODECOV_TOKEN }}

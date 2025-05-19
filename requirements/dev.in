@@ -8,7 +8,10 @@
 -c pins-cffi.in
 -c prod.unlock
 
+# click==8.1.7; python_version < "3.10"
+# click==8.2.0; python_version >= "3.10"
 black
+
 blackdoc
 isort
 flake8

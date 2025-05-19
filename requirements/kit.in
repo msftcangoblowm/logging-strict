@@ -3,15 +3,17 @@
 
 -c pins.in
 
-# Things needed to make distribution kits.
-# "make upgrade" turns this into requirements/kit.lock.
-
-auditwheel
+# Build environment top level dependencies
+# Necessary to produce both .lock .unlock files. Afterwards would be removed
 build
-cibuildwheel
 setuptools
 setuptools-scm  # versioning
 wheel
+
+# Things needed to make distribution kits.
+# "make upgrade" turns this into requirements/kit.lock.
+auditwheel
+cibuildwheel
 
 # Build has a windows-only dependency on colorama:
 # https://github.com/pypa/build/blob/main/setup.cfg#L32

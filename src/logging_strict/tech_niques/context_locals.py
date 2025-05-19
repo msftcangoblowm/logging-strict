@@ -69,7 +69,7 @@ Returns ``"bar"``
 
 .. testcode::
 
-    from logging_strict.tech_niques.context_locals import get_locals, _func
+    from logging_strict.tech_niques.context_locals import get_locals_dynamic, _func
 
 
     def main():
@@ -78,7 +78,7 @@ Returns ``"bar"``
 
         args = ("A",)
         kwargs = {}
-        t_ret = get_locals(func_path, _func, *args, **kwargs)
+        t_ret = get_locals_dynamic(_func, *args, **kwargs)
         ret, d_locals = t_ret
         assert ret == "bar"
         assert "param_a" in d_locals.keys()
@@ -90,7 +90,7 @@ Returns ``"bar"``
 
 .. testoutput::
 
-   {'param_a': 'Hey A', 'param_b': 30}
+   {'full_name': '_func', 'param_a': 'Hey A', 'param_b': 30}
 
 Woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-
 oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooah!

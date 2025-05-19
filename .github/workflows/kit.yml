@@ -151,17 +151,34 @@ jobs:
           # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
           fetch-depth: 0
 
+      # https://stackoverflow.com/questions/66349002/get-latest-tag-git-describe-tags-when-repo-is-cloned-with-depth-1
+      # echo "tag=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_OUTPUT
+      - name: Get latest tag
+        id: vars
+        run: |
+          echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
+
       - name: "Install Python 3.9"
-        uses: actions/setup-python@v5.5.0
+        uses: actions/setup-python@v5.6.0
         with:
           # PYVERSIONS
           python-version: "3.9"
           # cache: pip
           # cache-dependency-path: 'requirements/*.lock'
 
+      # Will fail without: build wheel and setuptools-scm
+      # Build environment top level dependencies should never be in dependency files
       - name: "Install tools"
         run: |
-          python -m pip install -r requirements/kit.lock
+          python -m pip install build wheel setuptools-scm -r requirements/kit.lock
+
+      # Only for creating _version.py file
+      - name: "Build sdist"
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          echo "python igor.py build_next $RELEASE_VERSION"
+          python igor.py build_next "$RELEASE_VERSION"
 
       - name: "Build wheels"
         env:
@@ -201,16 +218,18 @@ jobs:
           echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
 
       - name: "Install Python 3.9"
-        uses: actions/setup-python@v5.5.0
+        uses: actions/setup-python@v5.6.0
         with:
           # PYVERSIONS
           python-version: "3.9"
           cache: pip
           cache-dependency-path: 'requirements/*.lock'
 
+      # Will fail without: build wheel and setuptools-scm
+      # Build environment top level dependencies should never be in dependency files
       - name: "Install tools"
         run: |
-          python -m pip install -r requirements/kit.lock
+          python -m pip install wheel build setuptools-scm -r requirements/kit.lock
 
       - name: "Build sdist"
         env:
@@ -241,15 +260,17 @@ jobs:
           fetch-depth: 0
 
       - name: "Install PyPy"
-        uses: actions/setup-python@v5.5.0
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: "pypy-3.9" # Minimum of PyPy PYVERSIONS
           cache: pip
           cache-dependency-path: 'requirements/*.lock'
 
+      # Will fail without: build wheel and setuptools-scm
+      # Build environment top level dependencies should never be in dependency files
       - name: "Install requirements"
         run: |
-          pypy3 -m pip install -r requirements/kit.lock
+          pypy3 -m pip install build wheel setuptools-scm -r requirements/kit.lock
 
       - name: "Build wheel"
         env:
@@ -284,7 +305,7 @@ jobs:
       id-token: write
     steps:
       - name: "Download artifacts"
-        uses: actions/download-artifact@v4.2.1
+        uses: actions/download-artifact@v4.3.0
         with:
           pattern: dist-*
           merge-multiple: true

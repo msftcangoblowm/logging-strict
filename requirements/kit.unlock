@@ -1,10 +1,7 @@
+# top level build environment dependencies removed
 auditwheel
-build
 cibuildwheel
 colorama
 python-dateutil>=2.9.0.post0
-setuptools
-setuptools-scm
 tomli; python_version<"3.11"
 typing-extensions; python_version<"3.11"
-wheel
