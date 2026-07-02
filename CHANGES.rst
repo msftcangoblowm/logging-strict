@@ -221,6 +221,7 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - ci: disable dependency-review workflow
    - fix(pep518_read): py314 PermissionError lenient or delayed
    - fix(xdg_folder): appauthor property setter normalize author name
    - fix(package_resource): unknown package fast fail raise PackageNotFoundError
