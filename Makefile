@@ -127,7 +127,7 @@ diff_upgrade:			## Summarize the last `make upgrade`
 .PHONY: pre-commit
 pre-commit:				## Run checks found in .pre-commit-config.yaml
 ifeq ($(is_venv),1)
-	-@pre-commit run --all-files > /tmp/out.txt
+	-@PRE_COMMIT_COLOR=never pre-commit run --all-files > /tmp/out.txt
 endif
 
 #--strict is on

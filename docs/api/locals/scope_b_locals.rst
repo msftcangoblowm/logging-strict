@@ -1,21 +1,23 @@
 .. _api_locals_scope_b_locals_capture:
 
-==============
-Scope B locals
-==============
+get_locals
+===========
 
 When an Exception occurs the locals are available where the Exception
-occurs, for that scope (scope A). Which is often within a unittest function.
+occurs, for that scope (scope A). Which is often within a pytest/unittest function.
 
 Of course, once figure out where to debug, will need the locals within
 that scope (scope B). Scope A and B are **always** different. To add
-to the frustration, scope A locals are mostly really useless.
+to the frustration, scope A locals are often frustratingly useless.
 
 An advanced :py:mod:`unittest.mock` technique is used to patch a function
 that has one return statement; not yield, not raises something.
 
 All the nasty details are hidden. Can accomplish this in one function call,
 :ref:`get_locals <code/tech_niques/context_locals:top>`
+
+Example usage
+--------------
 
 Function ``piggy_back``:
 
@@ -48,3 +50,10 @@ Would like to know the locals key/value pairs and return value
 
    The piggy_back function is in unittest,
    ``/tests/tech_niques/test_docs_capture_traceback.py``
+
+
+:py:func:`~logging_strict.tech_niques.get_locals_dynamic` is a better
+:py:func:`~logging_strict.tech_niques.get_locals`. Just leave out
+``func_path``.
+
+Otherwise the usage is exactly the same; less is better.

@@ -1,0 +1,3 @@
+# tox -e rst2html5
+docutils
+Pygments

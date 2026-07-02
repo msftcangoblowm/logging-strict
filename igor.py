@@ -14,8 +14,6 @@ Adapted from
 
 """
 
-from __future__ import annotations
-
 import datetime
 import inspect
 import os
@@ -52,7 +50,7 @@ current_aliases = (
 g_kinds = ("tag", "current", "now")
 
 
-def sanitize_kind(kind: str | None = None) -> str:
+def sanitize_kind(kind: "str | None" = None) -> str:
     """Allow kind to be a version str, 'current', 'tag'"""
     if kind is None:
         # Fallback
@@ -121,7 +119,7 @@ def sanitize_tag(ver: str) -> str:
     return str_v
 
 
-def do_quietly(command, cwd):
+def do_quietly(command: "list[str]", cwd: "Path") -> int:
     """Run a noisy command in a shell to suppress the output"""
     proc = subprocess.run(
         command,
@@ -173,22 +171,19 @@ def print_banner(label: str) -> None:
 
 def _update_file(fname: str, pattern: str, replacement: str) -> None:
     """Update the contents of a file, replacing pattern with replacement."""
-    path_file = Path(fname)
-    if path_file.exists():
-        with open(fname) as fobj:
-            old_text = fobj.read()
-
+    abspath_file = Path(fname)
+    if abspath_file.exists():
+        old_text = abspath_file.read_text()
         new_text = re.sub(pattern, replacement, old_text, count=1)
 
-        if new_text != old_text:
-            print(f"Updating {fname}", file=sys.stderr)
-            with open(fname, "w") as fobj:
-                fobj.write(new_text)
+        if new_text != old_text:  # pragma: no branch
+            print(f"Updating {abspath_file!s}", file=sys.stderr)
+            abspath_file.write_text(new_text)
     else:
-        print(f"Cannot update nonexistent file, {fname}", file=sys.stderr)
+        print(f"Cannot update nonexistent file, {abspath_file!s}", file=sys.stderr)
 
 
-def get_release_facts(kind: str) -> types.SimpleNamespace:
+def get_release_facts(kind: str) -> "types.SimpleNamespace":
     """Return an object with facts about the current release."""
     facts = types.SimpleNamespace()
     # sanitize again just in case
@@ -263,8 +258,7 @@ def do_edit_for_release(kind: str):
     _update_file("CHANGES.rst", re.escape(UNRELEASED), SCRIV_START + new_head)
 
     # docs/conf.py
-    new_conf = textwrap.dedent(
-        f"""\
+    new_conf = textwrap.dedent(f"""\
         # @@@ editable
         copyright = "2023\N{EN DASH}{facts.now:%Y}, Dave Faulkmore"
         # The short X.Y.Z version.
@@ -274,8 +268,7 @@ def do_edit_for_release(kind: str):
         # The date of release, in "monthname day, year" format.
         release_date = "{facts.now:%B %-d, %Y}"
         # @@@ end
-        """
-    )
+        """)
     _update_file("docs/conf.py", r"(?s)# @@@ editable\n.*# @@@ end\n", new_conf)
 
 
@@ -292,7 +285,7 @@ def do_bump_version(kind: str) -> None:
     )
 
 
-def do_cheats(kind: str):
+def do_cheats(kind: str) -> None:
     """Show a cheatsheet of useful things during releasing."""
     kind_: str = sanitize_kind(kind)
     facts = get_release_facts(kind_)
@@ -334,7 +327,7 @@ def do_help() -> None:
             print(f"{name[3:]:<20}{value.__doc__}")
 
 
-def current_tag() -> str | None:
+def current_tag() -> "str | None":
     """Run git describe --tag"""
     cmd = ["/bin/git", "describe", "--tag"]
     path_cwd = Path.cwd()
@@ -364,7 +357,7 @@ def scm_key(prog_name: str) -> str:
     return scm_override_key
 
 
-def _current_version() -> str | None:
+def _current_version() -> "str | None":
     path_cwd = Path.cwd()
     cmd = [sys.executable, "setup.py", "--version"]
     proc = subprocess.run(
@@ -396,15 +389,15 @@ def do_current_version() -> None:
         print(str_out)
 
 
-def _arbritary_version(next_version: str) -> str | None:
+def _arbritary_version(next_version: str) -> "str | None":
     path_cwd = Path.cwd()
     cwd_path = str(path_cwd)
     scm_override_key = scm_key(g_app_name)
 
-    if next_version is None or (
-        next_version is not None
-        and isinstance(next_version, str)
-        and len(next_version) == 0
+    if (
+        next_version is None
+        or not isinstance(next_version, str)
+        or not bool(next_version.strip())
     ):
         scm_override_val = current_tag()
     else:
@@ -433,7 +426,7 @@ def _arbritary_version(next_version: str) -> str | None:
     return str_out
 
 
-def _tag_version(next_version: str | None = "") -> str | None:
+def _tag_version(next_version: "str | None" = "") -> "str | None":
     """Get version potentially overriding it"""
     # empty str means take current tag version
     ret = _arbritary_version(next_version)
@@ -513,10 +506,10 @@ def do_build_next(next_version: str) -> None:
     cwd_path = str(path_cwd)
     env = os.environ.copy()
 
-    if next_version is None or (
-        next_version is not None
-        and isinstance(next_version, str)
-        and len(next_version) == 0
+    if (
+        next_version is None
+        or not isinstance(next_version, str)
+        or not bool(next_version.strip())
     ):
         msg = "Use current version, not tagged or provided version"
         print(msg)
@@ -564,7 +557,7 @@ def do_pretag(tag: str) -> int:
     return ret
 
 
-def _analyze_args(function: types.FunctionType) -> tuple[bool, int]:
+def _analyze_args(function: "types.FunctionType") -> tuple[bool, int]:
     """What kind of args does `function` expect?
 
     :param function: module level function. Inspect arg spec

@@ -20,7 +20,6 @@ import logging
 import sys
 import unittest
 
-from logging_strict.constants import LOG_FORMAT  # noqa: F401
 from logging_strict.constants import g_app_name
 from logging_strict.tech_niques import LoggerRedirector
 
@@ -28,7 +27,7 @@ from logging_strict.tech_niques import LoggerRedirector
 class SomeUnittestClass(unittest.TestCase):
     """Example straight from the docs. Applicable to unittest, not pytest"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Setup loggers redirect"""
         g_module_name = "test_docs_sync_log_capture"
         g_module = f"{g_app_name}.tests.tech_niques.{g_module_name}"
@@ -37,6 +36,7 @@ class SomeUnittestClass(unittest.TestCase):
 
         # So see root logging messages, replace, needs logging with handlers
         """
+        from logging_strict.constants import LOG_FORMAT
         logging.basicConfig(
             format=LOG_FORMAT,
             level=logging.INFO,
@@ -51,14 +51,14 @@ class SomeUnittestClass(unittest.TestCase):
             fake_stderr=sys.stderr,
         )
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         """Restore previous state for sys.stderr and sys.stdout"""
         LoggerRedirector.reset_loggers(
             fake_stdout=sys.stdout,
             fake_stderr=sys.stderr,
         )
 
-    def test_logging_redirect(self):
+    def test_logging_redirect(self) -> None:
         """Are log messages shown? Uncomment self._LOGGER.info line then run
 
         Confirm log message printed

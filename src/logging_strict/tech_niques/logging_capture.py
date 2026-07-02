@@ -1,8 +1,6 @@
 """
 .. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-..
-
 Within a context manager, capture log messages from third party packages
 
 Capture logging messages from package `foo`, INFO level and higher,
@@ -143,7 +141,7 @@ Code snippet
    assertNoLogs (py310+) :py:meth:`[docs] <unittest.TestCase.assertNoLogs>`
 
 Into the rabbit hole
----------------------------
+----------------------
 
 More in-depth low level implementation notes
 
@@ -162,24 +160,12 @@ More in-depth low level implementation notes
 
    https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L193
 
-
-**Module private variables**
-
-.. py:data:: __all__
-   :type: tuple[str, str]
-   :value: ("captureLogs", "captureLogsMany")
-
-   Exported objects from this module
-
-**Module objects**
-
 """
-
-from __future__ import annotations
 
 import contextlib
 import logging
 import sys
+from collections.abc import MutableSequence
 
 import attrs
 
@@ -195,22 +181,6 @@ from ..util.check_type import (
     is_ok,
 )
 
-if sys.version_info >= (3, 8):  # pragma: no cover
-    from collections.abc import (  # noqa: F401 Used by Sphinx
-        MutableSequence,
-        Sequence,
-    )
-else:  # pragma: no cover
-    from typing import (  # noqa: F401 Used by Sphinx
-        MutableSequence,
-        Sequence,
-    )
-
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Iterator  # noqa: F401 Used by sphinx
-else:  # pragma: no cover
-    from typing import Iterator  # noqa: F401 Used by sphinx
-
 __all__ = ("captureLogs", "captureLogsMany")
 
 # ####################
@@ -219,7 +189,7 @@ __all__ = ("captureLogs", "captureLogsMany")
 
 if sys.version_info < (3, 11):  # pragma: no cover py311 feature
 
-    def getLevelNamesMapping() -> dict[str, int]:
+    def getLevelNamesMapping() -> "dict[str, int]":
         """Backport: getLevelNamesMapping
 
         :returns: mapping of logging level name to int value
@@ -311,37 +281,35 @@ def _normalize_level(level):
        - :py:exc:`TypeError` -- Unsupported type. Not a logging level
 
     """
-    msg_typerror = f"Unsupported type, {type(level)}"
+    msg_typerror = f"Unsupported type, {level!r} {type(level)}"
     msg_valueerror_int = (
-        f"Invalid logging level {str(level)} or out of range. "
+        f"Invalid logging level {level!r} or out of range. "
         "Keep within KISS principle"
     )
     msg_valueerror_str = (
-        f"Invalid logging level {str(level)} or out of range. "
+        f"Invalid logging level {level!r} or out of range. "
         "Keep within KISS principle"
     )
 
     # Process errors first
     # #####################
 
-    if not check_level(level):
+    if not check_level(level):  # pragma: no branch
         # Why not?
         if isinstance(level, logging.Logger):  # pragma: no cover
             pass
         elif isinstance(level, int):
             if level not in logging.getLevelNamesMapping().values() and (
                 (level > 0 and level < 50) or level < 0 or level > 50
-            ):
+            ):  # pragma: no branch
                 # Although valid, KISS principle
                 # or out of range
                 raise ValueError(msg_valueerror_int)
-            else:  # pragma: no cover
-                pass
         elif isinstance(level, str):
             is_str_convertable = str2int(level=level)
             if isinstance(is_str_convertable, int) and level not in map(
                 str, logging.getLevelNamesMapping().values()
-            ):
+            ):  # pragma: no branch
                 if is_str_convertable > 0 and is_str_convertable < 50:
                     raise ValueError(msg_valueerror_str)
                 elif is_str_convertable < 0:
@@ -350,12 +318,8 @@ def _normalize_level(level):
                     raise ValueError(msg_valueerror_str)
                 else:  # pragma: no cover
                     pass
-            else:  # pragma: no cover
-                pass
         else:
             raise TypeError(msg_typerror)
-    else:  # pragma: no cover
-        pass
 
     if is_assume_root(level):
         """Guess referring to root logger. Avoid making a disasterous
@@ -377,7 +341,8 @@ def _normalize_level(level):
                 level_name = logging.getLevelName(level)
             else:  # pragma: no cover
                 raise ValueError(msg_valueerror_int)
-        else:  # pragma: no cover Check unsupported type already occurred
+        else:  # pragma: no cover
+            # Check unsupported type already occurred
             raise TypeError(msg_typerror)
 
     return level_name
@@ -724,14 +689,10 @@ def captureLogsMany(
     assert len(loggers) == len(levels)
 
     # Normalize levels. :paramref:`levels` is possibly immutable
-    _levels = []
-    for idx, level in enumerate(levels):
-        _levels.append(_normalize_level(level))
+    _levels = [_normalize_level(level) for level in levels]
 
     # Normalize loggers
-    _loggers = []
-    for logger in loggers:
-        _loggers.append(_normalize_logger(logger))
+    _loggers = [_normalize_logger(logger) for logger in loggers]
 
     try:
         # __enter__

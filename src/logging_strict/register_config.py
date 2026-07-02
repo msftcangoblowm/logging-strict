@@ -96,6 +96,7 @@ from .constants import (
     LoggingConfigCategory,
     g_app_name,
 )
+from .exceptions import PackageNotFoundError
 from .logging_api import (
     setup_ui_other,
     setup_worker_other,
@@ -232,11 +233,9 @@ class ExtractorLoggingConfig:
                     # relative path is bad or not a folder
                     is_set_to_xdg = True
 
-        if is_set_to_xdg:
+        if is_set_to_xdg:  # pragma: no branch
             self._patch_extract_folder = False
             self._path_extraction_dir = Path(DestFolderUser(self.package_name).data_dir)
-        else:  # pragma: no cover
-            pass
 
         if is_test_file is None or not isinstance(is_test_file, bool):
             self._is_test_file = False
@@ -298,10 +297,8 @@ class ExtractorLoggingConfig:
         """
         cls = type(self)
         package_name_clean = cls.clean_package_name(val)
-        if package_name_clean is not None:
+        if package_name_clean is not None:  # pragma: no branch
             self._package_name = package_name_clean
-        else:  # pragma: no cover
-            pass
 
     @property
     def path_extracted_db(self):
@@ -366,35 +363,39 @@ class ExtractorLoggingConfig:
             cb_suffix: PartSuffix
 
         start_folder_relpath = ""
-        pr = PackageResource(self._package_name, start_folder_relpath)
         cb_stem = partial(filter_by_file_stem, CONFIG_STEM)
         cb_suffix = partial(filter_by_suffix, CONFIG_SUFFIX)
         # msg_info = f"cb_suffix {cb_suffix!r}"
         # _logger.info(msg_info)
 
-        # Generator not called yet, no ImportError
-        gen_files = pr.package_data_folders(
-            cb_suffix=cb_suffix,
-            cb_file_stem=cb_stem,
-        )
-
-        # Exceptions logged WARNING level
-        iter_path_f = pr.resource_extract(
-            gen_files,
-            self._path_extraction_dir,
-            cb_suffix=cb_suffix,
-            cb_file_stem=cb_stem,
-            is_overwrite=True,
-        )
-        lst_files = list(iter_path_f)
-        lst_files_count = len(lst_files)
-        # print(f"extract_db file count ({lst_files_count}) {lst_files}", file=sys.stderr)
-        if lst_files_count >= 1:
-            # Take the 1st result although there should only be one file
-            self._path_extracted_db = lst_files[0]
-        else:  # pragma: no cover
-            # Failed query. In package, no such data file
+        try:
+            pr = PackageResource(self._package_name, start_folder_relpath)
+        except PackageNotFoundError:
             self._path_extracted_db = None
+        else:
+            # Generator not called yet, no ImportError
+            gen_files = pr.package_data_folders(
+                cb_suffix=cb_suffix,
+                cb_file_stem=cb_stem,
+            )
+
+            # Exceptions logged WARNING level
+            iter_path_f = pr.resource_extract(
+                gen_files,
+                self._path_extraction_dir,
+                cb_suffix=cb_suffix,
+                cb_file_stem=cb_stem,
+                is_overwrite=True,
+            )
+            files = list(iter_path_f)
+            files_count = len(files)
+            # print(f"extract_db file count ({lst_files_count}) {lst_files}", file=sys.stderr)
+            if files_count >= 1:
+                # Take the 1st result although there should only be one file
+                self._path_extracted_db = files[0]
+            else:  # pragma: no cover
+                # Failed query. In package, no such data file
+                self._path_extracted_db = None
 
     def get_db(self, path_extracted_db=None):
         """Get YAML registry of logging config YAML file records. Which happens
@@ -430,10 +431,8 @@ class ExtractorLoggingConfig:
         else:
             is_extract = True
 
-        if is_extract is True:
+        if is_extract:  # pragma: no branch
             self.extract_db()
-        else:  # pragma: no cover
-            pass
 
         path_f = self.path_extracted_db
         if path_f is None:
@@ -548,10 +547,8 @@ class ExtractorLoggingConfig:
                 )
                 is_skip = any(t_skip)
 
-                if is_skip:
+                if is_skip:  # pragma: no branch
                     continue
-                else:
-                    pass
 
                 """Choose which extraction function to use based only on category
 
@@ -567,9 +564,8 @@ class ExtractorLoggingConfig:
                 # Is package data so will need to extract package data file
                 # Separate relpath into components. Get relative path without file name
                 relpath_f = Path(item_f_relpath)
-                if str(relpath_f.parent) == ".":
-                    package_start_relative_folder = ""
-                else:
+                package_start_relative_folder = ""
+                if str(relpath_f.parent) != ".":  # pragma: no branch
                     package_start_relative_folder = str(relpath_f.parent)
 
                 # Extract the logging config YAML file
@@ -594,7 +590,7 @@ class ExtractorLoggingConfig:
                     cm_skip = does_not_raise()
 
                 try:
-                    is_xdg_folder = self._patch_extract_folder is False
+                    is_xdg_folder = not self._patch_extract_folder
                     if is_xdg_folder:
                         with cm_skip:
                             t_ret = fcn_wo_params()
@@ -643,8 +639,6 @@ class ExtractorLoggingConfig:
                 # config file has no records
                 is_set_blank = True
 
-        if is_set_blank:
+        if is_set_blank:  # pragma: no branch
             self._logging_config_yaml_relpath = None
             self._logging_config_yaml_str = None
-        else:  # pragma: no cover
-            pass

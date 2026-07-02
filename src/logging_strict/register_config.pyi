@@ -12,6 +12,7 @@ from .constants import LoggingConfigCategory
 CONFIG_STEM: Final[str]
 CONFIG_SUFFIX: Final[str]
 REGEX_REL_PATH: Final[str]
+test_yaml: Final[str]
 
 _category_values: s.scalar.Enum
 _item_map: s.compound.MapCombined
@@ -29,6 +30,13 @@ class ExtractorLoggingConfig:
         "_registry",
         "_logging_config_yaml_relpath",
     )
+
+    _patch_extract_folder: bool
+    _is_test_file: bool
+    _path_extracted_db: Path | None
+    _registry: dict[Any, Any] | None
+    _logging_config_yaml_str: str | None
+
     def __init__(
         self,
         package_name: str,

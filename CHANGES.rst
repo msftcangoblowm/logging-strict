@@ -8,6 +8,180 @@ Changelog
    Feature request
    .................
 
+   - [feat] PackageResource gather folders that contain data files.
+
+     If package_data_folder_start is not provided. Traverse package
+     detecting folders that contain data files.
+
+     Recursive
+
+     .. code-block:: python
+
+         from importlib.resources import files
+
+         t_extensions = (
+             '.py',
+             '.pyc',
+             '.pyo',
+             '.pyd',  # win extension (C/C++/Rust)
+             '.so',  # macos and linux (C/C++/Rust standard)
+             '.dll',  # win dynamic library (C/C++/Rust)
+             '.dylib',  # macOS dynamic library (Rust/C++ raw output, rarely in final install)
+         )
+
+
+         def get_data_folder_paths(package_name: str) -> list[str]:
+             """
+             Returns a list of dotted paths to subdirectories containing data files.
+             Does not extract files or read metadata. Safe for zipped packages.
+             """
+
+             data_folders: set[str] = set()
+             root = files(package_name)
+
+             # Recursive helper to traverse the virtual file system
+             def traverse(current_traversable, current_dotted_path: str):
+                 try:
+                     for item in current_traversable.iterdir():
+                         if item.is_dir():
+                             # Construct the new dotted path
+                             new_dotted_path = (
+                                 f"{current_dotted_path}.{item.name}"
+                                 if current_dotted_path
+                                 else item.name
+                             )
+
+                             # Check if this directory contains any non-code files
+                             has_data = False
+                             for sub_item in item.iterdir():
+                                 if sub_item.is_file() and not sub_item.name.endswith(
+                                     t_extensions
+                                 ):
+                                     has_data = True
+                                     break
+
+                             if has_data:
+                                 data_folders.add(f"{package_name}.{new_dotted_path}")
+
+                             # Recurse deeper. For package base only don't do this!
+                             # traverse(item, new_dotted_path)
+                             pass
+
+                 except Exception:
+                     # Skip inaccessible directories (permissions or virtual structure issues)
+                     pass
+
+             traverse(root, "")
+             return sorted(list(data_folders))
+
+
+         Non - recursive
+
+     .. code-block:: python
+
+         from importlib.resources import files
+         from typing import List
+
+
+         def get_top_level_data_hints(package_name: str) -> List[str]:
+             """
+             Scans ONLY immediate subdirectories of the package root.
+             Returns dotted paths of folders containing at least one non-code file.
+             Does not recurse, does not cache, does not extract files.
+             """
+             hints = {}
+             try:
+                 root = files(package_name)
+
+                 # Iterate only direct children
+                 for item in root.iterdir():
+                     if item.is_dir():
+                         # Check only immediate children of this folder for data
+                         # We don't need to scan deep, just prove it's a 'data' folder
+                         has_data = False
+                         try:
+                             for sub_item in item.iterdir():
+                                 if sub_item.is_file() and not sub_item.name.endswith(
+                                     t_extensions
+                                 ):
+                                     has_data = True
+                                     break
+                         except Exception:
+                             # Skip if directory content is inaccessible
+                             continue
+
+                         if has_data:
+                             # Construct dotted path: package.folder_name
+                             hints.add(f"{package_name}.{item.name}")
+
+             except Exception:
+                 # Package not found or inaccessible
+                 pass
+
+             return sorted(list(hints))
+
+   - [fix] in walk_tree_folders. Keep all folder references. Need access to
+     - parent folder
+     - parent parent folder
+
+   - [feat] async support
+
+     await can suspend execution, breaking direct source re-execution
+
+     Wrap the async function in an event loop (e.g., asyncio.run) during
+     re-execution. Ensure the injected code preserves coroutine context
+     and doesn’t block the loop.
+
+     code.co_freevars, func.__closure__) to preserve context during re-execution
+
+     1. Detect async def functions via AST inspection (ast.AsyncFunctionDef).
+
+     2. Preserve coroutine nature — rewritten code must return a coroutine; use async def in generated code.
+
+     3. Handle await expressions — ensure injected logging does not break suspension points.
+
+     4. Run in an event loop — during debugging, re-execution must occur within an active loop (e.g., asyncio.run).
+
+     5. Capture locals correctly — use AST node traversal to inject locals() capture before return or await statements.
+
+     The core challenge is maintaining async execution semantics while safely injecting debug logic.
+
+   - [feat] nested functions
+
+     Inner functions close over outer locals(), which may not be visible
+     during AST transformation.
+
+     Recursively parse and rewrite nested function definitions. Capture
+     closure variables (__closure__) and include them in the debug output.
+
+     code.co_freevars, func.__closure__ to preserve context during re-execution
+
+   - [feat] Closures
+
+     Variables from outer scopes are referenced, not owned.
+
+     Use co_freevars and __closure__ to detect captured variables. Report
+     them as "non-local" in the locals dump, indicating read-only access.
+
+     code.co_freevars, func.__closure__) to preserve context during re-execution
+
+   - [BUG] Limited Compatibility with Modern Python Features
+
+     Weakness: May not handle:
+
+     - Decorated methods reliably.
+
+     - Async functions (async/await) without special handling.
+
+     - Closures or nested functions correctly.
+
+     Impact: Risk of incorrect variable capture or transformation errors
+
+     Performance Overhead: Not suitable for performance-critical paths;
+     logging should ideally be low-cost or lazy.
+
+     Source Code Parsing Reliability: Source is not available .pyc or frozen executable
+
    - Framework classifier to advertise package contains unverified
      logging config YAML files
 
@@ -47,6 +221,12 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
+   - fix(xdg_folder): appauthor property setter normalize author name
+   - fix(package_resource): unknown package fast fail raise PackageNotFoundError
+   - refactor(xdg_folder): property accessors for instance attributes
+   - refactor(xdg_folder): base class XDGBase
+   - chore: add stubtest allowlist
+   - chore: drop py39 support
    - docs: use py313+ avoid ruamel.yaml clib package
    - docs(context_locals): fix doctest for get_locals_dynamic
    - chore: bump versions

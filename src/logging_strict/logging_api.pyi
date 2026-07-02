@@ -1,6 +1,10 @@
 import sys
+import threading
 from pathlib import Path
-from typing import Any
+from typing import (
+    Any,
+    ClassVar,
+)
 
 from .constants import LoggingConfigCategory
 from .logging_yaml_abc import LoggingYamlType
@@ -12,17 +16,22 @@ else:
 
 __all__ = (
     "LoggingConfigYaml",
-    "ui_yaml_curated",
-    "setup_ui_other",
-    "worker_yaml_curated",
-    "setup_worker_other",
     "LoggingState",
+    "setup_ui_other",
+    "setup_worker_other",
+    "ui_yaml_curated",
+    "worker_yaml_curated",
 )
 
 def cb_true(x: Any) -> bool: ...
 
 class LoggingConfigYaml(LoggingYamlType):
-    suffixes: str = ...
+    suffixes: ClassVar[str] = ...
+    _package_name: str
+    _category: str | None
+    _genre: str | None
+    _flavor: str | None
+    _version: str
 
     def __init__(
         self,
@@ -36,7 +45,7 @@ class LoggingConfigYaml(LoggingYamlType):
     @property
     def file_stem(self) -> str: ...
     @property
-    def category(self) -> str: ...
+    def category(self) -> str | None: ...
     @property
     def genre(self) -> str | None: ...
     @property
@@ -62,9 +71,10 @@ class LoggingConfigYaml(LoggingYamlType):
 
 def setup_ui_other(
     package_name: str,
+    package_data_folder_start: str,
     genre: str,
     flavor: str,
-    version_no: Any = ...,
+    version_no: Any | None = ...,
     package_start_relative_folder: Path | str | None = "",
     logger_package_name: str | None = None,
 ) -> tuple[str, str]: ...
@@ -93,10 +103,13 @@ def setup_worker_other(
 ) -> tuple[str, str]: ...
 
 class LoggingState:
-    __instance: Self | None = None
+    _instance: ClassVar[Self | None] = None
+    _lock: ClassVar[threading.RLock] = ...
 
-    def __new__(cls, is_state_app: Any | None = False) -> Self: ...
+    def __new__(cls) -> Self: ...
+    @classmethod
+    def reset(cls) -> None: ...
     @property
     def is_state_app(self) -> bool: ...
     @is_state_app.setter
-    def is_state_app(self, is_state_app: Any) -> None: ...
+    def is_state_app(self, val: Any) -> None: ...

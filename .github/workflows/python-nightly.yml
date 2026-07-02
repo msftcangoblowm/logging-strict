@@ -49,26 +49,24 @@ jobs:
           # tox.ini so that tox will run properly. PYVERSIONS
           # Available versions:
           # https://launchpad.net/~deadsnakes/+archive/ubuntu/nightly/+packages
-          - "3.11-dev"
-          - "3.12-dev"
-          - "3.13-dev"
+          - '3.12'
+          - '3.13'
           # https://github.com/actions/setup-python#available-versions-of-pypy
-          - "pypy-3.9-nightly"
-          - "pypy-3.10-nightly"
+          - pypy-3.11-nightly
       fail-fast: false
 
     steps:
       - name: "Check out the repo"
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
 
       - name: "Install ${{ matrix.python-version }} with deadsnakes"
-        uses: deadsnakes/action@v3.2.0
+        uses: deadsnakes/action@ef54298f4881dc40a8a4e9b367f91578fdbe12a1
         if: "!startsWith(matrix.python-version, 'pypy-')"
         with:
           python-version: "${{ matrix.python-version }}"
 
       - name: "Install ${{ matrix.python-version }} with setup-python"
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v6.2.0
         if: "startsWith(matrix.python-version, 'pypy-')"
         with:
           python-version: "${{ matrix.python-version }}"

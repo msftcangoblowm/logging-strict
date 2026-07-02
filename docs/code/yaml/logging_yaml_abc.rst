@@ -21,6 +21,12 @@ Non-abstract methods:
 
 - pattern     -- classmethod
 
+.. py:data:: logging_strict.logging_yaml_abc.__all__
+   :type: tuple[str, ...]
+   :value: ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", "after_as_str_update_package_name", "setup_logging_yaml")
+
+   Module object exports
+
 .. automodule:: logging_strict.logging_yaml_abc
    :members:
    :undoc-members:

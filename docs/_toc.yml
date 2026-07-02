@@ -16,6 +16,7 @@ subtrees:
     entries:
     - file: api/locals/index
       entries:
+      - file: api/locals/get_locals_dynamic
       - file: api/locals/scope_b_locals
       - file: api/locals/unittest_setup_to_include_locals
     - file: api/logging/index
@@ -61,6 +62,10 @@ subtrees:
     - file: code/tech_niques/logger_redirect
     - file: code/tech_niques/logging_capture
     - file: code/tech_niques/stream_capture
+- entries:
+  - file: contributing/index
+    entries:
+    - file: contributing/testing
 - entries:
   - file: threat-model
 - caption: Links

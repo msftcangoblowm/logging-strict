@@ -12,7 +12,7 @@ from pathlib import (
     Path,
     PurePath,
 )
-from typing import Optional
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
 from logging_strict.util.check_type import (
@@ -23,11 +23,14 @@ from logging_strict.util.check_type import (
     is_ok,
 )
 
+if TYPE_CHECKING:
+    from types import TracebackType
+
 
 class CommonChecks(unittest.TestCase):
     """Check types tests"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Initialize settings: base folder and package base folder."""
         if "__pycache__" in __file__:
             # cached
@@ -37,7 +40,7 @@ class CommonChecks(unittest.TestCase):
             self.path_tests = Path(__file__).parent
         self.path_cwd = self.path_tests.parent
 
-    def test_is_ok(self):
+    def test_is_ok(self) -> None:
         """Is not None, a str, and not just whitespace, non-empty string"""
         invalids = (
             None,  # not str
@@ -54,7 +57,7 @@ class CommonChecks(unittest.TestCase):
             out_actual = is_ok(valid)
             self.assertTrue(out_actual)
 
-    def test_is_not_ok(self):
+    def test_is_not_ok(self) -> None:
         """Not ok opposite of is_ok. None, contains just whitespace, or not a str"""
         invalids = ("Hello World!",)
         for invalid in invalids:
@@ -71,7 +74,7 @@ class CommonChecks(unittest.TestCase):
             out_actual = is_not_ok(valid)
             self.assertTrue(out_actual)
 
-    def test_check_type_path(self):
+    def test_check_type_path(self) -> None:
         """Check for pathlib.Path and os.PathLike"""
         path_unittests_dir = self.path_tests
         path_cwd = self.path_cwd
@@ -82,12 +85,12 @@ class CommonChecks(unittest.TestCase):
         )
 
         # RuntimeError -- simulating no home folder **or** invalid path
-        for attr_name, attr_val in path_attrs:
+        for _, attr_val in path_attrs:
             with patch("pathlib.Path.expanduser", side_effect=RuntimeError):
                 with self.assertRaises(ValueError):
                     check_type_path(attr_val)
 
-        for attr_name, attr_val in path_attrs:
+        for _, attr_val in path_attrs:
             # pathlib.Path
             out = check_type_path(attr_val)
             self.assertTrue(out)
@@ -114,7 +117,7 @@ class CommonChecks(unittest.TestCase):
 class RarelyUsedChecks(unittest.TestCase):
     """More specialized checks. Possibly specific to package logging-strict"""
 
-    def test_check_int_verbosity(self):
+    def test_check_int_verbosity(self) -> None:
         """Test function check_int_verbosity"""
         # None
         invalids = (
@@ -137,20 +140,20 @@ class RarelyUsedChecks(unittest.TestCase):
             self.assertIsInstance(out, bool)
             self.assertTrue(out)
 
-    def test_check_start_folder_importable(self):
+    def test_check_start_folder_importable(self) -> None:
         """Test function check_start_folder_importable"""
         # unsupported type
         with self.assertRaises(TypeError):
             check_start_folder_importable(4)
 
         # relative folder
-        target_relative = Path("")
-        self.assertFalse(check_start_folder_importable(target_relative))
+        target_relative_0 = Path()
+        self.assertFalse(check_start_folder_importable(target_relative_0))
 
         # relative file unsupported. Not a folder
         with self.assertRaises(NotADirectoryError):
-            target_relative = "__init__.py"
-            self.assertFalse(check_start_folder_importable(target_relative))
+            target_relative_1 = "__init__.py"
+            self.assertFalse(check_start_folder_importable(target_relative_1))
 
         # In actual folder, __init__.py not found within folder. Not a package
         if platform.system().lower() != "windows":
@@ -161,14 +164,17 @@ class RarelyUsedChecks(unittest.TestCase):
         class TempFolder:
             """Roll your own temp folder context manager"""
 
-            def __init__(self, folder_base, folder_name) -> None:
+            target_name: str
+            path_target: "Path"
+
+            def __init__(self, folder_base: str, folder_name: str) -> None:
                 """Class constructor"""
                 self.target_name = folder_name
 
                 path_folder_tmp = Path(folder_base)
                 self.path_target = path_folder_tmp.joinpath(self.target_name)
 
-            def __enter__(self):
+            def __enter__(self) -> "Path | None":
                 """Enter context manager"""
                 if not self.path_target.exists():
                     self.path_target.mkdir(
@@ -184,7 +190,12 @@ class RarelyUsedChecks(unittest.TestCase):
 
                 return ret
 
-            def __exit__(self, exc_type, exc_value, tb):
+            def __exit__(
+                self,
+                exc_type: "type[Exception] | None",
+                exc_value: "Exception | None",
+                tb: "TracebackType | None",
+            ) -> None:
                 """Exit context manager. Do whatever cleanup is required."""
                 pass
 
@@ -192,21 +203,30 @@ class RarelyUsedChecks(unittest.TestCase):
         class TempFile:
             """Roll your own Temp file context manager."""
 
-            def __init__(self, tmp_folder, file_name) -> None:
+            path_target: "Path"
+
+            def __init__(self, tmp_folder: str, file_name: str) -> None:
                 """Class constructor"""
                 self.path_target = Path(tmp_folder).joinpath(file_name)
 
-            def __enter__(self) -> Optional[Path]:
+            def __enter__(self) -> "Path | None":
                 """Enter context manager"""
                 if not self.path_target.exists():
                     self.path_target.touch(mode=0o600, exist_ok=True)
-                    return self.path_target
+                    ret = self.path_target
                 elif self.path_target.exists() and not self.path_target.is_file():
-                    return None
+                    ret = None
                 else:
-                    return self.path_target
+                    ret = self.path_target
 
-            def __exit__(self, exc_type, exc_value, tb) -> None:
+                return ret
+
+            def __exit__(
+                self,
+                exc_type: "type[Exception] | None",
+                exc_value: "Exception | None",
+                tb: "TracebackType | None",
+            ) -> None:
                 """Exit context manager. Do whatever cleanup is required."""
                 if self.path_target.exists() and self.path_target.is_file():
                     self.path_target.unlink()
@@ -220,9 +240,10 @@ class RarelyUsedChecks(unittest.TestCase):
 
             with TempFolder(tmp_dir_path, "__init__.py") as path_dir:
                 self.assertIsNotNone(path_dir)
-                self.assertTrue(issubclass(type(path_dir), PurePath))
-                self.assertTrue(path_dir.exists() and path_dir.is_dir())
-                self.assertFalse(check_start_folder_importable(tmp_dir_path))
+                if path_dir is not None:
+                    self.assertTrue(issubclass(type(path_dir), PurePath))
+                    self.assertTrue(path_dir.exists() and path_dir.is_dir())
+                    self.assertFalse(check_start_folder_importable(tmp_dir_path))
 
 
 if __name__ == "__main__":  # pragma: no cover

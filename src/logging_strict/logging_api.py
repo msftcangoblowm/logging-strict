@@ -1,8 +1,6 @@
 """
 .. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-..
-
 :py:mod:`logging` is thread-safe. A change in one thread affects every
 thread. And logging config is dirty, each logger, since it's a Singleton,
 stays around for the life of the app. So the app and workers need to be
@@ -26,25 +24,8 @@ Uses a (logging) handler specific for a particular UI framework
 (:py:class:`logging.StreamHandler`), capture the worker
 logging output, including it along with the worker output.
 
-**Module private variables**
-
-
-.. py:data:: __all__
-   :type: tuple[str, str, str, str, str, str]
-   :value: ("LoggingConfigYaml", "setup_ui_other", "ui_yaml_curated", \
-   "worker_yaml_curated", "setup_worker_other", "LoggingState")
-
-   Module exports
-
-
-**Module objects**
-
-
 """
 
-from __future__ import annotations
-
-import sys
 import threading
 from functools import partial
 from typing import TYPE_CHECKING
@@ -60,6 +41,7 @@ from .exceptions import (
     LoggingStrictPackageNameRequired,
     LoggingStrictPackageStartFolderNameRequired,
     LoggingStrictProcessCategoryRequired,
+    PackageNotFoundError,
 )
 from .logging_yaml_abc import (
     VERSION_FALLBACK,
@@ -81,27 +63,21 @@ from .util.package_resource import (
 )
 from .util.xdg_folder import _get_path_config
 
-if sys.version_info >= (3, 8):  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Iterator
-else:  # pragma: no cover
-    from typing import Iterator
 
-if sys.version_info >= (3, 9):  # pragma: no cover
-    try:
-        from importlib.resources.abc import Traversable  # py312+
-    except ImportError:  # pragma: no cover
-        from importlib.abc import Traversable  # py39+
-else:  # pragma: no cover
-    msg_exc = "Traversable py39+"
-    raise ImportError(msg_exc)
+try:
+    from importlib.resources.abc import Traversable  # py312+
+except ImportError:  # pragma: no cover
+    from importlib.abc import Traversable  # py39+
 
 __all__ = (
     "LoggingConfigYaml",
-    "ui_yaml_curated",
-    "setup_ui_other",
-    "worker_yaml_curated",
-    "setup_worker_other",
     "LoggingState",
+    "setup_ui_other",
+    "setup_worker_other",
+    "ui_yaml_curated",
+    "worker_yaml_curated",
 )
 
 
@@ -217,7 +193,7 @@ class LoggingConfigYaml(LoggingYamlType):
 
     """
 
-    suffixes: str = YAML_LOGGING_CONFIG_SUFFIX
+    suffixes = YAML_LOGGING_CONFIG_SUFFIX
 
     def __init__(
         self,
@@ -297,10 +273,8 @@ class LoggingConfigYaml(LoggingYamlType):
 
         ret = f"{self.genre}_{self.version}"
 
-        if self._flavor is not None:
+        if self._flavor is not None:  # pragma: no branch
             ret = f"{ret}_{self._flavor}"
-        else:  # pragma: no cover
-            pass
 
         return ret
 
@@ -309,7 +283,7 @@ class LoggingConfigYaml(LoggingYamlType):
         """Category as a str. Category str either: 'app' or 'worker'
 
         :returns: Category str
-        :rtype: str
+        :rtype: str | None
         """
         return self._category
 
@@ -397,14 +371,12 @@ class LoggingConfigYaml(LoggingYamlType):
              -- Requires category
 
         """
-        if is_not_ok(self.category):
+        if is_not_ok(self.category):  # pragma: no branch
             msg_exc = (
                 f"Unknown category, {self.category}. Choices: "
                 f"{tuple(LoggingConfigCategory.categories())}"
             )
             raise LoggingStrictProcessCategoryRequired(msg_exc)
-        else:  # pragma: no cover
-            pass
 
         cls = type(self)
         ret = f".{self.category}{cls.suffixes}"
@@ -542,27 +514,30 @@ class LoggingConfigYaml(LoggingYamlType):
             file_name = f"??.{file_suffix}" if file_stem is None else self.file_name
 
         package_name_dotted_path = self.package
-        pr = PackageResource(package_name_dotted_path, self._package_data_folder_start)
 
         try:
-            gen = pr.package_data_folders(
-                cb_suffix=cb_suffix,
-                cb_file_stem=cb_file_stem,
-                path_relative_package_dir=path_relative_package_dir,
+            pr = PackageResource(
+                package_name_dotted_path, self._package_data_folder_start
             )
-            folders = list(gen)
-        except ImportError as exc:
+        except PackageNotFoundError as exc:
             msg_err = (
                 f"package {self.package} is not installed in venv. "
                 "Cannot extract files. Install package then try again"
             )
-            raise ImportError(msg_err) from exc
+            raise PackageNotFoundError(msg_err) from exc
+
+        gen = pr.package_data_folders(
+            cb_suffix=cb_suffix,
+            cb_file_stem=cb_file_stem,
+            path_relative_package_dir=path_relative_package_dir,
+        )
+        folders = list(gen)
 
         folder_count = len(folders)
         if folder_count > 1:
             msg_err = (
                 f"Within package {self.package}, starting from "
-                f"{from_where}, found {str(folder_count)} "
+                f"{from_where}, found {folder_count!s} "
                 f"{file_name}. Expected one. Adjust / narrow "
                 "param, path_relative_package_dir"
             )
@@ -570,7 +545,7 @@ class LoggingConfigYaml(LoggingYamlType):
         elif folder_count == 0:
             msg_err = (
                 f"Within package {self.package}, starting from "
-                f"{from_where}, found {str(folder_count)} "
+                f"{from_where}, found {folder_count!s} "
                 f"{file_name}. Expected one. Is in this package? "
                 "Is folder too specific? Try casting a wider net?"
             )
@@ -688,7 +663,7 @@ def setup_ui_other(
     ):
         raise
 
-    # extract and validate
+    # extract package resource
     try:
         f_relpath = ui_yaml.extract(
             path_relative_package_dir=package_start_relative_folder
@@ -697,9 +672,11 @@ def setup_ui_other(
         raise
     except (FileNotFoundError, AssertionError):
         raise
+
+    # runtime validate
     try:
         str_yaml_raw = ui_yaml.as_str()
-    except s.YAMLValidationError:
+    except (FileNotFoundError, s.YAMLValidationError):
         raise
 
     str_yaml = after_as_str_update_package_name(
@@ -969,6 +946,7 @@ def setup_worker_other(
     ):
         raise
 
+    # extract package resource
     try:
         f_relpath = ui_yaml.extract(
             path_relative_package_dir=package_start_relative_folder
@@ -977,9 +955,11 @@ def setup_worker_other(
         raise
     except (FileNotFoundError, AssertionError):
         raise
+
+    # runtime validate
     try:
         str_yaml_raw = ui_yaml.as_str()
-    except s.YAMLValidationError:
+    except (FileNotFoundError, s.YAMLValidationError):
         raise
 
     # validation already occurred. In yaml, replace logger package name
@@ -994,21 +974,21 @@ def setup_worker_other(
 
 
 class LoggingState:
-    """Singleton to hold the current logging state.
-    To know whether or not, run by app or from cli
+    """Singleton to hold the current logging state. To know whether or
+    not, run by app or from cli.
 
-    logging is redirected to
+    logging is redirected to:
 
     - If run from app --> :py:exc:`textual.logging.TextualHandler`
 
     - If run from cli --> :py:class:`logging.StreamHandler`
 
-    Knowing the logging mode (or state), first step towards restoring logging mode
+    Knowing the logging mode (or state), first step towards restoring logging mode.
 
     Class variables
 
-    :cvar _instance: Default ``None``. Holds Singleton instance
-    :type _instance: ``"LoggingState"`` | None
+    :cvar _instance: Default None. Holds Singleton instance
+    :type _instance: logging_strict.logging_api.LoggingState | None
     :cvar _lock: Thread lock for Singleton
     :type _lock: threading.RLock
 
@@ -1021,37 +1001,28 @@ class LoggingState:
 
     """
 
-    _instance: "LoggingState" | None = None
+    _instance = None
     _lock = threading.RLock()
-    # __state: bool | None = None
 
     def __new__(cls):
         """
         :returns: Singleton instance
         :rtype: ``"LoggingState"``
         """
-        if cls._instance is None:
+        if cls._instance is None:  # pragma: no branch
             with cls._lock:
-                if not cls._instance:
+                if not cls._instance:  # pragma: no branch
                     cls._instance = super().__new__(cls)
-                else:  # pragma: no cover
-                    pass
-        else:  # pragma: no cover
-            pass
 
         return cls._instance
 
     @classmethod
     def reset(cls):
         """A cheat to reset the Singleton state. Use only during testing"""
-        if cls._instance is not None:
+        if cls._instance is not None:  # pragma: no branch
             with cls._lock:
-                if cls._instance:
+                if cls._instance:  # pragma: no branch
                     cls._instance = None
-                else:  # pragma: no cover
-                    pass
-        else:  # pragma: no cover
-            pass
 
     @property
     def is_state_app(self):
@@ -1070,7 +1041,7 @@ class LoggingState:
         return ret
 
     @is_state_app.setter
-    def is_state_app(self, is_state_app):
+    def is_state_app(self, val):
         """Would only ever be changed within a unittest or module dealing with logging
 
         - ``True`` app logging state
@@ -1079,13 +1050,10 @@ class LoggingState:
 
         If not a bool, logging state is not changed
 
-        :param is_state_app: New logging state. ``True`` if app otherwise ``False``
-        :type is_state_app: typing.Any
+        :param val: New logging state. ``True`` if app otherwise ``False``
+        :type val: typing.Any
         """
         cls = type(self)
         with cls._lock:
-            is_param_ok = is_state_app is not None and isinstance(is_state_app, bool)
-            if is_param_ok:
-                self._state = is_state_app
-            else:
-                pass
+            if val is not None and isinstance(val, bool):  # pragma: no branch
+                self._state = val

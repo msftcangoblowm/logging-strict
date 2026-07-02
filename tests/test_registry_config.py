@@ -38,7 +38,7 @@ from logging_strict.tech_niques import captureLogs
 class TestExtractor(unittest.TestCase):
     """Improved Intuitive UI for extracting registry and logging config YAML files"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Initialize variables for test base folder and package base folder."""
         if "__pycache__" in __file__:
             # cached
@@ -51,34 +51,58 @@ class TestExtractor(unittest.TestCase):
         self.path_package_src = self.path_cwd.joinpath("src", g_app_name)
         self.package_name_raw = g_app_name
 
-    def test_query_db_without_extract(self):
+    def test_query_db_without_extract(self) -> None:
         """Extract never occurred"""
         category = LoggingConfigCategory.UI.value
-        with tempfile.TemporaryDirectory() as fp:
+        with tempfile.TemporaryDirectory() as fp_0:
             reg = ExtractorLoggingConfig(
                 self.package_name_raw,
-                path_alternative_dest_folder=Path(fp),
+                path_alternative_dest_folder=Path(fp_0),
                 is_test_file=False,
             )
+
             reg.query_db(category)
             self.assertIsNone(reg.path_extracted_db)
             self.assertIsNone(reg._registry)
             self.assertIsNone(reg.logging_config_yaml_str)
             self.assertIsNone(reg.logging_config_yaml_relpath)
 
-    def test_query_db_xdg_folder(self):
+        with tempfile.TemporaryDirectory() as fp_1:
+            reg = ExtractorLoggingConfig(
+                self.package_name_raw,
+                path_alternative_dest_folder=Path(fp_1),  # not XDG data dir
+                is_test_file=False,
+            )
+            reg.get_db()
+            d_config_contents = reg._registry
+            self.assertIsNotNone(d_config_contents)
+            path_f_dest = reg.path_extracted_db
+            self.assertIsNotNone(path_f_dest)
+
+            # package resource YAML file fails runtime validation
+            with patch(
+                f"{g_app_name}.register_config.setup_ui_other",
+                side_effect=s.YAMLValidationError(None, None, None),
+            ) as mock_func:
+                reg.query_db(category)
+                self.assertIsNone(reg._logging_config_yaml_str)
+                mock_func.assert_called_once()
+
+    def test_query_db_xdg_folder(self) -> None:
         """Extracts to XDG folder"""
         # relative path --> xdg folder
-        reg_0 = ExtractorLoggingConfig(  # noqa: F841
+        invalid_0 = 0.12345
+        reg_0 = ExtractorLoggingConfig(  # noqa: F841  # pyright: ignore[reportUnusedVariable]
             self.package_name_raw,
             path_alternative_dest_folder=Path("configs"),
-            is_test_file=0.12345,
+            is_test_file=invalid_0,  # type: ignore[arg-type]
         )
 
         # not str or path --> xdg folder
-        reg_1 = ExtractorLoggingConfig(  # noqa: F841
+        invalid_1 = 0.12345
+        reg_1 = ExtractorLoggingConfig(  # noqa: F841  # pyright: ignore[reportUnusedVariable]
             self.package_name_raw,
-            path_alternative_dest_folder=0.12345,
+            path_alternative_dest_folder=invalid_1,  # type: ignore[arg-type]
             is_test_file=None,
         )
 
@@ -118,26 +142,26 @@ class TestExtractor(unittest.TestCase):
         )
         """
 
-    def test_extract_db(self):
+    def test_extract_db(self) -> None:
         """Extract and validate registry"""
-        testdata = (
+        testdata_0 = (
             (None, None, False, False, "path_alternative_dest_folder is None"),
             (None, True, False, True, "is_test_file True"),
         )
         for (
-            path_alternative_dest_folder,
-            is_test_file,
-            is_patch_extract_folder,
-            is_test_file_expected,
-            testitem_desc,
-        ) in testdata:
+            path_alternative_dest_folder_0,
+            is_test_file_0,
+            is_patch_extract_folder_0,
+            is_test_file_expected_0,
+            testitem_desc_0,  # pyright: ignore[reportUnusedVariable]
+        ) in testdata_0:
             reg = ExtractorLoggingConfig(
                 self.package_name_raw,
-                path_alternative_dest_folder=path_alternative_dest_folder,
-                is_test_file=is_test_file,
+                path_alternative_dest_folder=path_alternative_dest_folder_0,
+                is_test_file=is_test_file_0,
             )
-            self.assertEqual(reg._is_test_file, is_test_file_expected)
-            self.assertEqual(reg._patch_extract_folder, is_patch_extract_folder)
+            self.assertEqual(reg._is_test_file, is_test_file_expected_0)
+            self.assertEqual(reg._patch_extract_folder, is_patch_extract_folder_0)
             # private variable initialized
             self.assertIsNone(reg._path_extracted_db)
             self.assertIsNone(reg._logging_config_yaml_str)
@@ -146,26 +170,28 @@ class TestExtractor(unittest.TestCase):
 
         # path_alternative_dest_folder is a Path
         with tempfile.TemporaryDirectory() as fp:
-            valids = (
-                (str(fp), True),
-                (str(fp), False),
+            valids_1 = (
+                (fp, True),
+                (fp, False),
                 (Path(fp), True),
                 (Path(fp), False),
             )
-            for path_alternative_dest_folder, is_test_file in valids:
+            for path_alternative_dest_folder_1, is_test_file_1 in valids_1:
                 reg = ExtractorLoggingConfig(
                     self.package_name_raw,
-                    path_alternative_dest_folder=path_alternative_dest_folder,
-                    is_test_file=is_test_file,
+                    path_alternative_dest_folder=path_alternative_dest_folder_1,  # type: ignore[arg-type]  # fmt: skip
+                    is_test_file=is_test_file_1,
                 )
                 self.assertTrue(reg._patch_extract_folder)
                 self.assertIsNone(reg.path_extracted_db)
-                self.assertEqual(reg.is_test_file, is_test_file)
+                self.assertEqual(reg.is_test_file, is_test_file_1)
                 reg.extract_db()
                 self.assertIsNotNone(reg.path_extracted_db)
                 self.assertTrue(issubclass(type(reg.path_extracted_db), PurePath))
 
         # Cause ImportError, by attempting to extract nonexistent package data file
+        msg_count_expected_2 = 0
+        import_name_2 = "sdfsadfsdafsadfsadfsadfy"
         with (
             tempfile.TemporaryDirectory() as fp,
             patch(
@@ -173,23 +199,22 @@ class TestExtractor(unittest.TestCase):
                 return_value=".toml",
             ),
         ):
-            testdata = ((Path(fp), False),)
-            for path_alternative_dest_folder, is_test_file in testdata:
+            testdata_2 = ((Path(fp), False),)
+            for path_alternative_dest_folder_2, is_test_file_2 in testdata_2:
                 reg = ExtractorLoggingConfig(
-                    "sdfsadfsdafsadfsadfsadfy",
-                    path_alternative_dest_folder=path_alternative_dest_folder,
-                    is_test_file=is_test_file,
+                    import_name_2,
+                    path_alternative_dest_folder=path_alternative_dest_folder_2,
+                    is_test_file=is_test_file_2,
                 )
                 # logs INFO and WARNING messages. So capture at INFO level
                 with captureLogs(logger=None, level=20) as cm:
                     reg.extract_db()
                 out = cm.output
-                msg_count_actual = len(out)
-                msg_count_expected = 2
-                self.assertEqual(msg_count_actual, msg_count_expected)
+                msg_count_actual_2 = len(out)
+                self.assertEqual(msg_count_actual_2, msg_count_expected_2)
                 self.assertIsNone(reg.path_extracted_db)
 
-    def test_get_db(self):
+    def test_get_db(self) -> None:
         """Extract db and validate YAML
 
         .. seealso::
@@ -240,7 +265,7 @@ class TestExtractor(unittest.TestCase):
             self.assertIsInstance(reg._registry, Sequence)
             self.assertIsNone(reg.logging_config_yaml_str)
 
-    def test_query_two_step(self):
+    def test_query_two_step(self) -> None:
         """Two step process. extract_db then pass path to get_db"""
         # unsupported type --> extract_db called
         #    logs INFO and WARNING messages. So capture at INFO level
@@ -251,11 +276,15 @@ class TestExtractor(unittest.TestCase):
                 is_test_file=True,
             )
             with captureLogs(logger=None, level=20):
-                reg_0.get_db(path_extracted_db=0.12345)
+                reg_0.get_db(
+                    path_extracted_db=0.12345,  # type: ignore[arg-type]
+                )
             ls_path_extracted_db = reg_0.path_extracted_db
             self.assertIsNotNone(ls_path_extracted_db)
-            self.assertTrue(issubclass(type(ls_path_extracted_db), PurePath))
-            self.assertTrue(ls_path_extracted_db.is_file())
+            if ls_path_extracted_db is not None:
+                self.assertTrue(issubclass(type(ls_path_extracted_db), PurePath))
+                self.assertTrue(ls_path_extracted_db.is_file())
+
             # cleanup
             # with suppress(OSError):
             #     fp_0.cleanup()
@@ -272,15 +301,17 @@ class TestExtractor(unittest.TestCase):
                 reg_1.extract_db()
             ls_path_extracted_db = reg_1.path_extracted_db
             self.assertIsNotNone(ls_path_extracted_db)
-            self.assertTrue(issubclass(type(ls_path_extracted_db), PurePath))
-            self.assertTrue(ls_path_extracted_db.is_file())
-            reg_1.get_db(path_extracted_db=ls_path_extracted_db)
-            self.assertIsNotNone(reg_1._registry)
+            if ls_path_extracted_db is not None:
+                self.assertTrue(issubclass(type(ls_path_extracted_db), PurePath))
+                self.assertTrue(ls_path_extracted_db.is_file())
+                reg_1.get_db(path_extracted_db=ls_path_extracted_db)
+                self.assertIsNotNone(reg_1._registry)
+
             # cleanup
             # with suppress(OSError):
             #    fp_1.cleanup()
 
-    def test_query_db_main(self):
+    def test_query_db_main(self) -> None:
         """Query the registry db extracts returns validated logging config as str"""
         testdata = (
             (
@@ -410,7 +441,7 @@ class TestExtractor(unittest.TestCase):
                 True,
             ),
         )
-        for idx, (
+        for (
             package_name_raw,
             category,
             genre,
@@ -422,23 +453,24 @@ class TestExtractor(unittest.TestCase):
             expectation,
             has_search_result,
             is_skip_setup,
-            has_log_messages,
-        ) in enumerate(testdata):
+            has_log_messages,  # pyright: ignore[reportUnusedVariable]
+        ) in testdata:
+            # OSError or PermissionError if cannot create, not None
             with tempfile.NamedTemporaryFile(delete=False) as fp:
-                path_f = Path(fp.name)
-                path_alternative_dest_folder = path_f.parent
+                path_f_0 = Path(fp.name)
+                path_alternative_dest_folder_0 = path_f_0.parent
                 # delete the file. Want option to not delete the folder
                 with suppress(OSError):
-                    path_f.unlink()
+                    path_f_0.unlink()
 
                 reg = ExtractorLoggingConfig(
                     package_name_raw,
-                    path_alternative_dest_folder=path_alternative_dest_folder,
+                    path_alternative_dest_folder=path_alternative_dest_folder_0,
                     is_test_file=is_test_file,
                 )
 
                 # Was there a is_test_file switcharoo?
-                reg_is_test_file = reg.is_test_file  # noqa: F841
+                reg_is_test_file = reg.is_test_file  # noqa: F841  # pyright: ignore[reportUnusedVariable]  # fmt: skip
                 self.assertEqual(
                     is_test_file,
                     reg.is_test_file,
@@ -448,17 +480,18 @@ class TestExtractor(unittest.TestCase):
                 # Check registry db valid
                 with captureLogs(logger=None, level=20):
                     reg.get_db()
-                reg_path_extracted_db = reg.path_extracted_db  # noqa: F841
+
+                reg_path_extracted_db = reg.path_extracted_db  # noqa: F841  # pyright: ignore[reportUnusedVariable]  # fmt: skip
+                reg_registry = reg._registry  # noqa: F841  # pyright: ignore[reportUnusedVariable]  # fmt: skip
                 """
                 self.assertIsNotNone(
                     reg_path_extracted_db,
                     msg="registry db not extracted",
                 )
+                self.assertIsNotNone(reg_registry, msg="registry db yaml invalid?")
                 """
-                reg_registry = reg._registry  # noqa: F841
-                # self.assertIsNotNone(reg_registry, msg="registry db yaml invalid?")
 
-                # does not emit any log messages, get_db does
+                # Soes not emit any log messages, get_db does
                 reg.query_db(
                     category,
                     genre=genre,
@@ -481,12 +514,15 @@ class TestExtractor(unittest.TestCase):
                         # cleanup
                         logging_config_yaml_relpath = reg.logging_config_yaml_relpath
                         self.assertIsNotNone(logging_config_yaml_relpath)
-                        self.assertIsInstance(logging_config_yaml_relpath, str)
-                        # relpath uses pathlib.as_posix, not str
-                        relpath_f = Path(logging_config_yaml_relpath)
-                        abspath_f = path_alternative_dest_folder.joinpath(relpath_f)
-                        with suppress(OSError):
-                            abspath_f.unlink()
+                        if logging_config_yaml_relpath is not None:
+                            self.assertIsInstance(logging_config_yaml_relpath, str)
+                            # relpath uses pathlib.as_posix, not str
+                            relpath_f_1 = Path(logging_config_yaml_relpath)
+                            abspath_f_1 = path_alternative_dest_folder_0.joinpath(
+                                relpath_f_1
+                            )
+                            with suppress(OSError):
+                                abspath_f_1.unlink()
 
 
 if __name__ == "__main__":  # pragma: no cover

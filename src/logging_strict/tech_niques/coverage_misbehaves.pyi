@@ -1,1 +1,3 @@
+__all__ = ("detect_coverage",)
+
 def detect_coverage() -> bool: ...

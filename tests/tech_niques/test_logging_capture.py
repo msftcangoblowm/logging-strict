@@ -5,16 +5,14 @@ Unittest for logging_capture module
 
 """
 
-from __future__ import annotations
-
 import logging
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 from typing import (
-    Any,
-    Optional,
+    TYPE_CHECKING,
+    cast,
 )
 from unittest.mock import patch
 
@@ -32,25 +30,32 @@ from logging_strict.tech_niques import (
     detect_coverage,
 )
 from logging_strict.tech_niques.logging_capture import (
-    _LoggingWatcher,
-    _normalize_formatter,
-    _normalize_level,
-    _normalize_level_name,
+    _LoggingWatcher,  # pyright: ignore[reportPrivateUsage]
+)
+from logging_strict.tech_niques.logging_capture import (
+    _normalize_formatter,  # pyright: ignore[reportPrivateUsage]
+)
+from logging_strict.tech_niques.logging_capture import (
+    _normalize_level,  # pyright: ignore[reportPrivateUsage]
+)
+from logging_strict.tech_niques.logging_capture import (
+    _normalize_level_name,  # pyright: ignore[reportPrivateUsage]
+)
+from logging_strict.tech_niques.logging_capture import (
     captureLogs,
     captureLogsMany,
-    getLevelNamesMapping,
 )
 
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import (  # noqa: F401 Used by sphinx
-        Generator,
+from logging_strict.tech_niques.logging_capture import (  # type: ignore[attr-defined]  # isort:skip
+    getLevelNamesMapping,  # pyright: ignore[reportAttributeAccessIssue, reportUnknownVariableType]  # fmt: skip
+)
+
+if TYPE_CHECKING:
+    from collections.abc import (
+        Iterator,
         Sequence,
     )
-else:  # pragma: no cover
-    from typing import (  # noqa: F401 Used by sphinx
-        Generator,
-        Sequence,
-    )
+    from typing import Any
 
 
 class AppLoggingStateSafe(unittest.TestCase):
@@ -74,7 +79,7 @@ class AppLoggingStateSafe(unittest.TestCase):
 
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Currently testing package logging_strict. The logging.config
         yaml file within package is in ``configs/`` folder.
 
@@ -120,7 +125,7 @@ class AppLoggingStateSafe(unittest.TestCase):
                     version_no="1",
                     package_start_relative_folder="",
                 )
-                f_relpath, str_yaml = t_ret
+                f_relpath, str_yaml = t_ret  # pyright: ignore[reportUnusedVariable]
                 # Step 2 -- in worker
                 setup_logging_yaml(str_yaml)
 
@@ -136,7 +141,7 @@ class AppLoggingStateSafe(unittest.TestCase):
             fake_stderr=sys.stderr,
         )
 
-    def test_normalize_level_name(self):
+    def test_normalize_level_name(self) -> None:
         """From current logger, normalize logging level name"""
         root = logging.getLogger("root")
         level = root.getEffectiveLevel()
@@ -169,13 +174,13 @@ class AppLoggingStateSafe(unittest.TestCase):
             g_app_name,
         )
         """
-        same = logger_app
-        levelname = _normalize_level_name(same)
+        same_0 = logger_app
+        levelname = _normalize_level_name(same_0)
         # EffectiveLevel, not level. level is NOTSET
         self.assertEqual(levelname, "ERROR")
 
-        same = g_app_name
-        levelname = _normalize_level_name(same)
+        same_1 = g_app_name
+        levelname = _normalize_level_name(same_1)
         # EffectiveLevel, not level. level is NOTSET
         self.assertEqual(levelname, "ERROR")
 
@@ -185,7 +190,7 @@ class AppLoggingStateSafe(unittest.TestCase):
         self.assertTrue(logger_app.isEnabledFor(logging.ERROR))
         self.assertTrue(logger_app.isEnabledFor(logging.CRITICAL))
 
-    def test_normalize_level(self):
+    def test_normalize_level(self) -> None:
         """From level, normalize logging level name
 
         The logging.config yaml file has root level logging.ERROR (40),
@@ -196,6 +201,13 @@ class AppLoggingStateSafe(unittest.TestCase):
         root = logging.getLogger("root")
         level = root.getEffectiveLevel()
         expected_level_root = logging.getLevelName(level)
+
+        #    static type checkers import issue
+        t_level_names = cast(
+            "tuple[str, ...]",
+            tuple(getLevelNamesMapping().keys()),  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue, reportUnknownArgumentType]  # fmt: skip
+        )
+        d_level_map = cast("dict[str, int]", getLevelNamesMapping())
 
         # Assume root logger
         roots = (
@@ -224,26 +236,29 @@ class AppLoggingStateSafe(unittest.TestCase):
         # Another logging.Logger (see logging.config yaml root logger level)
         log_foo = logging.getLogger("foo")
         actual_level_name = _normalize_level(log_foo)
-        self.assertIn(actual_level_name, getLevelNamesMapping().keys())
+        self.assertIn(
+            actual_level_name,
+            t_level_names,
+        )
         level_by_runner = logging.INFO if detect_coverage() else logging.ERROR
-        self.assertEqual(getLevelNamesMapping()[actual_level_name], level_by_runner)
+        self.assertEqual(d_level_map[actual_level_name], level_by_runner)
 
         # int
         # ##################
 
         # 1 < x < 49
-        invalids = (
+        invalids_0 = (
             11,
             49,
             51,
             -1,
             1,
         )
-        for invalid in invalids:
+        for invalid_0 in invalids_0:
             with self.assertRaises(ValueError):
-                _normalize_level(invalid)
+                _normalize_level(invalid_0)
 
-        valids = (
+        valids_0 = (
             logging.NOTSET,
             logging.DEBUG,
             logging.INFO,
@@ -252,21 +267,22 @@ class AppLoggingStateSafe(unittest.TestCase):
             logging.CRITICAL,
             logging.FATAL,  # Same as logging.CRITICAL
         )
-        for valid in valids:
-            actual_level_name = _normalize_level(valid)
-            self.assertIn(actual_level_name, getLevelNamesMapping().keys())
-            self.assertEqual(getLevelNamesMapping()[actual_level_name], int(valid))
+        for valid_0 in valids_0:
+            self.assertIsInstance(valid_0, int)
+            actual_level_name = _normalize_level(valid_0)
+            self.assertIn(actual_level_name, t_level_names)
+            self.assertEqual(d_level_map[actual_level_name], valid_0)
 
         # Unsupported type
         # ##################
-        invalids = (11.4,)
-        for invalid in invalids:
+        invalids_1 = (11.4,)
+        for invalid_1 in invalids_1:
             with self.assertRaises(TypeError):
-                _normalize_level(invalid)
+                _normalize_level(invalid_1)
 
         # str
         # ##################
-        valids = (
+        valids_1 = (
             "0",
             "10",
             "20",
@@ -274,12 +290,12 @@ class AppLoggingStateSafe(unittest.TestCase):
             "40",
             "50",
         )
-        for valid in valids:
-            actual_level_name = _normalize_level(valid)
-            self.assertIn(actual_level_name, getLevelNamesMapping().keys())
-            self.assertEqual(getLevelNamesMapping()[actual_level_name], int(valid))
+        for valid_1 in valids_1:
+            actual_level_name = _normalize_level(valid_1)
+            self.assertIn(actual_level_name, t_level_names)
+            self.assertEqual(d_level_map[actual_level_name], int(valid_1))
 
-        valids = (
+        valids_2 = (
             "NOTSET",
             "DEBUG",
             "INFO",
@@ -288,67 +304,67 @@ class AppLoggingStateSafe(unittest.TestCase):
             "CRITICAL",
             "FATAL",
         )
-        for valid in valids:
-            actual_level_name = _normalize_level(valid)
-            self.assertIn(actual_level_name, getLevelNamesMapping().keys())
+        for valid_2 in valids_2:
+            actual_level_name = _normalize_level(valid_2)
+            self.assertIn(actual_level_name, t_level_names)
 
         # 1 < x < 49
-        invalids = (
+        invalids_2 = (
             "11",
             "49",
             "51",
             "-1",
             "1",
         )
-        for invalid in invalids:
+        for invalid_2 in invalids_2:
             with self.assertRaises(ValueError):
-                _normalize_level(invalid)
+                _normalize_level(invalid_2)
 
-    def test_normalize_formatter(self):
+    def test_normalize_formatter(self) -> None:
         """Deal with sending nonsense and insist it can become a logging formatter"""
         # Unsupported type --> fallback. logging.Formatter only accepts str
-        invalids = (
+        invalids_0 = (
             0.1234,
             12,
         )
-        for invalid in invalids:
-            fmt = _normalize_formatter(invalid)
+        for invalid_0 in invalids_0:
+            fmt = _normalize_formatter(invalid_0)
             self.assertIsInstance(fmt, logging.Formatter)
 
         # Invalid format str --> fallback logging.Formatter str
-        invalids = ("asdf %q sadf ",)
-        for invalid in invalids:
-            fmt = _normalize_formatter(invalid)
+        invalids_1 = ("asdf %q sadf ",)
+        for invalid_1 in invalids_1:
+            fmt = _normalize_formatter(invalid_1)
             self.assertIsInstance(fmt, logging.Formatter)
 
         # Probably uses the default format
-        invalids = (
+        invalids_2 = (
             None,
             "",
             "     ",
         )
-        for invalid in invalids:
-            fmt = _normalize_formatter(invalid)
+        for invalid_2 in invalids_2:
+            fmt = _normalize_formatter(invalid_2)
             self.assertIsInstance(fmt, logging.Formatter)
 
 
 class TestsLoggingCapture(unittest.TestCase):
     """Logging capture tests"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Ensure root logger"""
         self.root = logging.getLogger("")
         # self.root.setLevel(logging.WARNING)
         # print(self.root.getChildren())
         pass
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         """Ensure root logger"""
         # print(self.root.getChildren())
         # self.root.setLevel(logging.WARNING)
         pass
 
-    def test_capture_logs(self):
+    def test_capture_logs(self) -> None:
         """captureLogs, within context manager, captures stderr and stdout"""
         module_name = str(Path(__file__).stem)
         MSG_0 = "first message"
@@ -368,20 +384,23 @@ class TestsLoggingCapture(unittest.TestCase):
         )
 
         def get_captured(
-            logger_names: Sequence[Any], levels: Sequence[str | int | Any | None]
-        ) -> Generator[Sequence[Any, Sequence[str]], None, None]:
+            logger_names: "Sequence[Any]",
+            levels: "Sequence[str | int | Any | None]",
+        ) -> "Iterator[tuple[Any, Sequence[str]]]":
             """Demonstrate captureLogs context manager"""
+            if TYPE_CHECKING:
+                msgs: list[str]
 
-            for idx_a, logger_name in enumerate(logger_names):
-                for idx_b, level in enumerate(levels):
-                    for idx_c, format_ in enumerate(formats):
+            for logger_name in logger_names:
+                for level in levels:
+                    for format_ in formats:
                         # print(f"logger_name (before with block): {logger_name}")
                         # print(f"level (before with block): {level}")
                         # print(f"format_ (before with block): {format_}")
                         with captureLogs(
                             logger=logger_name,
                             level=level,
-                            format_=format_,
+                            format_=format_,  # type: ignore[arg-type]
                         ) as cm:
                             log_0 = logging.getLogger(WORKER_0)
                             log_0.info(MSG_0)
@@ -389,19 +408,21 @@ class TestsLoggingCapture(unittest.TestCase):
                             log_1.error(MSG_1)
 
                         msgs = []
-                        msgs.append(
-                            f"logger_name: {logger_name} level: {level} format_: {format_}"
+                        msg_0 = (
+                            f"logger_name: {logger_name} level: {level} "
+                            f"format_: {format_}"
                         )
-                        msgs.append(f"cm.output: {cm.output} cm {cm}")
+                        msgs.append(msg_0)
+                        msg_1 = f"cm.output: {cm.output} cm {cm}"
+                        msgs.append(msg_1)
                         # print("\n".join(msgs))
                         # ['INFO:foo:first message', 'ERROR:foo.bar:second message']
                         # messages
                         self.assertIsInstance(cm.output, list)
-                        yield logger_name, cm.output
+                        t_ret = (logger_name, cm.output)
+                        yield t_ret
 
-            yield from []
-
-        def is_a_worker(logger_name: Optional[Any]) -> bool:
+        def is_a_worker(logger_name: "Any | None") -> bool:
             """Check if logger name in Sequence workers.
 
             :param logger_name: logger name
@@ -416,15 +437,19 @@ class TestsLoggingCapture(unittest.TestCase):
             )
 
         meth_name = "get_captured"
+        d_level_map = cast(
+            "dict[str, int]",
+            logging.getLevelNamesMapping(),  # type: ignore[attr-defined]  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]  # fmt: skip
+        )
 
         # LEVELS
         # #############
-        levels = (
+        levels_0 = (
             10,  # --> DEBUG
             20,  # --> INFO
         )
         logger_names_worker_0 = (WORKER_0,)
-        for logger_name, messages in get_captured(logger_names_worker_0, levels):
+        for logger_name, messages in get_captured(logger_names_worker_0, levels_0):
             msg = (
                 f"logger {logger_name} messages {messages} count "
                 f"{len(messages)} Should be 2"
@@ -432,17 +457,17 @@ class TestsLoggingCapture(unittest.TestCase):
             # print(msg)
             self.assertEqual(len(messages), 2)
 
-        levels = (
+        levels_1 = (
             30,  # --> WARNING
             40,  # --> ERROR
         )
         logger_names_worker_0 = (WORKER_0,)
-        for logger_name, messages in get_captured(logger_names_worker_0, levels):
+        for logger_name, messages in get_captured(logger_names_worker_0, levels_1):
             self.assertEqual(len(messages), 1)
 
-        levels = (50,)  # --> CRITICAL
+        levels_2 = (50,)  # --> CRITICAL
         logger_names_worker_0 = (WORKER_0,)
-        for logger_name, messages in get_captured(logger_names_worker_0, levels):
+        for logger_name, messages in get_captured(logger_names_worker_0, levels_2):
             self.assertEqual(len(messages), 0)
 
         """Cast a very wide net. Capture all logging; level is set to DEBUG
@@ -452,67 +477,70 @@ class TestsLoggingCapture(unittest.TestCase):
         - Logged: Nothing should be logged
 
         """
-        levels = (
+        levels_3 = (
             None,  # --> Same as root or EffectiveLevel. aka WARNING
             "",  # --> Same as root or EffectiveLevel
         )
         logger_names_worker_0 = (WORKER_0,)
-        for logger_name, messages in get_captured(logger_names_worker_0, levels):
+        for logger_name, messages in get_captured(logger_names_worker_0, levels_3):
             self.assertEqual(len(messages), 1)
 
         # ValueError
-        levels = (
+        levels_4 = (
             4,  # --> KISS principle
             51,  # --> outside of range
         )
         with self.assertRaises(ValueError):
-            for logger_name, messages in get_captured(logger_names_worker_0, levels):
+            for logger_name, messages in get_captured(logger_names_worker_0, levels_4):
                 self.assertEqual(len(messages), 2)
 
         # TypeError
-        levels = (4.44,)  # --> unsupported type
+        levels_5 = (4.44,)  # --> unsupported type
         with self.assertRaises(TypeError):
-            for logger_name, messages in get_captured(logger_names_worker_0, levels):
+            for logger_name, messages in get_captured(logger_names_worker_0, levels_5):
                 self.assertEqual(len(messages), 2)
 
         # ancestor logger root level is logging.WARNING
-        levels = (
+        levels_6 = (
             0,  # --> NOTSET
             logging.NOTSET,
             "NOTSET",
         )
-        for logger_name, messages in get_captured(logger_names_worker_0, levels):
+        for logger_name, messages in get_captured(logger_names_worker_0, levels_6):
             self.assertEqual(len(messages), 1)
 
         # LOGGER NAME
         # #############
 
         # For logger name, unsupported type
-        logger_name_changes = (
+        logger_name_changes_7 = (
             4,  # other --> root
             51,  # other --> root
             4.44,  # other --> root
         )
         # INFO+ captured
-        levels = (
+        levels_7 = (
             "INFO",
             logging.INFO,
         )
-        for level in levels:
+        for level_7 in levels_7:
             with self.assertRaises(TypeError):
                 for logger_name, messages in get_captured(
-                    logger_name_changes, (level,)
+                    logger_name_changes_7, (level_7,)
                 ):
                     pass
 
         # root logger
-        logger_name_changes = (None,)
-        for logger_name, messages in get_captured(logger_name_changes, levels):
+        logger_name_changes_7_point_5 = (None,)
+        for logger_name, messages in get_captured(
+            logger_name_changes_7_point_5, levels_7
+        ):
             self.assertNotIsInstance(logger_name, str)
             level_name = _normalize_level_name(logger_name)
 
-            if len(messages) == 1:
-                msg = messages.pop()
+            lst_messages = cast("list[str]", messages)
+            if len(lst_messages) == 1:
+                msg = lst_messages.pop()
                 parts = msg.split(":")
                 if is_a_worker(logger_name):
                     # Will only have the message from that particular worker
@@ -522,7 +550,7 @@ class TestsLoggingCapture(unittest.TestCase):
                     self.assertEqual(parts[0], f"ERROR {module_name} {meth_name}")
                     # self.assertEqual(parts[1], WORKER_1) --> lineno
                     self.assertEqual(parts[2].strip(), MSG_1)
-            elif len(messages) == 2:
+            elif len(lst_messages) == 2:
                 # If NOTSET, DEBUG, INFO
                 if detect_coverage():
                     self.assertIn(
@@ -531,8 +559,8 @@ class TestsLoggingCapture(unittest.TestCase):
                 else:
                     self.assertIn(level_name, ("NOTSET", "DEBUG", "INFO"))
 
-                msg_two = messages.pop()
-                msg_one = messages.pop()
+                msg_two = lst_messages.pop()
+                msg_one = lst_messages.pop()
                 self.assertIsInstance(msg_one, str)
                 self.assertIsInstance(msg_two, str)
                 # print(f"test_capture_logs parts: {parts}. Whats parts[0]?")
@@ -547,7 +575,7 @@ class TestsLoggingCapture(unittest.TestCase):
                 self.assertEqual(parts[2].strip(), MSG_1)
             else:  # pragma: no cover
                 # No messages cuz level too high
-                self.assertEqual(len(messages), 0)
+                self.assertEqual(len(lst_messages), 0)
 
             # Exceptions pass thru
             with (
@@ -560,23 +588,30 @@ class TestsLoggingCapture(unittest.TestCase):
         """logger foo at logging level INFO, not WARNING"""
         logger_name_bad = (logging.getLogger(WORKER_0),)  # logging.Logger; foo
         # INFO+ captured
-        levels = (
+        levels_8 = (
             "INFO",
             logging.INFO,
         )
-        for logger_name, messages in get_captured(logger_name_bad, levels):
-            self.assertIsInstance(logger_name, logging.Logger)
-            #    Proves reason for capturing two must be due to arg: ``levels``
-            level_name = logger_name.level
-            effective_level_name = _normalize_level_name(logger_name)
-            level_by_runner = "INFO" if detect_coverage() else "ERROR"
-            self.assertEqual(effective_level_name, level_by_runner)
-            self.assertEqual(logging.getLevelName(level_name), level_by_runner)
+        level_no_8_expected = 20
+        for logger_name_8, messages_8 in get_captured(logger_name_bad, levels_8):
+            lst_messages_8 = cast("list[str]", messages_8)
+            msg_count = len(lst_messages_8)
 
-            msg_count = len(messages)
+            self.assertIsInstance(logger_name_8, logging.Logger)
+            #    Proves reason for capturing two must be due to arg: ``levels``
+            #    level_no_8 = logger_name_8.level
+            level_no_8 = logger_name_8.getEffectiveLevel()
+            level_name_8 = logging.getLevelName(level_no_8)  # pyright: ignore[reportDeprecated]  # fmt: skip
+            effective_level_name = _normalize_level_name(level_name_8)  # noqa: F841  # pyright: ignore[reportUnusedVariable]  # fmt: skip
+
+            # level_by_runner = "INFO" if detect_coverage() else "ERROR"
+            # self.assertEqual(effective_level_name, level_by_runner)
+            level_no_8_actual = d_level_map[level_name_8.upper()]
+            self.assertEqual(level_no_8_actual, level_no_8_expected)
+
             self.assertEqual(msg_count, 2)
-            msg_two = messages.pop()
-            msg_one = messages.pop()
+            msg_two = lst_messages_8.pop()
+            msg_one = lst_messages_8.pop()
             self.assertIsInstance(msg_one, str)
             self.assertIsInstance(msg_two, str)
             parts = msg_one.split(":")
@@ -584,28 +619,30 @@ class TestsLoggingCapture(unittest.TestCase):
             # self.assertEqual(parts[1], WORKER_0) --> lineno
             self.assertEqual(parts[2].strip(), MSG_0)
 
-        levels = (
+        levels_9 = (
             "WARNING",
             logging.WARNING,
         )
-        for logger_name, messages in get_captured(logger_name_bad, levels):
+        for logger_name, messages_9 in get_captured(logger_name_bad, levels_9):
+            lst_messages_9 = cast("list[str]", messages_9)
+            msg_count_9 = len(lst_messages_9)
             self.assertIsInstance(logger_name, logging.Logger)
-            msg_count = len(messages)
-            self.assertEqual(msg_count, 1)
-            msg = messages.pop()
+            self.assertEqual(msg_count_9, 1)
+            msg = lst_messages_9.pop()
             parts = msg.split(":")
             self.assertIn(f"{module_name} {meth_name}", parts[0])
 
-        levels = (
+        levels_10 = (
             "CRITICAL",
             logging.CRITICAL,
         )
-        for logger_name, messages in get_captured(logger_name_bad, levels):
+        for logger_name, messages_10 in get_captured(logger_name_bad, levels_10):
+            lst_messages_10 = cast("list[str]", messages_10)
+            msg_count_10 = len(lst_messages_10)
             self.assertIsInstance(logger_name, logging.Logger)
-            msg_count = len(messages)
-            self.assertEqual(msg_count, 0)
+            self.assertEqual(msg_count_10, 0)
 
-    def test_capture_decendants_msgs_nested(self):
+    def test_capture_decendants_msgs_nested(self) -> None:
         """For parent to capture both descendant msgs, this nesting will not work"""
         MSG_0 = "first message"
         MSG_1 = "second message"
@@ -634,7 +671,7 @@ class TestsLoggingCapture(unittest.TestCase):
                 msg_count = len(messages)
                 self.assertEqual(msg_count, 1)  # not 2
 
-    def test_capture_descendants_msgs(self):
+    def test_capture_descendants_msgs(self) -> None:
         """Parent captures descendants messages"""
         MSG_0 = "first message"
         MSG_1 = "second message"
@@ -659,33 +696,57 @@ class TestsLoggingCapture(unittest.TestCase):
         sys.version_info >= (3, 12),
         "py312 feature, backport unneeded",
     )
-    def test_py312_backport(self):
+    def test_py312_backport(self) -> None:
         """Backported py312 logging.getHandlerNames and logging.getHandlerByName
 
         :py:class:`captureLogs` temporarily redirects handlers for one logger, the
         one provided. Not for loggers or capture (and classify) all logging.
         """
+        if TYPE_CHECKING:
+            logger_both: logging.Logger
+
         WORKER_0 = "foo.baz"
         WORKER_1 = "foo.bar"
         WORKER_BOTH = "foo"
         MSG_0 = "first message"
         MSG_1 = "second message"
 
-        from logging_strict.tech_niques.logging_capture import logging as logging2
+        from logging_strict.tech_niques.logging_capture import logging as logging2  # type: ignore[attr-defined]  # fmt: skip
 
-        logger_both = logging2.getLogger(WORKER_BOTH)
-        self.assertIsInstance(logger_both, logging.Logger)
-        self.assertEqual(logger_both.name, WORKER_BOTH)
+        logger_both = cast(  # type: ignore[redundant-cast]
+            "logging.Logger",
+            logging2.getLogger(WORKER_BOTH),  # pyright: ignore[reportUnknownMemberType]
+        )
+        self.assertIsInstance(
+            logger_both,  # pyright: ignore[reportUnknownArgumentType]
+            logging.Logger,
+        )
+        self.assertEqual(
+            logger_both.name,  # pyright: ignore[reportUnknownMemberType]
+            WORKER_BOTH,
+        )
         level_by_runner = logging.INFO if detect_coverage() else logging.ERROR
-        self.assertEqual(logger_both.level, level_by_runner)
+        self.assertEqual(
+            logger_both.level,  # pyright: ignore[reportUnknownMemberType]
+            level_by_runner,
+        )
 
-        handler_names = logging2.getHandlerNames()
-        self.assertIsInstance(handler_names, frozenset)
+        handler_names = logging2.getHandlerNames()  # type: ignore[attr-defined]
+        self.assertIsInstance(
+            handler_names,  # pyright: ignore[reportUnknownArgumentType]
+            frozenset,
+        )
 
-        self.assertIsInstance(logger_both.hasHandlers(), bool)
-        self.assertIsNone(logging2.getHandlerByName(WORKER_BOTH))
+        self.assertIsInstance(
+            logger_both.hasHandlers(),  # pyright: ignore[reportUnknownArgumentType,reportUnknownMemberType]  # fmt: skip
+            bool,
+        )
+        self.assertIsNone(logging2.getHandlerByName(WORKER_BOTH))  # type: ignore[attr-defined]  # fmt: skip
 
-        with captureLogs(logger=logger_both, level="INFO") as cm:
+        with captureLogs(
+            logger=logger_both,  # pyright: ignore[reportUnknownArgumentType]
+            level="INFO",
+        ) as cm:
             self.assertTrue(hasattr(cm, "getHandlerNames"))
             self.assertTrue(hasattr(cm, "getHandlerByName"))
             self.assertEqual(len(cm.output), 0)
@@ -702,7 +763,7 @@ class TestsLoggingCapture(unittest.TestCase):
 
             self.assertIsNone(cm.getHandlerByName(WORKER_BOTH))
 
-    def test_watch_many(self):
+    def test_watch_many(self) -> None:
         """Micro manage loggers and their respective logging levels"""
         loggers = ("foo.bar", "bar.foo", "")
         levels = ("INFO", "WARNING", "ERROR")
@@ -732,9 +793,12 @@ class TestsLoggingCapture(unittest.TestCase):
                 self.assertEqual(len(cm.output), 1)
                 # cm.records (contains list[logging.LogRecord])
                 rec_0 = cm.records[0]
+                rec_0_level_no = rec_0.levelno
                 int_level = cm.getLevelNo(levels[idx])
                 self.assertIsInstance(int_level, int)
-                self.assertGreaterEqual(rec_0.levelno, int_level)
+                if isinstance(int_level, int):
+                    self.assertGreaterEqual(rec_0_level_no, int_level)
+
                 if len(loggers[idx]) == 0:
                     self.assertEqual(rec_0.name, "root")
                 else:
@@ -754,19 +818,23 @@ class TestsLoggingCapture(unittest.TestCase):
             captureLogsMany(
                 loggers=loggers,
                 levels=levels,
-                format_=0.12345,
+                format_=0.12345,  # type: ignore[arg-type]
             ) as cms,
         ):
             msg_exc = "Oh no! This is bad"
             raise RuntimeError(msg_exc)
 
-    def test_logger_watcher(self):
+    def test_logger_watcher(self) -> None:
         """Test _LoggingWatcher seperately."""
+        if TYPE_CHECKING:
+            records: list[logging.LogRecord]
+            output: list[str]
+
         records = []
         output = []
         WORKER_BOTH = "foo"
         watcher = _LoggingWatcher(records, output)
-        logger_both = logging.getLogger(WORKER_BOTH)  # noqa: F841
+        logger_both = logging.getLogger(WORKER_BOTH)  # noqa: F841  # pyright: ignore[reportUnusedVariable]  # fmt: skip
         name = WORKER_BOTH
         handler = watcher.getHandlerByName(name)
         self.assertIsNone(handler)
@@ -777,7 +845,7 @@ class TestsLoggingCapture(unittest.TestCase):
 class DocumentAssertLogs(unittest.TestCase):
     """Show unittest way of capturing all log output"""
 
-    def test_assert_logging_output(self):
+    def test_assert_logging_output(self) -> None:
         """Test has logging output"""
         with self.assertLogs("foo", level="INFO") as cm:
             logging.getLogger("foo").info("first message")

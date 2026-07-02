@@ -1,4 +1,4 @@
-import sys
+import builtins
 from collections.abc import Callable
 from types import (
     BuiltinFunctionType,
@@ -13,21 +13,12 @@ from types import (
 )
 from typing import (
     Any,
+    ParamSpec,
     Protocol,
+    TypeAlias,
     TypeVar,
 )
 from unittest.mock import MagicMock
-
-if sys.version_info >= (3, 10):  # pragma: no cover
-    from typing import (
-        ParamSpec,
-        TypeAlias,
-    )
-else:  # pragma: no cover
-    from typing_extensions import (
-        ParamSpec,
-        TypeAlias,
-    )
 
 _T = TypeVar("_T")  # Can be anything
 _P = ParamSpec("_P")
@@ -40,10 +31,15 @@ __all__ = (
 )
 
 class FuncWrapper:
+    _name: str
+    _module: ModuleType | None
+    _cls: builtins.type | None
+
     def __init__(
         self,
         func: (
-            FunctionType
+            Callable[..., Any]  # recognized by mypy
+            | FunctionType  # runtime not recognized by mypy
             | MethodType
             | BuiltinFunctionType
             | BuiltinMethodType
@@ -54,11 +50,11 @@ class FuncWrapper:
         ),
     ) -> None: ...
     @staticmethod
-    def _get_method_parent(meth: Any) -> type | None: ...
+    def _get_method_parent(meth: Any) -> builtins.type | None: ...
     @property
     def name(self) -> str: ...
     @property
-    def cls(self) -> type | None: ...
+    def cls(self) -> builtins.type | None: ...
     @property
     def cls_name(self) -> str | None: ...
     @property
@@ -78,6 +74,9 @@ class FuncWrapper:
 def _func(param_a: str, param_b: int | None = 10) -> str: ...
 
 class MockFunction(Protocol[_P, _R[_T]]):  # type: ignore[misc]
+    func: Callable[_P, _T]
+    full_name: str
+
     def __init__(self, func: Callable[_P, _T]) -> None: ...
     def __call__(  # type: ignore[misc]  # missing self non-static method
         mock_instance: MagicMock,
@@ -87,7 +86,10 @@ class MockFunction(Protocol[_P, _R[_T]]):  # type: ignore[misc]
     ) -> _R[_T]: ...
 
 class MockMethod(Protocol[_P, _R[_T]]):  # type: ignore[misc]
-    def __init__(self, cls: type, func: Callable[_P, _T]) -> None: ...
+    cls: builtins.type
+    func: Callable[_P, _T]
+
+    def __init__(self, cls: builtins.type, func: Callable[_P, _T]) -> None: ...
     def __call__(  # type: ignore[misc]  # missing self non-static method
         mock_instance: MagicMock,
         /,

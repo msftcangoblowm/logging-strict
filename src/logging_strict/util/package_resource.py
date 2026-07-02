@@ -1,17 +1,30 @@
 """
 .. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-..
+Extract Python package data file(s). Without excess error-prone boilerplate.
 
-Extracts package resource data
-
-- works!
-- intuitive
-- flexible
+- query and extract **multiple** package data files
+- minimum boilerplate
+- can roll your own filter functions
 - static type checks
 
-The Problem
+Alternative
 ------------
+
+``importlib.resources`` (and ``importlib-resources``) can export one
+package data file in a one liner.
+
+Less is more! That's so beautiful.
+
+Tragically, that philosophy doesn't extend beyond one data file.
+
+To extract multiple data files requires a ton of error prone w/o
+corresponding unittest boilerplate code.
+
+:py:mod:`logging_strict.util.package_resource` solves this issue.
+
+Traversal hacks
+----------------
 
 Some Python package authors create bash scripts to find a folder,
 using :code:`Path(__file__).parent` which contains their data
@@ -32,7 +45,15 @@ hacks and bash scripts.
 Example
 ---------
 
-Extract package data to local cache
+Use a query to find and then extract package data files.
+
+- ``cache_extract``
+
+  Output folder is XDG cache dir for specified package (and appauthor)
+
+- ``resource_extract``
+
+  Choose the output path
 
 package data folder: ``data/currency``
 
@@ -42,7 +63,6 @@ Local cache folder: :code:`$HOME/.cache/[package name]`
 
 .. code-block:: python
 
-    import sys
     from typing import TYPE_CHECKING
     from collections.abc import Iterator
     from functools import partial
@@ -54,14 +74,10 @@ Local cache folder: :code:`$HOME/.cache/[package name]`
     from logging_strict.util.package_resource import package_data_folders
     from logging_strict.util.package_resource import cache_extract
 
-    if sys.version_info >= (3, 9):  # pragma: no cover
-        try:
-            from importlib.resources.abc import Traversable  # py312+
-        except ImportError:
-            from importlib.abc import Traversable  # py39+
-    else:  # pragma: no cover
-        msg_exc = "Traversable py39+"
-        raise ImportError(msg_exc)
+    try:
+        from importlib.resources.abc import Traversable  # py312+
+    except ImportError:
+        from importlib.abc import Traversable  # py39+
 
     if TYPE_CHECKING:
         data_folder_path: str
@@ -113,43 +129,9 @@ For more fine control, options are:
    Change to whichever package contains the data files you are interested
    in. Not the package in this example
 
-
-Module private variables
--------------------------
-
-.. py:data:: __all__
-   :type: tuple[str, str, str, str, str, str]
-   :value: ("filter_by_suffix", "filter_by_file_stem", \
-   "PackageResource", "PartSuffix", "PartStem", "get_package_data")
-
-   Module object exports
-
-.. py:data:: is_module_debug
-   :type: bool
-   :value: False
-
-   During development, turns on logging. Once unittest cover reaches
-   100%, turn off
-
-.. py:data:: g_module
-   :type: str
-   :value: logging_strict.util.package_resource
-
-   logging dotted path
-
-.. py:data:: _LOGGER
-   :type: logging.Logger
-
-   Complicated module. Does issue logging warnings
-
-
-Module objects
----------------
-
 """
 
-from __future__ import annotations
-
+import importlib.util
 import logging
 import os
 import platform
@@ -157,11 +139,7 @@ import re
 import shutil
 import sys
 import tempfile
-import traceback
-from collections.abc import (
-    Iterator,
-    Sequence,
-)
+from collections.abc import Sequence
 from contextlib import suppress  # py39+
 from functools import partial
 from pathlib import (
@@ -177,7 +155,11 @@ from typing import (
 )
 
 from ..constants import g_app_name
-from .check_type import is_ok
+from ..exceptions import PackageNotFoundError
+from .check_type import (
+    is_not_ok,
+    is_ok,
+)
 from .util_root import IsRoot
 from .xdg_folder import DestFolderUser
 
@@ -192,40 +174,34 @@ except ImportError:  # pragma: no cover
 
     is_got_traversable = False
 
-if not is_got_traversable:  # pragma: no cover
+if not is_got_traversable:  # pragma: no branch # pragma: no cover
     try:
         # py312+
         from importlib.resources.abc import Traversable  # noqa: F811
     except ImportError:  # pragma: no cover
         # py39+
         from importlib.abc import Traversable
-else:  # pragma: no cover
-    pass
-
-try:
-    from importlib_metadata import (
-        PackageNotFoundError,
-        distribution,
-    )
-except ImportError:  # pragma: no cover
-    # What CPython provides likely very dated
-    from importlib.metadata import (
-        PackageNotFoundError,
-        distribution,
-    )
 
 __all__ = (
-    "filter_by_suffix",
-    "filter_by_file_stem",
     "PackageResource",
     "PartSuffix",
     "PartStem",
+    "filter_by_suffix",
+    "filter_by_file_stem",
     "get_package_data",
 )
 
+#: bool: on/off switch for module level logging
 is_module_debug = False
+
+#: str: dotted path to this module
 g_module = f"{g_app_name}.util.package_resource"
+
+#: logging.Logger: module level logger
 _LOGGER = logging.getLogger(g_module)
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 def msg_stem(file_name):
@@ -238,16 +214,22 @@ def msg_stem(file_name):
 
     This is counter-intuitive
 
-    .. code-block:: python
+    .. testcode::
 
-        assert Path.stem("asdf.onnx.json") == "asdf.onnx"
+        from pathlib import Path
+
+        assert Path.stem("asdf.tar.gz") == "asdf.tar"
 
     What :py:func:`msg_stem` does
 
-    .. code-block:: python
+    .. testcode::
 
-        assert msg_stem("asdf.onnx.json") == "asdf"
+        from logging_strict.util.package_resource import msg_stem
 
+        assert msg_stem("asdf.tar.gz") == "asdf"
+
+    If file name contains semantic version str,
+    e.g. "0.36.0-ff-0.153.4.tar.gz", use regex rather than msg_stem.
 
     :param file_name: A file name or file path
     :type file_name: str | pathlib.Path
@@ -263,7 +245,7 @@ def msg_stem(file_name):
     """
     if TYPE_CHECKING:
         msg_warn: str
-        ret: str | None
+        ret: "str | None"
         path_name: Path
         name_path: str
         lst_suffixes: list[str]
@@ -291,10 +273,8 @@ def msg_stem(file_name):
     else:
         ret = None
 
-    if ret is None:
+    if ret is None:  # pragma: no branch
         raise ValueError(msg_warn)
-    else:  # pragma: no cover
-        pass
 
     return cast(str, ret)
 
@@ -306,17 +286,26 @@ class PartSuffix(Protocol):
 
     Usage
 
-    .. code-block:: python
+    .. testcode::
 
-        from typing import TYPE_CHECKING
         from functools import partial
+        from typing import TYPE_CHECKING
+
         from logging_strict.util.package_resource import filter_by_suffix
         from logging_strict.util.package_resource import PartSuffix
 
         if TYPE_CHECKING:
-            cb_suffix: PartSuffix
-        cb_suffix = partial(filter_by_suffix, (".svg", ".png"))
-        cb_suffix = partial(filter_by_suffix, ".toml")
+            cb_suffix_0: PartSuffix
+            cb_suffix_1: PartSuffix
+
+        suffixes_0 = (".svg", ".png")
+        cb_suffix_0 = partial(filter_by_suffix, suffixes_0)
+        assert cb_suffix_0("icon.png")
+        assert cb_suffix_0("icon.svg")
+        assert not cb_suffix_0("icon.txt")
+        suffix_1 = ".toml"
+        cb_suffix_1 = partial(filter_by_suffix, suffix_1)
+        assert cb_suffix_1("pyproject.toml")
 
     :param expected_suffix: Suffix or suffixes to search for
     :type expected_suffix: str | tuple[str, ...]
@@ -342,18 +331,20 @@ class PartStem(Protocol):
 
     Usage
 
-    .. code-block:: python
+    .. testcode::
 
-        from typing import TYPE_CHECKING
         from functools import partial
+        from typing import TYPE_CHECKING
+
         from logging_strict.util.package_resource import filter_by_file_stem
         from logging_strict.util.package_resource import PartStem
 
         if TYPE_CHECKING:
             cb_file_stem: PartStem
 
-        cb_file_stem = partial(filter_by_file_stem, file_name)
-        cb_file_stem = partial(filter_by_file_stem, "index.theme")
+        file_stem = "index"
+        cb_file_stem_0 = partial(filter_by_file_stem, file_stem)
+        assert cb_file_stem_0("index.theme")
 
     :param file_expected:
 
@@ -408,7 +399,7 @@ def match_file(y, /, *, cb_suffix=None, cb_file_stem=None):
         is_filter_file_stem: bool
 
     ret = False
-    if isinstance(y, Traversable) and y.is_file():
+    if isinstance(y, Traversable) and y.is_file():  # pragma: no branch
         # file_name_pkg = traversable_file.name
         # Check suffix
         suffixes = Path(y.name).suffixes
@@ -454,9 +445,7 @@ def check_folder(x, cb_suffix=None, cb_file_stem=None):
         is_match: bool
         y: Traversable
 
-    if not isinstance(x, Traversable):  # pragma: no cover
-        yield from ()
-    else:
+    if isinstance(x, Traversable):  # pragma: no branch
         is_found_target_file = False
 
         for y in x.iterdir():
@@ -465,28 +454,34 @@ def check_folder(x, cb_suffix=None, cb_file_stem=None):
                 cb_suffix=cb_suffix,
                 cb_file_stem=cb_file_stem,
             )
-            if is_match:
+            if is_match:  # pragma: no branch
                 is_found_target_file = True
-            else:  # pragma: no cover
-                pass
 
         # yield the folder, not the files
-        if is_found_target_file:
+        if is_found_target_file:  # pragma: no branch
             yield x
-        else:
-            yield from ()
 
 
 def filter_by_suffix(expected_suffix, test_suffix):
     """Usage
 
-    .. code-block:: python
+    .. testcode::
 
         from functools import partial
-        from logging_strict.package_resource import filter_by_suffix, PartSuffix
+        from logging_strict.util.package_resource import (
+            PartSuffix,
+            filter_by_suffix,
+        )
 
-        cb_suffix: PartSuffix = partial(filter_by_suffix, expected_suffix)
-        ...
+        expected_suffix_0 = ".yml"
+        expected_suffix_1 = (".yml", ".ini")
+        cb_suffix: PartSuffix = partial(filter_by_suffix, expected_suffix_0)
+
+        # cache_extract passes file names to check if a match
+        file_name_0 = "good.yml"
+        assert cb_suffix(file_name_0)
+        file_name_1 = "good.txt"
+        assert not cb_suffix(file_name_1)
 
     Then use ``cb_suffix`` as kwarg to
     :py:meth:`PackageResource.cache_extract <logging_strict.util.package_resource.PackageResource.cache_extract>`
@@ -539,7 +534,7 @@ def filter_by_suffix(expected_suffix, test_suffix):
                 is_not_empty(suffix)
                 and is_not_empty(test_suffix)
                 and test_suffix.endswith(suffix)
-            ):
+            ):  # pragma: no branch
                 is_found = True
                 break
         ret = is_found
@@ -555,13 +550,17 @@ def filter_by_file_stem(expected_file_name, test_file_name):
 
     Usage
 
-    .. code-block:: python
+    .. testcode::
 
         from functools import partial
         from logging_strict.util.package_resource import filter_by_file_stem
 
-        cb_file_stem = partial(filter_by_file_stem, expected_file_name)
-        ...
+        file_stem = "myfile"
+        cb_file_stem = partial(filter_by_file_stem, file_stem)
+        file_name_0 = "myfile.tar.gz"
+        assert cb_file_stem(file_name_0)
+        file_name_1 = "urfile.txt"
+        assert not cb_file_stem(file_name_1)
 
     ``cb_file_stem`` is used extensively within this module
 
@@ -629,36 +628,32 @@ def walk_tree_folders(traversable_root):
     ignores = ("__pycache__",)
 
     for traversable_x in traversable_root.iterdir():
-        if traversable_x.is_dir():
-            if traversable_x.name not in ignores:
+        if traversable_x.is_dir():  # pragma: no branch
+            if traversable_x.name not in ignores:  # pragma: no branch
                 yield traversable_x
                 yield from walk_tree_folders(traversable_x)
-            else:  # pragma: no cover blacklisted folder
-                pass
-
-    yield from ()
 
 
 def is_package_exists(package_name):
     """Discover whether a python package is installed within
     virtual environment
 
+    ``importlib.util.find_spec`` implementation.
+
+    - Extremely fast (~0.1ms)
+
+    - locates importable namespaces, which includes:
+      standard packages, namespace packages (PEP 420), and modules inside zip files
+
+    - import name ok
+      distribution name (e.g., Pillow) often differs from the import name (e.g., PIL)
+
     :param package_name: python package name
     :type package_name: str
     :returns: Whether or not python package found
     :rtype: bool
     """
-    if TYPE_CHECKING:
-        ret: bool
-
-    # Available in python3.10
-    # :py:meth:`importlib.metadata.packages_distributions`
-    try:
-        distribution(package_name)
-    except PackageNotFoundError:
-        ret = False
-    else:
-        ret = True
+    ret = importlib.util.find_spec(package_name) is not None
 
     return ret
 
@@ -737,14 +732,24 @@ class PackageResource:
 
     :ivar package: package name
     :vartype package: str
-    :ivar package_data_folder_start: package base data folder name. Not relative path
+    :ivar package_data_folder_start:
+
+       Package base **data folder** name. Not relative path.
+       Not supposed to be None. If None, the horrible fallback is cwd.
+
     :vartype package_data_folder_start: str
+    :raises:
+
+       - :py:exc:`logging_strict.exceptions.PackageNotFoundError` --
+         Package name not provided or not installed. Cannot access package data
+
     """
 
     def __init__(self, package, package_data_folder_start):
         """Class constructor"""
         super().__init__()
-        self._package = package
+
+        self.package = package
         self._package_data_folder_start = package_data_folder_start
 
     @property
@@ -756,11 +761,50 @@ class PackageResource:
         """
         return self._package
 
+    @package.setter
+    def package(self, val):
+        """package name setter.
+
+        :param val: Dotted path format. So lowercase, no hyphen.
+        :type val: typing.Any
+        :raises:
+
+           - :py:exc:`logging_strict.exceptions.PackageNotFoundError` --
+             Package name not provided or not installed. Cannot access package data
+
+        """
+        msg_warn = (
+            f"package {val!r} is not installed. Check is inclusive "
+            "of namespace packages and modules inside zip files"
+        )
+        # None, not str, or empty str
+        if is_not_ok(val):  # pragma: no branch
+            raise PackageNotFoundError(msg_warn)
+
+        # Fail early
+        if not is_package_exists(val):  # pragma: no branch
+            raise PackageNotFoundError(msg_warn)
+
+        self._package = val
+
     @property
     def package_data_folder_start(self):
-        """Package name
+        """Package base **data folder** name, e.g. "data" or "configs".
+        Not relative path.
 
-        :returns: package base data folder name. Not relative path
+        None would mean package data files are allowed on the base folder
+        of the package.
+
+        Which is:
+
+        - strongly discouraged
+        - currently allowed
+        - deprecated behavior
+
+        Searching for package data and allowing the package base folder is questionable.
+        If None, the horrible fallback is cwd.
+
+        :returns: Package base folder name.
         :rtype: str
         """
         return self._package_data_folder_start
@@ -804,9 +848,10 @@ class PackageResource:
         ... )
         >>> path_local_cache = Path(_extract_folder(g_app_name))
         >>> y = path_local_cache.joinpath(
-        ...     "data", "currency", "nonsense", "digital_tox_default.ini"
+        ...     "configs", "currency", "nonsense", "digital_tox_default.ini"
         ... )
-        >>> pr = PackageResource("some package name", "data")
+        >>> some_package = g_app_name
+        >>> pr = PackageResource(some_package, "configs")
         >>> pr.path_relative(y, parent_count=None)
         PosixPath('currency/nonsense/digital_tox_default.ini')
         >>> pr.path_relative(y, parent_count=0)
@@ -878,9 +923,7 @@ class PackageResource:
         ):
             path_relative_to = Path(self.package_data_folder_start)
         else:
-            if is_ok(path_relative_package_dir) and path_relative_package_dir not in (
-                ".",
-            ):
+            if is_ok(path_relative_package_dir) and path_relative_package_dir != ".":
                 # Any str will work
                 path_relative_to = Path(path_relative_package_dir)
             elif path_relative_package_dir is not None and issubclass(
@@ -893,7 +936,7 @@ class PackageResource:
                     path_relative_to = Path(self.package_data_folder_start)
                 else:
                     # horrible fallback
-                    path_relative_to = Path(".")
+                    path_relative_to = Path()
 
         file_name = y.name
         last_folder_name = path_relative_to.name
@@ -903,7 +946,7 @@ class PackageResource:
         #####
         is_in_root_folder = not bool(last_folder_name)
         is_last_is_parent_folder = last_folder_name == str(y.parent.name)
-        if is_in_root_folder or is_last_is_parent_folder:
+        if is_in_root_folder or is_last_is_parent_folder:  # pragma: no branch
             return Path(file_name)
 
         ######
@@ -921,7 +964,7 @@ class PackageResource:
             # path_relative_reversed = Path(*lst_parts[:1])
             msg_exc = (
                 f"In {operation}, folder {last_folder_name} not in "
-                f"{str(y.parent)}. Can not return relative path from "
+                f"{y.parent!s}. Can not return relative path from "
                 "non-existing parent"
             )
             raise LookupError(msg_exc) from e
@@ -938,7 +981,7 @@ class PackageResource:
             parents.extend(lst_playing)
         else:
             for num in range(0, parent_count):
-                if bool(lst_playing):
+                if bool(lst_playing):  # pragma: no branch
                     parents.append(lst_playing.pop(0))
 
         parents.reverse()
@@ -1033,9 +1076,7 @@ class PackageResource:
         ):
             path_relative_to = Path(self.package_data_folder_start)
         else:
-            if is_ok(path_relative_package_dir) and path_relative_package_dir not in (
-                ".",
-            ):
+            if is_ok(path_relative_package_dir) and path_relative_package_dir != ".":
                 # Any str will work
                 path_relative_to = Path(path_relative_package_dir)
             elif issubclass(type(path_relative_package_dir), PurePath):
@@ -1045,10 +1086,10 @@ class PackageResource:
                 if self.package_data_folder_start is not None:
                     path_relative_to = Path(self.package_data_folder_start)
                 else:
-                    path_relative_to = Path(".").resolve()
+                    path_relative_to = Path.cwd()
 
         # Callable check?!
-        if cb_suffix is None or cb_file_stem is None:
+        if cb_suffix is None or cb_file_stem is None:  # pragma: no branch
             # Query is invalid; required args. ValueError??
             return d_files
 
@@ -1059,11 +1100,9 @@ class PackageResource:
         )
         lst_base_folders = list(base_folder_generator)
         is_generator_empty = not bool(lst_base_folders)
-        if is_generator_empty:
+        if is_generator_empty:  # pragma: no branch
             # Query for package data files produced no results
             return d_files
-        else:  # pragma: no cover
-            pass
 
         # generator previously exhausted, refresh generator
         base_folder_generator = self.package_data_folders(
@@ -1077,7 +1116,7 @@ class PackageResource:
             parent_count is None
             or not isinstance(parent_count, int)
             or (isinstance(parent_count, int) and parent_count <= 0)
-        ):
+        ):  # pragma: no branch
             d_files = {}
             return d_files
 
@@ -1181,22 +1220,17 @@ class PackageResource:
            paths. Possibly filtered by theme
 
         :rtype: collections.abc.Iterator[importlib.resources.abc.Traversable]
-        :raises:
-
-           - :py:exc:`ImportError` -- package not installed. Before
-             introspecting package data, install package
-
         """
         if TYPE_CHECKING:
-            msg_exc: str
             base_token: str
             path_adjusted: Path
             parts: Sequence[str]
-            traversable_data_dir: Traversable | None
+            traversable_data_dir: "Traversable | None"
             traversable_x: Traversable
 
-        # Check package installed (in virtual environment)
-        if not is_package_exists(self.package):
+        # package installed check occurs in PackageResource.package setter
+        """
+        if not is_package_exists(self.package):  # pragma: no branch
             msg_exc = (
                 f"package {self.package} not installed. Before "
                 "introspecting package data, install package"
@@ -1206,14 +1240,11 @@ class PackageResource:
                 name=self.package,
                 path=g_module,
             )
-        else:  # pragma: no cover
-            pass
+        """
 
         # Enforce default, but not on empty string
-        if path_relative_package_dir is None:
+        if path_relative_package_dir is None:  # pragma: no branch
             path_relative_package_dir = self.package_data_folder_start
-        else:  # pragma: no cover
-            pass
 
         # Determine base token
         if is_ok(path_relative_package_dir):
@@ -1250,20 +1281,16 @@ class PackageResource:
             # Module definity exists in virtual environment
             is_use_fallback = True
 
-        if is_use_fallback is True:
+        if is_use_fallback:  # pragma: no branch
             traversable_data_dir = _get_package_data_folder(self.package)
-        else:  # pragma: no cover
-            pass
 
         # Impossible --> traversable_data_dir is None
         if path_adjusted is None:  # pragma: no cover Is package base folder
             pass
         else:
             parts = path_adjusted.parts
-            if bool(parts):
+            if bool(parts):  # pragma: no branch
                 traversable_data_dir.joinpath(*parts)
-            else:  # pragma: no cover
-                pass
 
         # Check the root folder
         #    root is ``data``. root relative to ``data`` is ````
@@ -1275,7 +1302,7 @@ class PackageResource:
                     cb_file_stem=cb_file_stem,
                 )
             )
-        ):
+        ):  # pragma: no branch
             yield from check_folder(
                 traversable_data_dir,
                 cb_suffix=cb_suffix,
@@ -1289,7 +1316,6 @@ class PackageResource:
                 cb_suffix=cb_suffix,
                 cb_file_stem=cb_file_stem,
             )
-        yield from ()
 
     def resource_extract(
         self,
@@ -1365,7 +1391,6 @@ class PackageResource:
 
         """
         if TYPE_CHECKING:
-            path_default: Path
             traversable_dir: Traversable
             traversable_x: Traversable
             file_name_pkg: str
@@ -1380,8 +1405,10 @@ class PackageResource:
         if is_ok(path_dest):
             try:
                 path_dest_dir = Path(path_dest)
-            except Exception:  # pragma: no cover How to trigger?
-                path_dest_dir = path_default
+            except Exception:  # pragma: no cover
+                # How to trigger?
+                yield from ()
+                return
         elif path_dest is not None and issubclass(type(path_dest), PurePath):
             path_dest_dir = path_dest
         else:  # pragma: no cover
@@ -1389,14 +1416,13 @@ class PackageResource:
             return
 
         # Informational -- after user input handling
-        if is_module_debug:  # pragma: no cover
+        if is_module_debug:  # pragma: no cover  # pragma: no branch
             msg_info = f"path_dest: {path_dest_dir}"
             print(msg_info, file=sys.stderr)
-        pass
 
         # dest (base) folder
         # On Windows, prevent FileNotFound for Cache folder. Windows needs parents=True?
-        if not path_dest_dir.exists():
+        if not path_dest_dir.exists():  # pragma: no branch
             path_dest_dir.mkdir(
                 mode=0o755,
                 parents=True,
@@ -1410,250 +1436,215 @@ class PackageResource:
         # Check acl writable permissions. Is dest folder tree writable?
         pass
 
-        """ if package not installed,
-        :paramref:`~logging_strict.util.package_resource.PackageResource.resource_extract.params.base_folder_generator`
-        will raise :py:exc:`ImportError`
-        """
-        try:
-            for traversable_dir in base_folder_generator:
-                if traversable_dir.is_dir():  # pragma: no cover
-                    dir_current_name = traversable_dir.name
-                else:  # pragma: no cover
-                    pass
+        for traversable_dir in base_folder_generator:
+            if traversable_dir.is_dir():  # pragma: no cover  # pragma: no branch
+                dir_current_name = traversable_dir.name
 
-                for traversable_x in traversable_dir.iterdir():
-                    if traversable_x.is_file():
-                        if is_module_debug:  # pragma: no cover
-                            print(
-                                f"dir {dir_current_name} file {traversable_x.name}",
-                                file=sys.stderr,
+            for traversable_x in traversable_dir.iterdir():
+                if traversable_x.is_file():  # pragma: no branch
+                    if is_module_debug:  # pragma: no cover  # pragma: no branch
+                        print(
+                            f"dir {dir_current_name} file {traversable_x.name}",
+                            file=sys.stderr,
+                        )
+                    file_name_pkg = traversable_x.name
+                    stem = msg_stem(file_name_pkg)
+                    suffixes = Path(file_name_pkg).suffixes
+                    suffix = "".join(suffixes)
+                    is_filter_suffix = cb_suffix is None or cb_suffix(suffix)
+                    is_filter_file_stem = cb_file_stem is None or cb_file_stem(stem)
+                    if is_filter_suffix and is_filter_file_stem:  # pragma: no branch
+                        # extract
+                        with importlib_resources.as_file(traversable_x) as path_entry:
+                            """Get relative (to start dir) parent
+                            folders (of package data file), so can extract, preserving
+                            folder tree
+                            """
+                            pass
+
+                            """
+                            package start folder. Not:
+
+                            - current folder
+
+                            - relative folder
+                            """
+                            pkg_start_dir = self.package_data_folder_start
+                            path_relative_to_base = self.path_relative(
+                                path_entry,
+                                parent_count=None,  # means get all
+                                path_relative_package_dir=pkg_start_dir,
                             )
-                        file_name_pkg = traversable_x.name
-                        stem = msg_stem(file_name_pkg)
-                        suffixes = Path(file_name_pkg).suffixes
-                        suffix = "".join(suffixes)
-                        is_filter_suffix = cb_suffix is None or cb_suffix(suffix)
-                        is_filter_file_stem = cb_file_stem is None or cb_file_stem(stem)
-                        if is_filter_suffix and is_filter_file_stem:
-                            # extract
-                            with importlib_resources.as_file(
-                                traversable_x
-                            ) as path_entry:
-                                """Get relative (to start dir) parent
-                                folders (of package data file), so can extract, preserving
-                                folder tree
-                                """
-                                pass
 
-                                """
-                                package start folder. Not:
+                            # Strip the file name
+                            tuple_relative_folders = path_relative_to_base.parts[:-1]
 
-                                - current folder
-
-                                - relative folder
-                                """
-                                pkg_start_dir = self.package_data_folder_start
-                                path_relative_to_base = self.path_relative(
-                                    path_entry,
-                                    parent_count=None,  # means get all
-                                    path_relative_package_dir=pkg_start_dir,
+                            if is_module_debug:  # pragma: no cover  # pragma: no branch
+                                print(
+                                    f"path_relative_to_base {path_relative_to_base}",
+                                    file=sys.stderr,
                                 )
-
-                                # Strip the file name
-                                tuple_relative_folders = path_relative_to_base.parts[
-                                    :-1
-                                ]
-
-                                if is_module_debug:  # pragma: no cover
-                                    print(
-                                        f"path_relative_to_base {path_relative_to_base}",
-                                        file=sys.stderr,
-                                    )
-                                    print(
-                                        f"tuple_relative_folders {tuple_relative_folders}",
-                                        file=sys.stderr,
-                                    )
-                                # Gracefully :py:meth:`Path.mkdir` dest folders
-                                if bool(tuple_relative_folders):
-                                    """In dest folder, gracefully create all
-                                    needed sub-folders. Setting correct owner
-                                    along the way.
-                                    So this script can be run as root,
-                                    but the folders would be owned by
-                                    normal session user
-                                    """
-                                    for num in range(0, len(tuple_relative_folders)):
-                                        lst_folder = tuple_relative_folders[: num + 1]
-                                        path_parent_tmp = path_dest_dir.joinpath(
-                                            *lst_folder
-                                        )
-                                        path_parent_tmp.mkdir(
-                                            mode=0o755,
-                                            parents=False,
-                                            exist_ok=True,
-                                        )
-                                        IsRoot.set_owner_as_user(
-                                            path_parent_tmp,
-                                            is_as_user=as_user,
-                                        )
-                                    path_dest_parent = path_dest_dir.joinpath(
-                                        *tuple_relative_folders,
-                                    )
-                                else:
-                                    path_dest_parent = path_dest_dir
-                                path_dest_file = path_dest_parent.joinpath(
-                                    path_entry.name,
+                                print(
+                                    f"tuple_relative_folders {tuple_relative_folders}",
+                                    file=sys.stderr,
                                 )
+                            # Gracefully :py:meth:`Path.mkdir` dest folders
+                            if bool(tuple_relative_folders):
+                                """In dest folder, gracefully create all
+                                needed sub-folders. Setting correct owner
+                                along the way.
+                                So this script can be run as root,
+                                but the folders would be owned by
+                                normal session user
+                                """
+                                for num in range(0, len(tuple_relative_folders)):
+                                    lst_folder = tuple_relative_folders[: num + 1]
+                                    path_parent_tmp = path_dest_dir.joinpath(
+                                        *lst_folder
+                                    )
+                                    path_parent_tmp.mkdir(
+                                        mode=0o755,
+                                        parents=False,
+                                        exist_ok=True,
+                                    )
+                                    IsRoot.set_owner_as_user(
+                                        path_parent_tmp,
+                                        is_as_user=as_user,
+                                    )
+                                path_dest_parent = path_dest_dir.joinpath(
+                                    *tuple_relative_folders,
+                                )
+                            else:
+                                path_dest_parent = path_dest_dir
+                            path_dest_file = path_dest_parent.joinpath(
+                                path_entry.name,
+                            )
 
-                                if not path_dest_file.exists():
-                                    is_ok_inner = True
+                            if not path_dest_file.exists():
+                                is_ok_inner = True
+                            else:
+                                if (
+                                    not path_dest_file.is_file()
+                                ):  # pragma: no cover logs warning
+                                    # Won't be able to overwrite existing fs object
+                                    msg_warn = (
+                                        f"In {operation}, destination "
+                                        "exists, but is not a file. "
+                                        "Can't overwrite. "
+                                        f"{path_dest_file}"
+                                    )
+                                    _LOGGER.warning(msg_warn)
+                                    is_ok_inner = False
                                 else:
                                     if (
-                                        not path_dest_file.is_file()
-                                    ):  # pragma: no cover logs warning
-                                        # Won't be able to overwrite existing fs object
-                                        msg_warn = (
-                                            f"In {operation}, destination "
-                                            "exists, but is not a file. "
-                                            "Can't overwrite. "
-                                            f"{path_dest_file}"
-                                        )
-                                        _LOGGER.warning(msg_warn)
+                                        isinstance(is_overwrite, bool)
+                                        and is_overwrite is True
+                                    ):
+                                        # overwrite existing file
+                                        is_ok_inner = True
+                                    else:
+                                        # Not a file or don't overwrite
                                         is_ok_inner = False
-                                    else:
-                                        if (
-                                            isinstance(is_overwrite, bool)
-                                            and is_overwrite is True
-                                        ):
-                                            # overwrite existing file
-                                            is_ok_inner = True
-                                        else:
-                                            # Not a file or don't overwrite
-                                            is_ok_inner = False
-                                """ The docs of shutil, pathlib, and os doesn't
-                                    cover which Exceptions are raised. Even the
-                                    source code isn't perfect. So best effort
-                                """
-                                try:
+                            """ The docs of shutil, pathlib, and os doesn't
+                                cover which Exceptions are raised. Even the
+                                source code isn't perfect. So best effort
+                            """
+                            try:
+                                if not is_ok_inner:  # pragma: no cover
+                                    # Don't overwrite
+                                    pass
+                                else:
+                                    """Compare sizes. timestamps
+                                    better. Like GNU Makefile
+                                    """
                                     if (
-                                        not is_ok_inner
-                                    ):  # pragma: no cover Don't overwrite
-                                        pass
-                                    else:
-                                        """Compare sizes. timestamps
-                                        better. Like GNU Makefile
-                                        """
-                                        if (
-                                            path_dest_file.exists()
-                                            and path_dest_file.is_file()
-                                        ):
-                                            dest_size = path_dest_file.stat().st_size
-                                            src_size = path_entry.stat().st_size
-                                            is_size_differs = dest_size != src_size
-                                            if is_size_differs:
-                                                # chown?!
-                                                if is_module_debug:  # pragma: no cover
-                                                    print(
-                                                        f"copy (overwrites) {path_entry} --> {path_dest_file}",
-                                                        file=sys.stderr,
-                                                    )
-                                                shutil.copy2(path_entry, path_dest_file)
-                                                path_dest_file.chmod(0o644)
-                                                IsRoot.set_owner_as_user(
-                                                    path_dest_file,
-                                                    is_as_user=as_user,
-                                                )
-                                            else:  # pragma: no cover Same size do nothing
-                                                pass
-                                        else:
+                                        path_dest_file.exists()
+                                        and path_dest_file.is_file()
+                                    ):
+                                        dest_size = path_dest_file.stat().st_size
+                                        src_size = path_entry.stat().st_size
+                                        is_size_differs = dest_size != src_size
+                                        if is_size_differs:  # pragma: no branch
                                             # chown?!
-                                            if is_module_debug:  # pragma: no cover
+                                            if is_module_debug:  # pragma: no cover  # pragma: no branch  # fmt: skip
                                                 print(
-                                                    f"copy (new) {path_entry} --> {path_dest_file}",
+                                                    f"copy (overwrites) {path_entry} --> {path_dest_file}",
                                                     file=sys.stderr,
                                                 )
-                                            shutil.copy2(
-                                                path_entry,
-                                                path_dest_file,
-                                            )
+                                            shutil.copy2(path_entry, path_dest_file)
                                             path_dest_file.chmod(0o644)
                                             IsRoot.set_owner_as_user(
                                                 path_dest_file,
                                                 is_as_user=as_user,
                                             )
-                                except (
-                                    shutil.SameFileError
-                                ):  # pragma: no cover logs warning
-                                    # Attempted to copy file onto itself
-                                    msg_warn = (
-                                        "During resource extract, attempted "
-                                        "to copy file onto itself. "
-                                        f"{path_dest_file}"
-                                    )
-                                    _LOGGER.warning(msg_warn)
-                                    yield from ()
-                                except (
-                                    FileNotFoundError
-                                ):  # pragma: no cover logs warning
-                                    # Dest folder does not exist
-                                    msg_warn = (
-                                        "During resource extract, destination "
-                                        "folder does not exist "
-                                        f"{path_dest_file}"
-                                    )
-                                    _LOGGER.warning(msg_warn)
-                                    yield from ()
-                                except (
-                                    IsADirectoryError
-                                ):  # pragma: no cover logs warning
-                                    # Folder exists but not a folder!
-                                    msg_warn = (
-                                        "During resource extract, folder "
-                                        "exists but not a folder! "
-                                        f"{path_dest_file}"
-                                    )
-                                    _LOGGER.warning(msg_warn)
-                                    yield from ()
-                                except OSError:  # pragma: no cover logs warning
-                                    # Problem copying file stats
-                                    msg_warn = (
-                                        "During resource extract, "
-                                        "problem copying file stats "
-                                        f"{path_dest_file}"
-                                    )
-                                    _LOGGER.warning(msg_warn)
-                                    yield from ()
-                                except PermissionError:  # pragma: no cover logs warning
-                                    """Insufficient permissions. Cannot copy
-                                    file or chmod
-                                    """
-                                    msg_warn = (
-                                        "During resource extract, "
-                                        "Insufficient permissions. Cannot "
-                                        "copy file or chmod "
-                                        f"{path_dest_file}"
-                                    )
-                                    _LOGGER.warning(msg_warn)
-                                    yield from ()
-                                else:
-                                    if is_module_debug:  # pragma: no cover
-                                        print(
-                                            f"yielding {path_dest_file}",
-                                            file=sys.stderr,
+                                    else:
+                                        # chown?!
+                                        if is_module_debug:  # pragma: no cover  # pragma: no branch  # fmt: skip
+                                            print(
+                                                f"copy (new) {path_entry} --> {path_dest_file}",
+                                                file=sys.stderr,
+                                            )
+                                        shutil.copy2(
+                                            path_entry,
+                                            path_dest_file,
                                         )
-                                    yield path_dest_file
-        except ImportError:
-            """package is not installed (in virtual
-            environment)
-            """
-            str_tb = traceback.format_exc()
-            _LOGGER.info(str_tb)
-            msg_warn = (
-                "Package is not installed. Tried to access package data "
-                "within a non-existing package. Install it first "
-            )
-            _LOGGER.warning(msg_warn)
-            yield from ()
+                                        path_dest_file.chmod(0o644)
+                                        IsRoot.set_owner_as_user(
+                                            path_dest_file,
+                                            is_as_user=as_user,
+                                        )
+                            except (
+                                shutil.SameFileError
+                            ):  # pragma: no cover logs warning
+                                # Attempted to copy file onto itself
+                                msg_warn = (
+                                    "During resource extract, attempted "
+                                    "to copy file onto itself. "
+                                    f"{path_dest_file}"
+                                )
+                                _LOGGER.warning(msg_warn)
+                            except FileNotFoundError:  # pragma: no cover logs warning
+                                # Dest folder does not exist
+                                msg_warn = (
+                                    "During resource extract, destination "
+                                    "folder does not exist "
+                                    f"{path_dest_file}"
+                                )
+                                _LOGGER.warning(msg_warn)
+                            except IsADirectoryError:  # pragma: no cover logs warning
+                                # Folder exists but not a folder!
+                                msg_warn = (
+                                    "During resource extract, folder "
+                                    "exists but not a folder! "
+                                    f"{path_dest_file}"
+                                )
+                                _LOGGER.warning(msg_warn)
+                            except OSError:  # pragma: no cover logs warning
+                                # Problem copying file stats
+                                msg_warn = (
+                                    "During resource extract, "
+                                    "problem copying file stats "
+                                    f"{path_dest_file}"
+                                )
+                                _LOGGER.warning(msg_warn)
+                            except PermissionError:  # pragma: no cover logs warning
+                                """Insufficient permissions. Cannot copy
+                                file or chmod
+                                """
+                                msg_warn = (
+                                    "During resource extract, "
+                                    "Insufficient permissions. Cannot "
+                                    "copy file or chmod "
+                                    f"{path_dest_file}"
+                                )
+                                _LOGGER.warning(msg_warn)
+                            else:
+                                if is_module_debug:  # pragma: no cover  # pragma: no branch  # fmt: skip
+                                    print(
+                                        f"yielding {path_dest_file}",
+                                        file=sys.stderr,
+                                    )
+                                yield path_dest_file
 
     def cache_extract(
         self,
@@ -1705,7 +1696,7 @@ class PackageResource:
         # user local cache
         dest_path = _extract_folder(self.package)
 
-        if is_module_debug:  # pragma: no cover
+        if is_module_debug:  # pragma: no cover  # pragma: no branch
             print(f"cache_extract... {dest_path} {type(dest_path)}", file=sys.stderr)
 
         yield from self.resource_extract(
@@ -1718,11 +1709,11 @@ class PackageResource:
 
 
 def get_package_data(
-    package_name: str,
-    file_name_stem: str,
+    package_name,
+    file_name_stem,
     suffix=".csv",
-    convert_to_path: Sequence[str] = ("data",),
-    is_extract: bool | None = False,
+    convert_to_path=("data",),
+    is_extract=False,
 ) -> str:
     """Export and read one package file. Exports to
     ``/run/user/[current session user id]``. This tmp folder inaccessible
@@ -1783,46 +1774,60 @@ def get_package_data(
     ):
         relpath_package_data_subfolder = ".".join(convert_to_path)
     else:
+        # if path_relative_package_dir is empty str
+        #   and package_data_folder_start is None should raise ValueError
+        #   No package base subfolder provided.
+        #   Searching entire package is unintended/sloppy.
         relpath_package_data_subfolder = ""
 
     cb_suffix = partial(filter_by_suffix, mixed_suffixes)
     cb_file_stem = partial(filter_by_file_stem, file_name_stem)
-    pr = PackageResource(package_name, None)
-    gen = pr.package_data_folders(
-        cb_suffix=cb_suffix,
-        cb_file_stem=cb_file_stem,
-        path_relative_package_dir=relpath_package_data_subfolder,
-    )
-    if not bool_is_extract:
-        # Do not want to extract model from package, just get it's absolute Path
-        path_parents = list(gen)
-        if bool(path_parents):
-            path_dir = path_parents[0]
-            path_f = path_dir.joinpath(module_file_name)
-        else:
-            path_f = None
-    else:
-        if platform.system().lower() == "linux":  # pragma: no cover
-            # inaccessible to other users (cold boot attack); automagically removed
-            path_dest_dir = Path("/run", "user", f"{os.geteuid()!s}")
-        else:  # pragma: no cover
-            path_dest_dir = Path(tempfile.gettempdir())
 
-        gen_paths = pr.resource_extract(
-            gen,
-            path_dest_dir,
-            cb_suffix=cb_suffix,
-            cb_file_stem=cb_file_stem,
+    try:
+        pr = PackageResource(
+            package_name,
+            None,  # type: ignore[arg-type]
         )
-        paths = list(gen_paths)
-        if bool(paths):
-            path_f = paths[0]
-        else:
-            path_f = None
-
-    if path_f is None:
+    except PackageNotFoundError:
         ret = ""
     else:
-        ret = path_f.read_text()
+        gen = pr.package_data_folders(
+            cb_suffix=cb_suffix,
+            cb_file_stem=cb_file_stem,
+            path_relative_package_dir=relpath_package_data_subfolder,
+        )
+        if not bool_is_extract:
+            # Do not want to extract model from package, just get it's absolute Path
+            path_parents = list(gen)
+            if bool(path_parents):
+                path_dir = path_parents[0]
+                path_f = path_dir.joinpath(module_file_name)
+            else:
+                path_f = None
+        else:
+            if platform.system().lower() == "linux":  # pragma: no cover
+                # inaccessible to other users (cold boot attack); automagically removed
+                path_dest_dir = Path("/run").joinpath("user", f"{os.geteuid()!s}")
+            else:  # pragma: no cover
+                # within pytest|tox the temp folder will be different
+                # **********************************************************************
+                path_dest_dir = Path(tempfile.gettempdir())
+
+            gen_paths = pr.resource_extract(
+                gen,
+                path_dest_dir,
+                cb_suffix=cb_suffix,
+                cb_file_stem=cb_file_stem,
+            )
+            paths = list(gen_paths)
+            if bool(paths):
+                path_f = paths[0]
+            else:
+                path_f = None
+
+        if path_f is None:
+            ret = ""
+        else:
+            ret = path_f.read_text()
 
     return ret

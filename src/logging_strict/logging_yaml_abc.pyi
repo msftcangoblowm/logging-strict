@@ -14,7 +14,6 @@ __all__ = (
 )
 
 YAML_LOGGING_CONFIG_SUFFIX: Final[str]
-PATTERN_DEFAULT: Final[str]
 VERSION_FALLBACK: str
 PACKAGE_NAME_SRC: str
 
@@ -31,6 +30,7 @@ def as_str(package_name: str, file_name: str) -> str: ...
 def after_as_str_update_package_name(
     str_yaml: str,
     logger_package_name: str | None = None,
+    target_logger_name: str | None = ...,
 ) -> str: ...
 
 class LoggingYamlType(abc.ABC):
@@ -46,11 +46,7 @@ class LoggingYamlType(abc.ABC):
     ) -> str: ...
     def iter_yamls(
         self,
-        path_dir: Path,
-        category: str | None = None,
-        genre: str | None = None,
-        flavor: str | None = None,
-        version: str | None = ...,
+        path_dir: Path | None,
     ) -> Iterator[Path]: ...
     @classmethod
     def __subclasshook__(cls, C: Any) -> bool: ...

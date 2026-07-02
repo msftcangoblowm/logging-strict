@@ -70,15 +70,24 @@ Move the tag past post commits
 """
 
 import types
+from typing import TYPE_CHECKING
 
-try:
-    from packaging.version import InvalidVersion
-    from packaging.version import Version as Version
-except ImportError:  # pragma: no cover
-    from setuptools.extern.packaging.version import InvalidVersion  # type: ignore
-    from setuptools.extern.packaging.version import Version as Version  # type: ignore
+if TYPE_CHECKING:
+    from packaging.version import (
+        InvalidVersion,
+        Version,
+    )
+else:
+    try:
+        from packaging.version import InvalidVersion
+        from packaging.version import Version as Version
+    except ImportError:  # pragma: no cover
+        from setuptools.extern.packaging.version import InvalidVersion  # type: ignore
+        from setuptools.extern.packaging.version import Version as Version  # type: ignore
 
 __all__ = (
+    "InvalidVersion",
+    "Version",
     "sanitize_tag",
     "get_version",
     "readthedocs_url",
@@ -93,7 +102,7 @@ def _strip_epoch(ver):
     :param ver: May contain epoch, ``v``, and local
     :type ver: str
     :returns: epoch and remaining str including ``v`` and local
-    :rtype: collections.abc.Sequence[str | None, str]
+    :rtype: tuple[str | None, str]
     :meta private:
     """
     try:
@@ -106,7 +115,9 @@ def _strip_epoch(ver):
         epoch = ver[: idx + 1]
         remaining = ver[idx + 1 :]
 
-    return epoch, remaining
+    t_ret = epoch, remaining
+
+    return t_ret
 
 
 def _strip_local(ver):
@@ -119,7 +130,7 @@ def _strip_local(ver):
     remaining: ``0!v1.0.1.a1dev1``
 
     :returns: local and remaining
-    :rtype: collections.abc.Sequence[str | None, str]
+    :rtype: tuple[str | None, str]
     :meta private:
     """
     try:
@@ -132,7 +143,9 @@ def _strip_local(ver):
         local = ver[idx + 1 :]
         remaining = ver[:idx]
 
-    return local, remaining
+    t_ret = local, remaining
+
+    return t_ret
 
 
 def remove_v(ver):
@@ -149,16 +162,13 @@ def remove_v(ver):
     local, remaining = _strip_local(remaining)
 
     # If prepended "v", remove it. epoch e.g. ``1!v1.0.1`` would conceal the "v"
-    if remaining.startswith("v"):
-        remaining = remaining[1:]
+    remaining = remaining.removeprefix("v")
 
     ret = epoch if epoch is not None else ""
     ret += remaining
 
-    if local is not None:
+    if local is not None:  # pragma: no branch
         ret += f"+{local}"
-    else:  # pragma: no cover
-        pass
 
     return ret
 

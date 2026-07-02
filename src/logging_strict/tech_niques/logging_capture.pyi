@@ -5,7 +5,10 @@ from collections.abc import (
     MutableSequence,
     Sequence,
 )
-from typing import Any
+from typing import (
+    Any,
+    ClassVar,
+)
 
 import attrs
 
@@ -28,23 +31,45 @@ def _normalize_formatter(
 ) -> logging.Formatter: ...
 @attrs.define
 class _LoggingWatcher:
-    records: MutableSequence[logging.LogRecord] = ...
-    output: MutableSequence[str] = ...
+    __attrs_attrs__: ClassVar[tuple[attrs.Attribute[str], ...]]
+    __attrs_own_setattr__: ClassVar[bool] = True
+
+    records: MutableSequence[logging.LogRecord] = attrs.field(
+        factory=list,
+        kw_only=False,
+        validator=attrs.validators.deep_iterable(
+            member_validator=attrs.validators.instance_of(logging.LogRecord),
+            iterable_validator=attrs.validators.instance_of(list),
+        ),
+    )
+    output: MutableSequence[str] = attrs.field(
+        factory=list,
+        kw_only=False,
+        validator=attrs.validators.deep_iterable(
+            member_validator=attrs.validators.instance_of(str),
+            iterable_validator=attrs.validators.instance_of(list),
+        ),
+    )
 
     def getHandlerByName(self, name: str) -> type[logging.Handler]: ...
     def getHandlerNames(self) -> frozenset[str]: ...
     def getLevelNo(self, level_name: str) -> int | None: ...
 
 class _CapturingHandler(logging.Handler):
+    watcher: _LoggingWatcher
+
     def __init__(self) -> None: ...
     def flush(self) -> None: ...
     def emit(self, record: logging.LogRecord) -> None: ...
 
 @attrs.define
 class _LoggerStoredState:
-    level_name: str = ...
-    propagate: bool = ...
+    __attrs_attrs__: ClassVar[tuple[attrs.Attribute[str], ...]]
+
+    level_name: str
+    propagate: bool
     handlers: list[type[logging.Handler]] = ...
+    __attrs_own_setattr__: ClassVar[bool] = True
 
 @contextlib.contextmanager
 def captureLogs(

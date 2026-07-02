@@ -1,6 +1,12 @@
 Logging capture
 ================
 
+.. py:data:: logging_strict.tech_niques.logging_capture.__all__
+   :type: tuple[str, ...]
+   :value: ("captureLogs", "captureLogsMany")
+
+   Module object exports
+
 .. automodule:: logging_strict.tech_niques.logging_capture
    :members:
    :private-members:

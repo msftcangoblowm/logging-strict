@@ -57,7 +57,8 @@ Lets pretend this is the module level function would like to see the locals
    def _func(param_a: str, param_b: Optional[int] = 10) -> str:
        param_a = f"Hey {param_a}"  # Local only
        param_b += 20  # Local only
-       return "bar"
+       ret = "bar"
+       return ret
 
 
 So there are two locals we'd really really like to see:
@@ -90,7 +91,7 @@ Returns ``"bar"``
 
 .. testoutput::
 
-   {'full_name': '_func', 'param_a': 'Hey A', 'param_b': 30}
+   {'full_name': '_func', 'param_a': 'Hey A', 'param_b': 30, 'ret': 'bar'}
 
 Woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-
 oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooah!
@@ -153,17 +154,14 @@ oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooah!
 import functools
 import inspect
 import re
-import sys
 from textwrap import dedent
-from typing import TypeVar
+from typing import (
+    ParamSpec,
+    TypeVar,
+)
 from unittest.mock import patch
 
 from logging_strict.util.check_type import is_not_ok
-
-if sys.version_info >= (3, 10):  # pragma: no cover
-    from typing import ParamSpec
-else:  # pragma: no cover
-    from typing_extensions import ParamSpec
 
 __all__ = (
     "FuncWrapper",
@@ -210,27 +208,27 @@ class FuncWrapper:
         :rtype: type | None
         """
         # https://stackoverflow.com/users/1956611/user1956611
-        if isinstance(meth, functools.partial):
+        if isinstance(meth, functools.partial):  # pragma: no branch
             return FuncWrapper._get_method_parent(meth.func)
 
         if inspect.ismethod(meth) or (
             inspect.isbuiltin(meth)
             and getattr(meth, "__self__", None) is not None
             and getattr(meth.__self__, "__class__", None)
-        ):
+        ):  # pragma: no branch
             for cls in inspect.getmro(meth.__self__.__class__):
-                if meth.__name__ in cls.__dict__:
+                if meth.__name__ in cls.__dict__:  # pragma: no branch
                     # bound method
                     return cls
             meth = getattr(meth, "__func__", meth)
-        if inspect.isfunction(meth):
+        if inspect.isfunction(meth):  # pragma: no branch
             # unbound method fallsback to __qualname__ parsing
             cls = getattr(
                 inspect.getmodule(meth),
                 meth.__qualname__.split(".<locals>", 1)[0].rsplit(".", 1)[0],
                 None,
             )
-            if isinstance(cls, type):
+            if isinstance(cls, type):  # pragma: no branch
                 return cls
         return getattr(meth, "__objclass__", None)  # handle special descriptor objects
 
@@ -259,10 +257,7 @@ class FuncWrapper:
         :returns: the parent class name
         :rtype: str | None
         """
-        if self._cls is not None:
-            ret = self._cls.__name__
-        else:
-            ret = None
+        ret = self._cls.__name__ if self._cls is not None else None
 
         return ret
 
@@ -284,7 +279,7 @@ class FuncWrapper:
         """
         if self._module is not None:
             ret = self._module.__name__
-        else:  # pragma: no cover
+        else:
             ret = None
 
         return ret
@@ -311,17 +306,15 @@ class FuncWrapper:
         :rtype: str
         """
         module = self.module
-        if module is not None:
+        """For functools.partial functions, on py310+ returns empty
+        str. Do this consistently
+        """
+        str_ret = ""
+
+        if module is not None:  # pragma: no branch
             ret = getattr(module, "__package__", "")
-            if ret is None:
-                str_ret = ""
-            else:
+            if bool(ret.strip()):  # pragma: no branch
                 str_ret = ret
-        else:
-            """For functools.partial functions, on py310+ returns empty
-            str. Do this consistently
-            """
-            str_ret = ""
 
         return str_ret
 
@@ -333,10 +326,10 @@ class FuncWrapper:
         :rtype: str
         """
         pkg_name = self.package_name
-        if pkg_name is not None and isinstance(pkg_name, str):
-            str_ret = self.package_name.partition(".")[0]
-        else:
-            str_ret = ""
+        str_ret = ""
+        if pkg_name is not None and isinstance(pkg_name, str):  # pragma: no branch
+            # 0 before separator, 1 the seperator, 2 after separator
+            str_ret = pkg_name.partition(".")[0]
 
         return str_ret
 
@@ -395,20 +388,18 @@ def _func(param_a, param_b=10):
     :returns: Greetings from this function to our adoring fans
     :rtype: str
     """
-    if is_not_ok(param_a):
+    if is_not_ok(param_a):  # pragma: no branch
         param_a = ""
-    else:  # pragma: no cover
-        pass
 
-    if param_b is None or not isinstance(param_b, int):
+    if param_b is None or not isinstance(param_b, int):  # pragma: no branch
         param_b = 10
-    else:  # pragma: no cover
-        pass
 
     param_a = f"Hey {param_a}"  # Local only
     param_b += 20  # Local only
 
-    return "bar"
+    ret = "bar"
+
+    return ret
 
 
 class MockFunction:
@@ -627,7 +618,7 @@ def get_locals_dynamic(
         # print(inspect.getmembers(mocked.side_effect))
         d_locals = {}
         for k, v in mocked.side_effect.__dict__.items():
-            if k != "func":
+            if k != "func":  # pragma: no branch
                 d_locals[k] = v
 
         return ret, d_locals
@@ -678,7 +669,7 @@ def get_locals(
         # print(inspect.getmembers(mocked.side_effect))
         d_locals = {}
         for k, v in mocked.side_effect.__dict__.items():
-            if k != "func":
+            if k != "func":  # pragma: no branch
                 d_locals[k] = v
 
         return ret, d_locals

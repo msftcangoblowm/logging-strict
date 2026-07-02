@@ -11,52 +11,12 @@ One for the app and another for worker(s).
 ``QA Tester`` can edit the yaml config files, **before using**,
 ensure validation passes!
 
-**Module private variables**
-
-.. py:data:: __all__
-   :type: tuple[str, str, str, str]
-   :value: ("LoggingYamlType", "YAML_LOGGING_CONFIG_SUFFIX", \
-   "after_as_str_update_package_name", "setup_logging_yaml")
-
-   Module exports
-
-.. py:data:: YAML_LOGGING_CONFIG_SUFFIX
-   :type: str
-   :value: ".logging.config.yaml"
-
-   For logging.config YAML files, define file extension (Suffixes)
-   Differentiates from other .yaml files
-
-.. py:data:: VERSION_FALLBACK
-   :type: str
-   :value: "1"
-
-   Initial version of :py:mod:`logging.config` YAML files
-
-.. py:data:: PACKAGE_NAME_SRC
-   :type: str
-   :value: "asz"
-
-   In a ``.logging.config.yaml``, under ``loggers``, default package name.
-   Should be a generic replacable name, ``package_name``
-
-**Module objects**
-
 """
 
-from __future__ import annotations
-
 import abc
-import glob
 import logging.config
-from pathlib import (
-    Path,
-    PurePath,
-)
-from typing import (
-    TYPE_CHECKING,
-    Any,
-)
+from pathlib import PurePath
+from typing import TYPE_CHECKING
 
 import strictyaml as s
 
@@ -69,6 +29,9 @@ from .util.check_type import (
 from .util.package_resource import _to_package_case
 from .util.xdg_folder import _get_path_config
 
+if TYPE_CHECKING:
+    from typing import Any
+
 __all__ = (
     "LoggingYamlType",
     "YAML_LOGGING_CONFIG_SUFFIX",
@@ -76,8 +39,13 @@ __all__ = (
     "setup_logging_yaml",
 )
 
+#: str: logging-strict config suffix(es). Differentiates from other .yaml files
 YAML_LOGGING_CONFIG_SUFFIX = ".logging.config.yaml"
+
+#: str: logging-strict config protocol versioning
 VERSION_FALLBACK = "1"
+
+#: str: In config, under ``loggers``, default generic replaceable package name
 PACKAGE_NAME_SRC = "package_name"
 
 
@@ -98,18 +66,16 @@ def _update_logger_package_name(
     :param target_logger_name: in logger config dict, logger name to replace
     :type target_logger_name: str | None
     """
-    if is_not_ok(target_logger_name):
+    if is_not_ok(target_logger_name):  # pragma: no branch
         target_logger_name = PACKAGE_NAME_SRC
-    else:  # pragma: no cover
-        pass
 
-    if is_ok(package_name):
+    if is_ok(package_name):  # pragma: no branch
         logger_keys = d_config["loggers"].keys()
         #    ensure package_name contains only underscores
         valid_package_name = _to_package_case(package_name)
         is_different = target_logger_name != valid_package_name
         is_in_logger_keys = target_logger_name in logger_keys
-        if is_different and is_in_logger_keys:
+        if is_different and is_in_logger_keys:  # pragma: no branch
             # rename logger
             #   copy default package logger setting
             d_logger_package_src = d_config["loggers"][target_logger_name]
@@ -117,10 +83,6 @@ def _update_logger_package_name(
             del d_config["loggers"][target_logger_name]
             #   use different logger package name with same logger settings
             d_config["loggers"][valid_package_name] = d_logger_package_src
-        else:  # pragma: no cover
-            pass
-    else:
-        pass
 
 
 def setup_logging_yaml(path_yaml, package_name=None):
@@ -161,7 +123,7 @@ def setup_logging_yaml(path_yaml, package_name=None):
             # unsupported type
             str_yaml = None
 
-    if is_ok(str_yaml):
+    if is_ok(str_yaml):  # pragma: no branch
         yaml_config = validate_yaml_dirty(str_yaml)
         # QA Tester is responsible to test the logging.config yaml file
         # A broken yaml config file will crash the app here
@@ -171,8 +133,6 @@ def setup_logging_yaml(path_yaml, package_name=None):
         _update_logger_package_name(d_config, package_name=package_name)
 
         logging.config.dictConfig(d_config)  # test: defang
-    else:  # pragma: no cover
-        pass
 
     # During testing, return needed to get locals
     return None
@@ -205,21 +165,21 @@ def as_str(package_name, file_name):
 
     msg_err = (
         "Did not find a logging config YAML file. It's extracted "
-        f"during app start. Expected location {str(path_yaml)}"
+        f"during app start. Expected location {path_yaml!s}"
     )
 
     is_exists = path_yaml.exists() and path_yaml.is_file()
-    if is_exists:
-        # test load the yaml file
-        str_yaml = path_yaml.read_text()
-        """raises py:exc:`strictyaml.YAMLValidationError`
-        If another yaml implementation, the exception raised will
-        be that implementation specific
-        """
-        yaml_config = validate_yaml_dirty(str_yaml)
-        assert isinstance(yaml_config, s.YAML)
-    else:
+    if not is_exists:  # pragma: no branch
         raise FileNotFoundError(msg_err)
+
+    # test load the yaml file
+    str_yaml = path_yaml.read_text()
+    """raises py:exc:`strictyaml.YAMLValidationError`
+    If another yaml implementation, the exception raised will
+    be that implementation specific
+    """
+    yaml_config = validate_yaml_dirty(str_yaml)
+    assert isinstance(yaml_config, s.YAML)
 
     return str_yaml
 
@@ -389,7 +349,7 @@ class LoggingYamlType(abc.ABC):
 
         :rtype: collections.abc.Iterator[pathlib.Path]
         """
-        cls = type(self)
+        cls = self.__class__
         # print(f"{self.category} {self.genre} {self.flavor} {self.version}")
         pattern = cls.pattern(
             category=self.category,
@@ -397,24 +357,22 @@ class LoggingYamlType(abc.ABC):
             flavor=self.flavor,
             version=self.version,
         )
-        if path_dir is None or (
-            path_dir is not None and not issubclass(type(path_dir), PurePath)
-        ):
-            # Path not provided
-            yield from ()
-        else:
-            if not path_dir.exists() or not path_dir.is_dir():
-                yield from ()
-            else:
-                # py310+ --> kw param root_dir
+        if path_dir is not None and issubclass(
+            type(path_dir), PurePath
+        ):  # pragma: no branch
+            if path_dir.exists() and path_dir.is_dir():  # pragma: no branch
+                """
                 search_query = f"{path_dir}/**/{pattern}"
                 # print(f"search_query: {search_query}", file=sys.stderr)
+                # py310+ --> kw param root_dir
                 for path_yaml in glob.glob(
                     search_query,
                     # root_dir=path_dir, py310
                     recursive=True,
                 ):
                     yield Path(path_yaml)
+                """
+                yield from path_dir.rglob(pattern)
 
     @classmethod
     def __subclasshook__(cls, C):
@@ -458,7 +416,7 @@ class LoggingYamlType(abc.ABC):
 
         :rtype: bool
         """
-        if cls is LoggingYamlType:
+        if cls is LoggingYamlType:  # pragma: no branch
             methods = (
                 "file_stem",
                 "file_name",
@@ -474,10 +432,9 @@ class LoggingYamlType(abc.ABC):
                 lst = [True for meth in methods if meth in B.__dict__]
                 match_count = len(lst)
                 is_same = match_count == expected_count
-                if is_same:
+                if is_same:  # pragma: no branch
                     return True
-        else:  # pragma: no cover
-            pass
+
         return NotImplemented  # pragma: no cover Tried long enough with issubclass
 
     @property
@@ -570,7 +527,7 @@ class LoggingYamlType(abc.ABC):
 
         return ret
 
-    def setup(self, str_yaml, package_name=None):  # pragma: no cover dangerous
+    def setup(self, str_yaml, package_name=None):  # pragma: no cover
         """Only called by app, not worker. For worker, is a 2 step
         process, not 1.
 
@@ -589,7 +546,5 @@ class LoggingYamlType(abc.ABC):
 
         :type: str | None
         """
-        if is_ok(str_yaml):
+        if is_ok(str_yaml):  # pragma: no branch
             setup_logging_yaml(str_yaml, package_name=package_name)
-        else:  # pragma: no cover
-            pass

@@ -15,5 +15,5 @@ def find_project_root(
 ) -> tuple[Path, str]: ...
 def find_pyproject_toml(
     path_search_start: tuple[str, ...],
-    stdin_filename: str | None = None,
+    stdin_filename: str | None,
 ) -> str | None: ...

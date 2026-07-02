@@ -36,12 +36,12 @@ jobs:
 
     steps:
       - name: "Check out the repo"
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
 
       - name: "Install Python"
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v6.2.0
         with:
-          python-version: "3.9" # Minimum of PYVERSIONS
+          python-version: "3.10" # Minimum of PYVERSIONS
           # cache: pip
           # cache-dependency-path: 'requirements/*.lock'
 
@@ -59,18 +59,18 @@ jobs:
 
     steps:
       - name: "Check out the repo"
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
 
       - name: "Install Python"
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v6.2.0
         with:
-          python-version: "3.9" # Minimum of PYVERSIONS, but at least 3.9
+          python-version: "3.10" # Minimum of PYVERSIONS
           # cache: pip
           # cache-dependency-path: 'requirements/*.lock'
 
       - name: "Install dependencies"
         run: |
-          # Runs on 3.9, but hashes supported by pip-tools is
+          # Runs on 3.10, but hashes supported by pip-tools is
           # not supported by setuptools. So don't expect hashes
           python -m pip install -r requirements/tox.lock
 
@@ -84,10 +84,10 @@ jobs:
 
     steps:
       - name: "Check out the repo"
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
 
       - name: "Install Python"
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: "3.13" # Doc version from PYVERSIONS
           # cache: pip

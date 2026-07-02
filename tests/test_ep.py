@@ -7,9 +7,9 @@ Test logging-strict main entrypoint.
 
 import argparse
 import io
-import sys
 import tempfile
 import unittest
+from collections.abc import Sequence
 from contextlib import redirect_stderr
 from pathlib import Path
 from unittest.mock import (
@@ -20,21 +20,18 @@ from unittest.mock import (
 from logging_strict import LoggingConfigCategory
 from logging_strict.constants import g_app_name
 from logging_strict.ep_validate_yaml import (
-    _process_args,
+    _process_args,  # pyright: ignore[reportPrivateUsage]
+)
+from logging_strict.ep_validate_yaml import (
     main,
 )
 from logging_strict.logging_yaml_abc import YAML_LOGGING_CONFIG_SUFFIX
-
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Sequence
-else:  # pragma: no cover
-    from typing import Sequence
 
 
 class EntrypointStrictYAMLValidate(unittest.TestCase):
     """Test entrypoint for strict yaml validation."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Initialize variables for tests base folder and cwd."""
         if "__pycache__" in __file__:
             # cached
@@ -47,7 +44,7 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
         self.path_package_src = self.path_cwd.joinpath("src", g_app_name)
         self.package_data_folder_start = "configs"
 
-    def test_process_args(self):
+    def test_process_args(self) -> None:
         """Test out interface. Bypass calling the entrypoint"""
         # 1, 2, 3, 5, 10
         # No arguments --> exit code 3
@@ -94,7 +91,7 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
         self.assertEqual(exc.code, 5)
 
         # exit code 6 no package (academic cuz fallback)
-        valids = (
+        valids_0 = (
             {
                 "dir": self.path_package_src,
                 "package": None,
@@ -115,11 +112,11 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
                 "fail_fast": True,
             },
         )
-        for kwargs in valids:
+        for kwargs_0 in valids_0:
             with (
                 patch(
                     "argparse.ArgumentParser.parse_args",
-                    return_value=argparse.Namespace(**kwargs),
+                    return_value=argparse.Namespace(**kwargs_0),
                 ),
                 self.assertRaises(SystemExit) as cm,
             ):
@@ -129,7 +126,7 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
             self.assertEqual(exc.code, 6)
 
         # Exit code 7 No package_data_folder_start (academic cuz fallback)
-        valids = (
+        valids_1 = (
             {
                 "dir": self.path_package_src,
                 "package": self.package,
@@ -150,11 +147,11 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
                 "fail_fast": True,
             },
         )
-        for kwargs in valids:
+        for kwargs_1 in valids_1:
             with (
                 patch(
                     "argparse.ArgumentParser.parse_args",
-                    return_value=argparse.Namespace(**kwargs),
+                    return_value=argparse.Namespace(**kwargs_1),
                 ),
                 self.assertRaises(SystemExit) as cm,
             ):
@@ -165,12 +162,12 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
 
         # All files
         # Category dodgy --> All categories
-        dodgy_categories = (
+        dodgy_categories_0 = (
             (None, None),
             (0.12345, None),
             ("notacategory", None),  # not in category enum --> None --> all results
         )
-        for category, genre in dodgy_categories:
+        for category_0, genre_0 in dodgy_categories_0:
             with (
                 patch(
                     "argparse.ArgumentParser.parse_args",
@@ -179,8 +176,8 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
                             "dir": self.path_package_src,
                             "package": self.package,
                             "package_data_folder_start": self.package_data_folder_start,
-                            "category": category,  # all category
-                            "genre": genre,  # all genre
+                            "category": category_0,  # all category
+                            "genre": genre_0,  # all genre
                             "flavor": "asz",
                         },
                     ),
@@ -194,8 +191,8 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
                 self.assertEqual(is_fail_fast, True)
 
         # No results
-        dodgy_categories = ((None, "bob"),)
-        for category, flavor in dodgy_categories:
+        dodgy_categories_1 = ((None, "bob"),)
+        for category_1, flavor_1 in dodgy_categories_1:
             with (
                 patch(
                     "argparse.ArgumentParser.parse_args",
@@ -204,9 +201,9 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
                             "dir": self.path_package_src,
                             "package": self.package,
                             "package_data_folder_start": self.package_data_folder_start,
-                            "category": category,  # all category
+                            "category": category_1,  # all category
                             "genre": None,  # all genre
-                            "flavor": flavor,
+                            "flavor": flavor_1,
                         },
                     ),
                 ),
@@ -218,7 +215,7 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
             self.assertEqual(exc.code, 10)
 
         # Success -- implict optional kwargs
-        valids = (
+        valids_2 = (
             (
                 {  # configs: 1
                     "dir": self.path_package_src,
@@ -237,11 +234,11 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
                 4,
             ),
         )
-        for kwargs, file_count_expected in valids:
+        for kwargs_2, file_count_expected_2 in valids_2:
             with (
                 patch(
                     "argparse.ArgumentParser.parse_args",
-                    return_value=argparse.Namespace(**kwargs),
+                    return_value=argparse.Namespace(**kwargs_2),
                 ),
             ):
                 t_ret = _process_args()
@@ -249,7 +246,7 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
                 files, is_fail_fast = t_ret
                 self.assertIsInstance(files, tuple)
                 files_count = len(files)
-                self.assertEqual(files_count, file_count_expected)
+                self.assertEqual(files_count, file_count_expected_2)
                 self.assertIsInstance(is_fail_fast, bool)
                 self.assertTrue(is_fail_fast)
 
@@ -280,7 +277,7 @@ class EntrypointStrictYAMLValidate(unittest.TestCase):
             self.assertIsInstance(is_fail_fast, bool)
             self.assertFalse(is_fail_fast)
 
-    def test_thru_api(self):
+    def test_thru_api(self) -> None:
         """Call main directly rather than thru a subprocess"""
         yaml_snippet0 = "version: 1\n"
         yaml_snippet1 = "b: 'tuna fish'\n"

@@ -1,7 +1,15 @@
+cachetools>=7.0.3
 colorama>=0.4.6
+filelock>=3.25
+packaging>=26
+platformdirs>=4.9.4
+pluggy>=1.6
+pyproject-api>=1.10
+python-discovery>=1.2.2
 python-dateutil>=2.9.0.post0
-tomli; python_version<"3.11"
-tox
-tox-gh-actions
-typing-extensions; python_version<"3.11"
-virtualenv>=20.26.6
+tomli>=2.4; python_version<'3.11'
+tomli-w>=1.2
+tox>=4.31
+tox-gh
+typing-extensions>=4.15; python_version<'3.11'
+virtualenv>=21.1

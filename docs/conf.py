@@ -47,13 +47,13 @@ proj_master_doc = config.get("master_doc")
 # Version is dynamic. Dependent on git and this file is edited by ``igor.py``
 
 # @@@ editable
-copyright = "2023–2025, Dave Faulkmore"
+copyright = "2023–2026, Dave Faulkmore"
 # The short X.Y.Z version.
-version = "1.5.0"
+version = "1.6.2.dev0"
 # The full version, including alpha/beta/rc tags.
-release = "1.5.0"
+release = "1.6.2.dev0"
 # The date of release, in "monthname day, year" format.
-release_date = "January 18, 2025"
+release_date = "July 2, 2026"
 # @@@ end
 
 # release = config.version
@@ -69,9 +69,7 @@ project = f"{proj_project} {version}"
 rst_epilog = """
 .. |project_name| replace:: {slug}
 .. |package-equals-release| replace:: logging_strict=={release}
-""".format(
-    release=release, slug=slug
-)
+""".format(release=release, slug=slug)
 
 # https://alabaster.readthedocs.io/en/latest/customization.html
 # https://pypi.org/project/sphinx_external_toc/

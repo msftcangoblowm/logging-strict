@@ -18,6 +18,7 @@ from pathlib import (
     Path,
     PurePath,
 )
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
 from logging_strict.constants import g_app_name
@@ -27,6 +28,9 @@ from logging_strict.util.util_root import (
     check_python_not_old,
     get_logname,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 _LOGGER = logging.getLogger(f"{g_app_name}.tests.test_util_root")
 
@@ -184,6 +188,9 @@ class AsUser(unittest.TestCase):
 
     def test_assert_root(self) -> None:
         """Test IsRoot.is_root"""
+        if TYPE_CHECKING:
+            cb: Callable[[str], None]
+
         self.assertFalse(IsRoot.is_root())
         # Neither raise nor exit, therefore does nothing
         _LOGGER2 = logging.getLogger(f"{g_app_name}.sdafsadfsadfsdf")
@@ -195,15 +202,15 @@ class AsUser(unittest.TestCase):
         for no_support in unsupported:
             IsRoot.check_root(
                 callback=None,
-                is_app_exit=no_support,
-                is_raise_exc=no_support,
+                is_app_exit=no_support,  # type: ignore[arg-type]
+                is_raise_exc=no_support,  # type: ignore[arg-type]
             )
         del _LOGGER2
         # With callback
         cb = lambda msg_warn: self.assertTrue(len(msg_warn) != 0)  # noqa: E731
         with self.assertRaises(PermissionError):
             IsRoot.check_root(
-                callback=cb,
+                callback=cb,  # type: ignore[arg-type]
                 is_app_exit=False,
                 is_raise_exc=True,
             )
@@ -227,8 +234,11 @@ class AsRoot(unittest.TestCase):
             fake_stderr=sys.stderr,
         )
 
-    def test_assert_not_root(self):
+    def test_assert_not_root(self) -> None:
         """Test IsRoot.check_not_root"""
+        if TYPE_CHECKING:
+            cb: Callable[[str], None]
+
         is_app_exits = (
             None,
             False,
@@ -242,11 +252,15 @@ class AsRoot(unittest.TestCase):
         )
         # Practice exiting app, if root
         for is_app_exit in is_app_exits:
-            IsRoot.check_not_root(is_app_exit=is_app_exit)
+            IsRoot.check_not_root(
+                is_app_exit=is_app_exit,  # type: ignore[arg-type]
+            )
 
         # Practice (not) raise exception, if root
         for is_raise_exc in is_raise_excs:
-            IsRoot.check_not_root(is_raise_exc=is_raise_exc)
+            IsRoot.check_not_root(
+                is_raise_exc=is_raise_exc,  # type: ignore[arg-type]
+            )
 
         # Practice raise exception, if root
         with self.assertRaises(PermissionError):
@@ -255,7 +269,9 @@ class AsRoot(unittest.TestCase):
         # Callback -- normally prints or logs msg
         # With callback
         cb = lambda msg_warn: self.assertTrue(len(msg_warn) != 0)  # noqa: E731
-        IsRoot.check_not_root(callback=cb)
+        IsRoot.check_not_root(
+            callback=cb,  # type: ignore[arg-type]
+        )
 
     def test_check_root(self) -> None:
         """Just covers parameter checking"""
@@ -272,11 +288,15 @@ class AsRoot(unittest.TestCase):
         )
         # Practice exiting app, if root
         for is_app_exit in is_app_exits:
-            IsRoot.check_root(is_app_exit=is_app_exit)
+            IsRoot.check_root(
+                is_app_exit=is_app_exit,  # type: ignore[arg-type]
+            )
 
         # Practice (not) raise exception, if root
         for is_raise_exc in is_raise_excs:
-            IsRoot.check_root(is_raise_exc=is_raise_exc)
+            IsRoot.check_root(
+                is_raise_exc=is_raise_exc,  # type: ignore[arg-type]
+            )
 
 
 @patch(f"{g_app_name}.util.util_root.is_python_old", True)
@@ -299,6 +319,9 @@ class UnsupportedPython(unittest.TestCase):
 
     def test_check_python_not_old(self) -> None:
         """Test check_python_not_old"""
+        if TYPE_CHECKING:
+            cb: Callable[[str], None]
+
         _LOGGER2 = logging.getLogger(f"{g_app_name}.sdafsadfsadfsdf")
         unsupported = (
             None,
@@ -308,15 +331,15 @@ class UnsupportedPython(unittest.TestCase):
         for no_support in unsupported:
             check_python_not_old(
                 callback=None,
-                is_app_exit=no_support,
-                is_raise_exc=no_support,
+                is_app_exit=no_support,  # type: ignore[arg-type]
+                is_raise_exc=no_support,  # type: ignore[arg-type]
             )
         del _LOGGER2
         # With callback
         cb = lambda msg_warn: self.assertTrue(len(msg_warn) != 0)  # noqa: E731
         with self.assertRaises(PermissionError):
             check_python_not_old(
-                callback=cb,
+                callback=cb,  # type: ignore[arg-type]
                 is_app_exit=False,
                 is_raise_exc=True,
             )
@@ -349,6 +372,9 @@ class SupportedPython(unittest.TestCase):
 
     def test_check_python_not_old(self) -> None:
         """Test check_python_not_old"""
+        if TYPE_CHECKING:
+            cb: Callable[[str], None]
+
         _LOGGER2 = logging.getLogger(f"{g_app_name}.sdafsadfsadfsdf")
         unsupported = (
             None,
@@ -358,14 +384,14 @@ class SupportedPython(unittest.TestCase):
         for no_support in unsupported:
             check_python_not_old(
                 callback=None,
-                is_app_exit=no_support,
-                is_raise_exc=no_support,
+                is_app_exit=no_support,  # type: ignore[arg-type]
+                is_raise_exc=no_support,  # type: ignore[arg-type]
             )
         del _LOGGER2
         # With callback. Never called
         cb = lambda msg_warn: self.assertTrue(len(msg_warn) != 0)  # noqa: E731
         check_python_not_old(
-            callback=cb,
+            callback=cb,  # type: ignore[arg-type]
             is_app_exit=False,
             is_raise_exc=True,
         )

@@ -12,14 +12,10 @@ leverage wreck.
 
 """
 
-# import sys
-# del sys.modules["logging_strict"]
-# import coverage
-
 import platform
-import sys
 import tempfile
 import unittest
+from collections.abc import Sequence
 from pathlib import (
     Path,
     PurePath,
@@ -31,16 +27,11 @@ from logging_strict.util.pep518_read import (
     find_pyproject_toml,
 )
 
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Sequence  # noqa: F401 Used by sphinx
-else:  # pragma: no cover
-    from typing import Sequence  # noqa: F401 Used by sphinx
-
 
 class Pep518Sections(unittest.TestCase):
     """Test pep518_read module."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Get test base folder and package base folder"""
         if "__pycache__" in __file__:
             # cached
@@ -50,15 +41,15 @@ class Pep518Sections(unittest.TestCase):
             self.path_tests = Path(__file__).parent
         self.cwd = self.path_tests.parent
 
-    def test_find_project_root(self):
+    def test_find_project_root(self) -> None:
         """Check possibilities: .git, .hg, pyproject.toml, or file system root"""
         # "pyproject.toml"
         with (
             tempfile.TemporaryDirectory() as f_d,
             patch("pathlib.Path.cwd", return_value=Path(f_d)),
         ):
-            tests = ((f_d, "pyproject.toml"),)
-            for t_valid_dirs in tests:
+            tests_0 = ((f_d, "pyproject.toml"),)
+            for t_valid_dirs in tests_0:
                 self.assertIsInstance(t_valid_dirs, tuple)
                 valid_dir, reason_expected = t_valid_dirs
                 path_dir = Path(valid_dir)
@@ -67,8 +58,8 @@ class Pep518Sections(unittest.TestCase):
                 path_f = path_dir.joinpath("pyproject.toml")
                 path_f.touch(mode=0o666, exist_ok=False)
 
-                srcs = (valid_dir,)
-                path_project_folder, reason = find_project_root(srcs)
+                srcs_0 = (valid_dir,)
+                path_project_folder, reason = find_project_root(srcs_0)
                 self.assertTrue(issubclass(type(path_project_folder), PurePath))
                 self.assertIsInstance(reason, str)
                 self.assertEqual(reason, reason_expected)
@@ -85,7 +76,7 @@ class Pep518Sections(unittest.TestCase):
             tempfile.TemporaryDirectory() as f_d,
             patch("pathlib.Path.cwd", return_value=Path(f_d)),
         ):
-            tests = (
+            tests_1 = (
                 ((f_d,), "file system root"),
                 ((None,), "file system root"),  # means should use cwd
                 (None, "file system root"),  # forgot; should be a Sequence
@@ -99,16 +90,16 @@ class Pep518Sections(unittest.TestCase):
                     "file system root",
                 ),  # filter out non-str
             )
-            for t_valid_dirs in tests:
-                self.assertIsInstance(t_valid_dirs, Sequence)
-                srcs, reason_expected = t_valid_dirs
-                if srcs is not None:
-                    self.assertIsInstance(srcs, Sequence)
+            for t_valid_dirs_1 in tests_1:
+                self.assertIsInstance(t_valid_dirs_1, Sequence)
+                srcs_1, reason_expected = t_valid_dirs_1
+                if srcs_1 is not None:
+                    self.assertIsInstance(srcs_1, Sequence)
                 else:
-                    self.assertIsNone(srcs)
+                    self.assertIsNone(srcs_1)
                 self.assertIsInstance(reason_expected, str)
 
-                path_project_folder, reason = find_project_root(srcs)
+                path_project_folder, reason = find_project_root(srcs_1)
                 self.assertTrue(issubclass(type(path_project_folder), PurePath))
                 self.assertIsInstance(reason, str)
                 self.assertEqual(reason, reason_expected)
@@ -134,9 +125,9 @@ class Pep518Sections(unittest.TestCase):
             )
 
             # pyproject.toml does not yet exist
-            srcs = ("-",)
+            srcs_2 = ("-",)
             stdin_filename = None
-            self.assertIsNone(find_pyproject_toml(srcs, stdin_filename))
+            self.assertIsNone(find_pyproject_toml(srcs_2, stdin_filename))
 
             path_f = path_dir.joinpath("pyproject.toml")
             path_f.touch(mode=0o666, exist_ok=False)
@@ -160,19 +151,19 @@ class Pep518Sections(unittest.TestCase):
 
             # pyproject.toml exists, stdin_filename supplied
             stdin_filename = str(path_f)
-            self.assertIsInstance(find_pyproject_toml(srcs, stdin_filename), str)
+            self.assertIsInstance(find_pyproject_toml(srcs_2, stdin_filename), str)
 
-            path_project_folder, reason = find_project_root(srcs, stdin_filename)
+            path_project_folder, reason = find_project_root(srcs_2, stdin_filename)
             self.assertTrue(issubclass(type(path_project_folder), PurePath))
             self.assertIsInstance(reason, str)
             self.assertEqual(reason, ".git directory")
 
         # Has .git, .hg folders
-        tests = (
+        tests_3 = (
             (".git", ".git directory"),
             (".hg", ".hg directory"),
         )
-        for t_valid_dirs in tests:
+        for t_valid_dirs in tests_3:
             self.assertIsInstance(t_valid_dirs, tuple)
             valid_dir, reason_expected = t_valid_dirs
             with (
@@ -186,8 +177,8 @@ class Pep518Sections(unittest.TestCase):
                     parents=False,
                     exist_ok=False,
                 )
-                srcs = (f_d,)
-                path_project_folder, reason = find_project_root(srcs)
+                srcs_3 = (f_d,)
+                path_project_folder, reason = find_project_root(srcs_3)
                 self.assertTrue(issubclass(type(path_project_folder), PurePath))
                 self.assertIsInstance(reason, str)
                 self.assertEqual(reason, reason_expected)
@@ -197,28 +188,28 @@ class Pep518Sections(unittest.TestCase):
             tempfile.TemporaryDirectory() as f_d,
             patch("pathlib.Path.cwd", return_value=Path(f_d)),
         ):
-            tests = ((f_d, "file system root"),)
-            for t_valid_dirs in tests:
+            tests_4 = ((f_d, "file system root"),)
+            for t_valid_dirs in tests_4:
                 self.assertIsInstance(t_valid_dirs, tuple)
                 valid_dir, reason_expected = t_valid_dirs
-                srcs = (valid_dir,)
+                srcs_4 = (valid_dir,)
 
-                path_project_folder, reason = find_project_root(srcs)
+                path_project_folder, reason = find_project_root(srcs_4)
                 self.assertTrue(issubclass(type(path_project_folder), PurePath))
                 self.assertIsInstance(reason, str)
                 self.assertEqual(reason, reason_expected)
 
                 # must be a tuple[str], not tuple[Path]
                 stdin_filename = None
-                self.assertIsNone(find_pyproject_toml(srcs, stdin_filename))
+                self.assertIsNone(find_pyproject_toml(srcs_4, stdin_filename))
 
             # PermissionError, **not** testing a filesystem base folder
             if platform.system().lower() == "linux":
-                srcs = ("/root",)
+                srcs_5 = ("/root",)
                 stdin_filename = None
                 with self.assertRaises(PermissionError):
-                    find_project_root(srcs)
-                self.assertIsNone(find_pyproject_toml(srcs, stdin_filename))
+                    find_project_root(srcs_5)
+                self.assertIsNone(find_pyproject_toml(srcs_5, stdin_filename))
 
 
 if __name__ == "__main__":  # pragma: no cover

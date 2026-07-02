@@ -1,4 +1,7 @@
+from importlib.metadata import PackageNotFoundError
+
 __all__ = (
+    "PackageNotFoundError",
     "LoggingStrictError",
     "LoggingStrictPackageNameRequired",
     "LoggingStrictPackageStartFolderNameRequired",

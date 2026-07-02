@@ -6,12 +6,14 @@ from typing import (
     Final,
 )
 
+from typing_extensions import LiteralString
+
 __all__ = (
     "IsRoot",
     "check_python_not_old",
 )
 
-g_module: Final[str]
+dotted_path_module: Final[LiteralString]
 _LOGGER: Final[logging.Logger]
 g_is_root: bool
 is_python_old: Final[bool]

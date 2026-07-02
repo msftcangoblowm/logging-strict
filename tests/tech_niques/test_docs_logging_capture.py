@@ -15,7 +15,7 @@ from logging_strict.tech_niques import captureLogs
 class DocsExampleLoggingCapture(unittest.TestCase):
     """Docs example of captureLogs usage"""
 
-    def test_logging_capture(self):
+    def test_logging_capture(self) -> None:
         """Confirms levelname and message, not others"""
         msg0 = "first msg"
         msg1 = "second msg"

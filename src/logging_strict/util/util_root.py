@@ -1,41 +1,9 @@
 """
 .. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-..
-
 Lets write this only once (DRY principle)
 
 Returns messages thru callbacks. So do not print or log anything
-
-**Module private variables**
-
-.. py:data:: __all__
-   :type: tuple[str, str]
-   :value: ("IsRoot", "check_python_not_old")
-
-   Module object exports
-
-.. py:data:: g_module
-   :type: str
-   :value: "logging_strict.util.util_root"
-
-   This module's dotted path
-
-.. py:data:: _LOGGER
-   :type: logging.Logger
-
-   Module level logger
-
-.. py:data:: g_is_root
-   :type: bool
-
-   ``True`` if app run as a service with root privledges. ``False`` if
-   run normally and sanely
-
-.. py:data:: is_python_old
-   :type: bool
-
-    ``True`` if py38- otherwise ``False``
 
 **Module objects**
 
@@ -51,10 +19,7 @@ from pathlib import (
     Path,
     PurePath,
 )
-from typing import (
-    TYPE_CHECKING,
-    ClassVar,
-)
+from typing import TYPE_CHECKING
 
 from ..constants import g_app_name
 
@@ -63,21 +28,22 @@ if platform.system().lower() != "windows":  # pragma: no cover
 else:  # pragma: no cover
     getpwnam = None
 
+if TYPE_CHECKING:
+    from typing import ClassVar
+
 __all__ = (
     "IsRoot",
     "check_python_not_old",
 )
 
-g_module = f"{g_app_name}.util.util_root"
-_LOGGER = logging.getLogger(g_module)
+#: str: dotted path to this module
+dotted_path_module = f"{g_app_name}.util.util_root"
 
+#: logging.Logger: module level logger
+_LOGGER = logging.getLogger(dotted_path_module)
+
+#: bool: py38-
 is_python_old = sys.version_info < (3, 9)
-
-if TYPE_CHECKING:
-    if sys.version_info >= (3, 9):  # pragma: no cover
-        from collections.abc import Callable  # noqa: F401 Used by sphinx
-    else:  # pragma: no cover
-        from typing import Callable  # noqa: F401 Used by sphinx
 
 
 def is_user_admin():  # pragma: no cover
@@ -118,6 +84,7 @@ def is_user_admin():  # pragma: no cover
     return ret
 
 
+#: bool: app run as a service with elevated privileges True
 g_is_root = is_user_admin()
 
 
@@ -159,10 +126,8 @@ def get_logname():
         ret: str
 
     ret = getpass.getuser()
-    if ret == "root":  # pragma: no cover
+    if ret == "root":  # pragma: no cover  # pragma: no branch
         ret = os.getlogin()
-    else:  # pragma: no cover
-        pass
 
     return ret
 
@@ -271,7 +236,7 @@ class IsRoot:
             assert g_is_root
         except AssertionError as e:
             msg_warn = "Requires root to run"
-            if callback is not None:
+            if callback is not None:  # pragma: no branch
                 callback(msg_warn)
             if is_app_exit is True:  # pragma: no cover No way to test
                 ungraceful_app_exit()
@@ -332,10 +297,8 @@ class IsRoot:
             assert not g_is_root
         except AssertionError as e:
             msg_warn = "Not run as root. Executed by session user"
-            if callback is not None:
+            if callback is not None:  # pragma: no branch
                 callback(msg_warn)
-            else:  # pragma: no cover
-                pass
 
             if is_app_exit is True:
                 ungraceful_app_exit()
@@ -386,7 +349,9 @@ class IsRoot:
         else:  # pragma: no cover
             pass
 
-        if g_is_root and is_as_user is True and platform.system().lower() != "windows":
+        if (
+            g_is_root and is_as_user is True and platform.system().lower() != "windows"
+        ):  # pragma: no branch
             # https://stackoverflow.com/questions/8086412/howto-determine-file-owner-on-windows-using-python-without-pywin32
             session_user_name = get_logname()
             session_uid = getpwnam(session_user_name)[2]
@@ -396,8 +361,6 @@ class IsRoot:
                 user=session_uid,
                 group=session_gid,
             )
-        else:  # pragma: no cover Do nothing
-            pass
 
 
 def check_python_not_old(
@@ -424,7 +387,6 @@ def check_python_not_old(
 
        :py:exc:`PermissionError` -- Requires root to run
 
-
     """
     if TYPE_CHECKING:
         major: str
@@ -433,19 +395,15 @@ def check_python_not_old(
         current_version: str
         msg_warn: str
 
-    if is_app_exit is None:
-        is_app_exit = False
-    elif not isinstance(is_app_exit, bool):
-        is_app_exit = False
-    else:  # pragma: no cover
-        pass
+    if is_app_exit is None or not isinstance(is_app_exit, bool):
+        bool_is_app_exit = False
+    else:
+        bool_is_app_exit = is_app_exit
 
-    if is_raise_exc is None:
-        is_raise_exc = False
-    elif not isinstance(is_raise_exc, bool):
-        is_raise_exc = False
-    else:  # pragma: no cover
-        pass
+    if is_raise_exc is None or not isinstance(is_raise_exc, bool):
+        bool_is_raise_exc = False
+    else:
+        bool_is_raise_exc = is_raise_exc
 
     try:
         assert not is_python_old
@@ -456,9 +414,11 @@ def check_python_not_old(
             "Requires Python version 3.9 or later. Python version: "
             f"{current_version}"
         )
-        if callback is not None:
+        if callback is not None:  # pragma: no branch
             callback(msg_warn)
-        if is_app_exit:
+        if bool_is_app_exit:
             ungraceful_app_exit()
-        elif is_raise_exc:
+        elif bool_is_raise_exc:
             raise PermissionError(msg_warn) from e
+        else:  # pragma: no cover
+            pass

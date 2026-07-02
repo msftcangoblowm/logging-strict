@@ -6,3 +6,5 @@
 -c pins.in
 
 mypy
+types-setuptools
+types-strictyaml

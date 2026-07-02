@@ -334,7 +334,7 @@ def main() -> None:
     report = (
         f"Processed: {count_processed} / {count_total}\n"
         f"Success / fail: {count_succeed} / {count_fail}\n"
-        f"last ({str(current_idx)}): {file_last}"
+        f"last ({current_idx!s}): {file_last}"
     )
     str_err = "\n".join(errors)
     print(f"{report}\n{str_err}", file=sys.stderr)

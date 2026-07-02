@@ -14,7 +14,7 @@ six==1.17.0
     # via python-dateutil
 strictyaml==1.7.3
     # via -r requirements/prod.in
-typing-extensions==4.12.2 ; python_version < "3.11"
+typing-extensions==4.15.0 ; python_version < "3.11"
     # via
     #   -c requirements/pins.in
     #   -r requirements/prod.in

@@ -140,6 +140,10 @@ logging_strict.tech_niques.context_locals.get_locals.params.args py:parameter 1 
 logging_strict.tech_niques.context_locals.get_locals.params.func py:parameter 1 code/tech_niques/context_locals.html#$ -
 logging_strict.tech_niques.context_locals.get_locals.params.func_path py:parameter 1 code/tech_niques/context_locals.html#$ -
 logging_strict.tech_niques.context_locals.get_locals.params.kwargs py:parameter 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.get_locals_dynamic py:function 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.get_locals_dynamic.params.func py:parameter 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.get_locals_dynamic.params.args py:parameter 1 code/tech_niques/context_locals.html#$ -
+logging_strict.tech_niques.context_locals.get_locals_dynamic.params.kwargs py:parameter 1 code/tech_niques/context_locals.html#$ -
 logging_strict.tech_niques.logger_redirect py:module 0 code/tech_niques/logger_redirect.html -
 logging_strict.tech_niques.logger_redirect.LoggerRedirector py:class 1 code/tech_niques/logger_redirect.html -
 logging_strict.tech_niques.logger_redirect.LoggerRedirector.redirect_loggers.params.fake_stderr py:parameter 1 code/tech_niques/logger_redirect.html#$ -

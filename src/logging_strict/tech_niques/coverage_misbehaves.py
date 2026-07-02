@@ -1,20 +1,7 @@
 """
 .. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-..
-
 Detect runner to adjust logging level inconsistencies
-
-
-**Module private variables**
-
-.. py:data:: __all__
-   :type: tuple[str]
-   :value: ("detect_coverage",)
-
-   This modules exports
-
-**Module objects**
 
 """
 
@@ -23,7 +10,7 @@ import os
 __all__ = ("detect_coverage",)
 
 
-def detect_coverage() -> bool:
+def detect_coverage():
     """Running by coverage and running by unittest behavior differs!
 
     :returns: ``True`` if runner is coverage otherwise ``False``

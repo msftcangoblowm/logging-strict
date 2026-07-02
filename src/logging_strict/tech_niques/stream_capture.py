@@ -18,8 +18,6 @@ both streams and logging output
 
 """
 
-from __future__ import annotations
-
 import io
 import sys
 

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=80.7.1", "wheel", "build", "setuptools_scm>=8.3.1"]
+requires = ["setuptools>=80.7.1", "wheel", "build", "setuptools-scm>=8.3.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -23,18 +23,13 @@ keywords = [
     "logging.config",
 ]
 readme = "README.rst"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
   "Environment :: Console",
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
   "Topic :: System :: Logging",
@@ -78,12 +73,14 @@ exclude = [
 
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements/prod.unlock"] }
+# tox.ini says, failed with extras not found for package logging-strict: toml
+optional-dependencies.toml = { file = [] }
 optional-dependencies.pip = { file = ["requirements/pip.lock"] }
 optional-dependencies.pip_tools = { file = ["requirements/pip-tools.lock"] }
 optional-dependencies.dev = { file = ["requirements/dev.lock"] }
 optional-dependencies.manage = { file = ["requirements/manage.lock"] }
 optional-dependencies.docs = { file = ["docs/requirements.lock"] }
-version = {attr = "logging_strict._version.__version__"}
+# version = {attr = "logging_strict._version.__version__"}
 
 [project.scripts]
 logging_strict_validate_yaml = "logging_strict.ep_validate_yaml:main"
@@ -109,12 +106,24 @@ warn_unused_ignores = true
 no_implicit_optional = true
 show_error_codes = true
 
-# These packages do not have stubs
 [[tool.mypy.overrides]]
-module = [
-    "strictyaml.*"
-]
+module = "packaging.*"
 ignore_missing_imports = true
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.10"
+venvPath = "."
+venv = ".venv"  # venv folder path
+include = ["tests"]
+reportUnnecessaryIsInstance = "none"
+
+# Exclude common non-source directories
+exclude = ["**/__pycache__", "**/.venv", "**/node_modules"]
+
+executionEnvironments = [
+  { root = "." }
+]
 
 [tool.coverage.run]
 source_pkgs = ["logging_strict"] # **REQUIRED** to be set correctly. Your package name
@@ -233,6 +242,9 @@ ignore_init_module = true
 exclude = [
     "src/logging_strict/_version.py",
 ]
+
+[tool.refurb]
+ignore = ["FURB184"]
 
 [tool.asz.unittest]
 "test_util_root.py" = 1

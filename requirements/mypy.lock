@@ -6,7 +6,11 @@ tomli==2.2.1 ; python_version < "3.11"
     # via
     #   -c requirements/pins.in
     #   mypy
-typing-extensions==4.12.2 ; python_version < "3.11"
+types-setuptools==82.0.0.20260518
+    # via -r requirements/mypy.in
+types-strictyaml==1.7.3.1
+    # via -r requirements/mypy.in
+typing-extensions==4.15.0 ; python_version < "3.11"
     # via
     #   -c requirements/pins.in
     #   mypy

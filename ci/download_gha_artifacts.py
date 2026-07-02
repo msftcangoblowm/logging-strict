@@ -12,6 +12,7 @@ import os.path
 import sys
 import time
 import zipfile
+from pathlib import Path
 
 from session import get_session
 
@@ -32,12 +33,10 @@ def download_url(url, filename):
 
     """
     response = get_session().get(url, stream=True)
-    if response.status_code == 200:
-        with open(filename, "wb") as f:
-            for chunk in response.iter_content(16 * 1024):
-                f.write(chunk)
-    else:
+    if response.status_code != 200:  # pragma: no branch
         raise RuntimeError(f"Fetching {url} produced: status={response.status_code}")
+    with open(filename, "wb") as f:
+        f.writelines(response.iter_content(16 * 1024))
 
 
 def unpack_zipfile(filename):
@@ -119,6 +118,7 @@ def main(owner_repo, artifact_pattern, dest_dir):
     :param dest_dir: Directory to unpack them into
     :type dest_dir: str
     """
+    abspath_dest_dir = Path(dest_dir)
     # Get all artifacts matching the pattern, grouped by name.
     url = f"https://api.github.com/repos/{owner_repo}/actions/artifacts"
     artifacts_by_name = collections.defaultdict(list)
@@ -128,12 +128,13 @@ def main(owner_repo, artifact_pattern, dest_dir):
             continue
         artifacts_by_name[name].append(artifact)
 
-    os.makedirs(dest_dir, exist_ok=True)
+    abspath_dest_dir.mkdir(parents=True, exist_ok=True)
     os.chdir(dest_dir)
     temp_zip = "artifacts.zip"
+    abspath_tmp_zip = abspath_dest_dir.joinpath(temp_zip)
 
     # Download the latest of each name.
-    for name, artifacts in artifacts_by_name.items():
+    for artifacts in artifacts_by_name.values():
         artifact = max(artifacts, key=operator.itemgetter("created_at"))
         print(
             f"Downloading {artifact['name']}, "
@@ -142,8 +143,9 @@ def main(owner_repo, artifact_pattern, dest_dir):
         )
         download_url(artifact["archive_download_url"], temp_zip)
         unpack_zipfile(temp_zip)
-        os.remove(temp_zip)
+        abspath_tmp_zip.unlink()
 
 
 if __name__ == "__main__":
+    """process guard"""
     sys.exit(main(*sys.argv[1:]))

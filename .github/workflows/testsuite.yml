@@ -49,29 +49,24 @@ jobs:
           # Available versions:
           # https://github.com/actions/python-versions/blob/main/versions-manifest.json
           # https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#available-versions-of-python-and-pypy
-          - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
           - "3.13"
-          - "pypy-3.9"
+          - "3.14"
           - "pypy-3.10"
-        exclude:
-          # https://github.com/pypy/pypy/issues/4958
-          - platform: windows-latest
-            python-version: "pypy-3.9"
       fail-fast: false
 
     steps:
-      - name: "Check out the repo"
-        uses: actions/checkout@v4.2.2
+      - name: Check out the repo
+        uses: actions/checkout@v6.0.2
         with:
           repository: '${{ github.repository }}'
           # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
           fetch-depth: 0
 
-      - name: "Set up Python"
-        uses: actions/setup-python@v5.6.0
+      - name: Setup Python
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: "${{ matrix.python-version }}"
           allow-prereleases: true
@@ -81,7 +76,7 @@ jobs:
           #cache: pip
           #cache-dependency-path: 'requirements/*.lock'
 
-      - name: "Show environment"
+      - name: Show environment
         run: |
           set -xe
           python -VV
@@ -90,21 +85,42 @@ jobs:
           # python -c "import urllib.request as r; exec(r.urlopen('https://bit.ly/pydoctor').read())"
           env
 
-      - name: "Install dependencies"
+      - name: Install dependencies
         run: |
           set -xe
           python -m pip install -r requirements/tox.lock
 
+      - name: Set OS and Python short vars
+        run: |
+          platform="${{ matrix.platform }}"
+          python_version="${{ matrix.python-version }}"
+          OS_SHORT="${platform%%-*}"
+          OS_SHORT="${OS_SHORT/ubuntu/linux}"
+          echo "OS_SHORT=$OS_SHORT" >> $GITHUB_ENV
+          if [[ "$python_version" == pypy-* ]]; then
+            ver_short="${python_version//-/}"  # pypy3.10
+          else
+            ver_short="py${python_version//-/}"  # py3.14
+          fi
+          ver_short="${ver_short//./}"  # remove dots → pypy310 or py314
+          echo "VER_SHORT=$ver_short" >> $GITHUB_ENV
+
       - name: Test with tox
-        run: tox -vv -c tox-test.ini
+        run: |
+          echo "env.OS_SHORT ${{ env.OS_SHORT }}"
+          echo "env.VER_SHORT ${{ env.VER_SHORT }}"
+          python -m tox -vv -c tox-test.ini -e ${{ env.VER_SHORT }}-${{ env.OS_SHORT }}
         env:
           PLATFORM: ${{ matrix.platform }}
 
       #  --skip-pkg-install -- -rfsEX --lf -vvvvv && exit 1
       - name: "Retry ${{ matrix.python-version }} ${{ matrix.platform }}"
-        # `exit 1` makes sure that the job remains red with flaky runs
         if: failure()
-        run: tox -vv -c tox-test.ini && exit 1
+        run: |
+          echo "env.OS_SHORT ${{ env.OS_SHORT }}"
+          echo "env.VER_SHORT ${{ env.VER_SHORT }}"
+          # `exit 1` makes sure that the job remains red with flaky runs
+          python -m tox -vv -c tox-test.ini -e ${{ env.VER_SHORT }}-${{ env.OS_SHORT }} && exit 1
         env:
           PLATFORM: ${{ matrix.platform }}
 
@@ -121,6 +137,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
-        uses: re-actors/alls-green@223e4bb7a751b91f43eda76992bcfbf23b8b0302
+        uses: re-actors/alls-green@2765efec08f0fd63e83ad900f5fd75646be69ff6
         with:
           jobs: ${{ toJSON(needs) }}

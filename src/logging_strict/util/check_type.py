@@ -1,33 +1,13 @@
 """
 .. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-..
-
 Check utility functions
 
-
-**Module private variables**
-
-.. py:attribute:: __all__
-   :type: tuple[str, str, str, str, str]
-   :value: ("check_type_path", "is_not_ok", "is_ok", "check_int_verbosity", \
-   "check_start_folder_importable")
-
-   Exported objects from this module
-
-**Module objects**
-
 """
-
-from __future__ import annotations
 
 from pathlib import (
     Path,
     PurePath,
-)
-from typing import (  # noqa: F401 Any used by Sphinx
-    TYPE_CHECKING,
-    Any,
 )
 
 __all__ = (
@@ -66,37 +46,33 @@ def check_type_path(module_path, *, msg_context=None):
          or path is invalid
 
     """
-    if TYPE_CHECKING:
-        msg_type_error: str
-        path_absolute: Path
-        msg_exc: str
-
-    msg_type_error = (
-        f"Path or PathLike expected, got {module_path} type {type(module_path)}."
-    )
-    msg_expanduser = """Home directory can’t be resolved"""
-    msg_supplimentary = msg_context if is_ok else ""
-    if module_path is not None and isinstance(module_path, str) and bool(module_path):
-        try:
-            """Do not know whether relative or absolute path, so no
-            :py:func:`pathlib.Path.resolve`
-            """
-            path_absolute = Path(module_path).expanduser()
-        except Exception as e:
-            # str path is not a path, contains nonsense characters
-            # home folder can't be resolved. Not mounted?
-            msg_exc = f"{msg_expanduser}. Path: {repr(module_path)} {msg_supplimentary}"
-            raise ValueError(msg_exc) from e
-    elif module_path is not None and issubclass(type(module_path), PurePath):
-        try:
-            path_absolute = module_path.expanduser()
-        except (PermissionError, RuntimeError) as e:
-            # home folder can't be resolved. Not mounted?
-            msg_exc = f"{msg_expanduser}. Path: {repr(module_path)} {msg_supplimentary}"
-            raise ValueError(msg_exc) from e
-    else:
+    msg_type_error = f"Path or PathLike expected, got {module_path!r}"
+    msg_expanduser = "Home directory can’t be resolved"
+    msg_supplimentary = msg_context if is_ok(msg_context) else ""
+    # neither non-empty str nor Path
+    if module_path is None or not (
+        (isinstance(module_path, str) and bool(module_path.strip()))
+        or issubclass(type(module_path), PurePath)
+    ):  # pragma: no branch
         msg_exc = f"{msg_type_error} {msg_supplimentary}"
         raise TypeError(msg_exc)
+
+    assert module_path is not None
+    if isinstance(module_path, str):
+        path_module = Path(module_path)
+    else:
+        path_module = module_path
+
+    try:
+        """Do not know whether relative or absolute path, so no
+        :py:func:`pathlib.Path.resolve`
+        """
+        path_absolute = path_module.expanduser()
+    except (PermissionError, OSError, RuntimeError, Exception) as e:
+        # str path is not a path, contains nonsense characters
+        # home folder can't be resolved. Not mounted?
+        msg_exc = f"{msg_expanduser}. Path: {module_path!r} {msg_supplimentary}"
+        raise ValueError(msg_exc) from e
 
     return path_absolute
 
@@ -109,21 +85,10 @@ def is_not_ok(test):
     :returns: ``True`` if either: ``None``, not a str, or an empty str
     :rtype: bool
     """
-    if TYPE_CHECKING:
-        is_str: bool
-        str_stripped: str
-        is_really_empty: bool
-        ret: bool
-
     is_str = test is not None and isinstance(test, str)
-
     if is_str:
-        str_stripped = test.strip()
-        is_really_empty = not bool(str_stripped)
-        if is_really_empty:
-            ret = True
-        else:
-            ret = False
+        # is_really_empty
+        ret = not bool(test.strip())
     else:
         # None or not a str
         ret = True
@@ -159,10 +124,8 @@ def check_int_verbosity(test):
     else:
         if not isinstance(test, int):
             ret = False
-        elif isinstance(test, int) and test not in [1, 2]:
-            ret = False
         else:
-            ret = True
+            ret = test in (1, 2)
 
     return ret
 
@@ -223,25 +186,25 @@ def check_start_folder_importable(folder_start):
         path_absolute_folder = check_type_path(folder_start)
     except (ValueError, TypeError):
         raise
+
+    if not (
+        path_absolute_folder.exists() and path_absolute_folder.is_dir()
+    ):  # pragma: no branch
+        msg_exc = (
+            f"Not a folder: {path_absolute_folder}, check, in that "
+            "folder, for __init__.py  would fail. Create the "
+            "folder and __init__.py within that folder using touch command"
+        )
+        raise NotADirectoryError(msg_exc)
+
+    if not path_absolute_folder.is_absolute():
+        ret = False
     else:
-        if not (path_absolute_folder.exists() and path_absolute_folder.is_dir()):
-            msg_exc = (
-                f"Not a folder: {path_absolute_folder}, check, in that "
-                "folder, for __init__.py  would fail. Create the "
-                "folder and __init__.py within that folder using touch command"
-            )
-            raise NotADirectoryError(msg_exc)
+        path_missing = path_absolute_folder.joinpath("__init__.py")
+        if not path_missing.exists():
+            ret = False
         else:
-            if not path_absolute_folder.is_absolute():
-                ret = False
-            else:
-                path_missing = path_absolute_folder.joinpath("__init__.py")
-                if not path_missing.exists():
-                    ret = False
-                elif path_missing.exists() and not path_missing.is_file():
-                    # Insane, but lets create a unittest for it anyways
-                    ret = False
-                else:
-                    ret = True
+            # False is insane, but lets create a unittest for it anyways
+            ret = path_missing.is_file()
 
     return ret

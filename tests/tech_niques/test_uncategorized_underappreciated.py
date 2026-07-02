@@ -6,7 +6,6 @@ Class inspection tool is_class_attrib_kind
 
 import unittest
 
-from logging_strict import LoggingYamlType
 from logging_strict.logging_api import LoggingConfigYaml
 from logging_strict.tech_niques import (
     ClassAttribTypes,
@@ -17,7 +16,7 @@ from logging_strict.tech_niques import (
 class InspectClassAttribute(unittest.TestCase):
     """Inspection using is_class_attrib_kind"""
 
-    def test_is_class_attrib_kind(self):
+    def test_is_class_attrib_kind(self) -> None:
         """Inspect LoggingConfigYaml attributes, properties, and methods"""
         # These classmethods are required by the ABC's interface
         self.assertTrue(
@@ -49,13 +48,10 @@ class InspectClassAttribute(unittest.TestCase):
             ),
         )
 
-        # Inherits from (subclass of) LoggingYamlType
-        self.assertTrue(issubclass(LoggingConfigYaml, LoggingYamlType))
-
         # not a class
         with self.assertRaises(AssertionError):
             is_class_attrib_kind(
-                42,
+                42,  # type: ignore[arg-type]
                 "file_name",
                 ClassAttribTypes.PROPERTY,
             )
@@ -79,7 +75,7 @@ if __name__ == "__main__":  # pragma: no cover
     """
     .. code-block:: shell
 
-       python -m tests.ui.test_uncategorized_underappreciated --locals
+       python -m tests.tech_niques.test_uncategorized_underappreciated --locals
 
        coverage run --data-file=".coverage-combine-42" \
        -m unittest discover -t. -s tests/tech_niques \

@@ -1,0 +1,16 @@
+# tox 4.53.1 depends on:
+cachetools>=7.0.3
+colorama>=0.4.6
+filelock>=3.25
+packaging>=26
+platformdirs>=4.9.4
+pluggy>=1.6
+pyproject-api>=1.10
+python-discovery>=1.2.2
+tomli>=2.4; python_version<'3.11'
+tomli-w>=1.2
+typing-extensions>=4.15; python_version<'3.11'
+virtualenv>=21.1
+
+# tox-gh 1.7.1 depends on:
+tox>=4.31

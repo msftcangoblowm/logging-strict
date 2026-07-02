@@ -16,7 +16,7 @@ filelock==3.16.1
     # via cibuildwheel
 importlib-metadata==8.7.0
     # via build
-packaging==25.0
+packaging==26.2
     # via
     #   auditwheel
     #   build
@@ -36,7 +36,7 @@ tomli==2.2.1 ; python_version < "3.11"
     #   cibuildwheel
     #   dependency-groups
     #   setuptools-scm
-typing-extensions==4.12.2 ; python_version < "3.11"
+typing-extensions==4.15.0 ; python_version < "3.11"
     # via
     #   -c requirements/pins.in
     #   cibuildwheel

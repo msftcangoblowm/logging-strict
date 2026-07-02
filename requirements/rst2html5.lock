@@ -1,0 +1,4 @@
+docutils==0.21.2
+    # via -r requirements/rst2html5.in
+pygments==2.19.1
+    # via -r requirements/rst2html5.in

@@ -2,6 +2,7 @@ import enum
 from typing import Any
 
 from .context_locals import (
+    FuncWrapper,
     get_locals,
     get_locals_dynamic,
 )
@@ -11,6 +12,7 @@ from .logging_capture import captureLogs
 from .stream_capture import CaptureOutput
 
 __all__ = (
+    "FuncWrapper",
     "get_locals",
     "get_locals_dynamic",
     "is_class_attrib_kind",

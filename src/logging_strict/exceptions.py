@@ -29,12 +29,19 @@ Usage
 
 """
 
+try:
+    from importlib_metadata import PackageNotFoundError
+except ImportError:  # pragma: no cover
+    # What CPython provides likely very dated
+    from importlib.metadata import PackageNotFoundError
+
 __all__ = (
     "LoggingStrictError",
     "LoggingStrictPackageNameRequired",
     "LoggingStrictPackageStartFolderNameRequired",
     "LoggingStrictProcessCategoryRequired",
     "LoggingStrictGenreRequired",
+    "PackageNotFoundError",
 )
 
 

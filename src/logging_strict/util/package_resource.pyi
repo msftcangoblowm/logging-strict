@@ -7,16 +7,18 @@ from collections.abc import (
 from importlib.abc import Traversable
 from pathlib import Path
 from typing import (
+    Any,
     Protocol,
     runtime_checkable,
 )
 
 __all__ = (
-    "filter_by_suffix",
-    "filter_by_file_stem",
     "PackageResource",
     "PartSuffix",
     "PartStem",
+    "filter_by_suffix",
+    "filter_by_file_stem",
+    "get_package_data",
 )
 
 is_module_debug: bool
@@ -75,6 +77,8 @@ class PackageResource:
     ) -> None: ...
     @property
     def package(self) -> str: ...
+    @package.setter
+    def package(self, val: Any) -> None: ...
     @property
     def package_data_folder_start(self) -> str: ...
     def path_relative(

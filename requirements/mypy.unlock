@@ -1,4 +1,6 @@
 mypy
 python-dateutil>=2.9.0.post0
 tomli; python_version<"3.11"
+types-setuptools
+types-strictyaml
 typing-extensions; python_version<"3.11"

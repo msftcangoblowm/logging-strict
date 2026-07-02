@@ -14,10 +14,7 @@ import secrets
 import sys
 import tempfile
 import unittest
-from collections.abc import (
-    Generator,
-    Sequence,
-)
+from collections.abc import Generator
 from contextlib import nullcontext as does_not_raise
 from contextlib import suppress
 from functools import partial
@@ -25,20 +22,27 @@ from pathlib import (
     Path,
     PurePath,
 )
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+    cast,
+)
 from unittest.mock import patch
 
 from logging_strict.constants import g_app_name
-from logging_strict.tech_niques import (
-    LoggerRedirector,
-    captureLogs,
-)
+from logging_strict.exceptions import PackageNotFoundError
+from logging_strict.tech_niques import LoggerRedirector
 from logging_strict.util.check_type import is_ok
+from logging_strict.util.package_resource import (
+    _extract_folder,  # pyright: ignore[reportPrivateUsage]
+)
+from logging_strict.util.package_resource import (
+    _get_package_data_folder,  # pyright: ignore[reportPrivateUsage]
+)
+from logging_strict.util.package_resource import (
+    _to_package_case,  # pyright: ignore[reportPrivateUsage]
+)
 from logging_strict.util.package_resource import (  # noqa: F401 sphinx uses
     PackageResource,
-    _extract_folder,
-    _get_package_data_folder,
-    _to_package_case,
     filter_by_file_stem,
     filter_by_suffix,
     get_package_data,
@@ -46,6 +50,9 @@ from logging_strict.util.package_resource import (  # noqa: F401 sphinx uses
     msg_stem,
     walk_tree_folders,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 g_module = f"{g_app_name}.tests.test_util_package_resource"
 
@@ -145,9 +152,9 @@ class PackageResourceMadness(unittest.TestCase):
         key_count = len(d_relative.keys())
         self.assertEqual(key_count, 2)
         for key, val in d_relative.items():
-            path_left = str(Path(key).parent)  # strips file name
+            path_left = Path(key).parent  # strip file name
             path_right = Path(*val)  # combines relative parent folders
-            self.assertEqual(str(path_left), str(path_right))
+            self.assertEqual(path_left, path_right)
 
         # Switch search query
         file_name = "textual_1_asz.app.logging.config.yaml"
@@ -161,15 +168,15 @@ class PackageResourceMadness(unittest.TestCase):
         )
 
         # Files exist, but nonexistent folder. Empty resultset
-        paths = (
+        paths_0 = (
             "$~..!#%(|=-_*+-[&)/curre]n>c<y",
             Path("$~..!#%(|=-_*+-[&)/curre]n>c<y"),
         )
-        for mixed_path in paths:
+        for mixed_path_0 in paths_0:
             d_relative = pr.get_parent_paths(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
-                path_relative_package_dir=mixed_path,
+                path_relative_package_dir=mixed_path_0,
                 parent_count=1,
             )
             self.assertIsInstance(d_relative, dict)
@@ -184,22 +191,22 @@ class PackageResourceMadness(unittest.TestCase):
         """
         d_expected = {file_name: ()}
 
-        paths = (
+        paths_1 = (
             None,
             does_not_raise,
             0.12345,
             pr.package_data_folder_start,
         )
-        for mixed_path in paths:
+        for mixed_path_1 in paths_1:
             d_relative = pr.get_parent_paths(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
-                path_relative_package_dir=mixed_path,
+                path_relative_package_dir=mixed_path_1,  # type: ignore[arg-type]
                 parent_count=1,
             )
             self.assertIsInstance(d_relative, dict)
             for key, val in d_relative.items():
-                self.assertTrue(key in d_expected.keys())
+                self.assertIn(key, d_expected)
                 self.assertIsInstance(val, tuple)
                 self.assertTrue(not bool(val))  # there are no relative parent dirs
 
@@ -253,7 +260,10 @@ class PackageResourceMadness(unittest.TestCase):
         self.assertTrue(len(d_relative.keys()) == 0)
 
         # start and relative path are both useless
-        pr3 = PackageResource(self.package_dest_c, None)
+        pr3 = PackageResource(
+            self.package_dest_c,
+            None,  # type: ignore[arg-type]
+        )
         d_relative = pr3.get_parent_paths(
             cb_suffix=cb_file_suffix,
             cb_file_stem=cb_file_stem,
@@ -296,25 +306,26 @@ class PackageResourceMadness(unittest.TestCase):
         )
 
         # path_relative.y unsupported --> TypeError
-        paths = (
+        paths_0 = (
             None,
             does_not_raise,
         )
-        for mixed_path in paths:
+        for mixed_path_0 in paths_0:
             with self.assertRaises(TypeError):
                 pr.path_relative(
-                    mixed_path,
+                    mixed_path_0,  # type: ignore[arg-type]
                     path_relative_package_dir=None,  # --> "configs"
                     parent_count=1,
                 )
 
         # path_relative.path_relative_package_dir unsupported type
         #    full relative path with one parent (folder)
-        paths = (path_json_bad,)
-        for mixed_path in paths:
+        paths_1 = (path_json_bad,)
+        for mixed_path_1 in paths_1:
             path_out = pr.path_relative(
-                mixed_path,
-                path_relative_package_dir=does_not_raise,  # --> "configs"
+                mixed_path_1,
+                # --> "configs"
+                path_relative_package_dir=does_not_raise,  # type: ignore[arg-type]
                 parent_count=1,
             )
             if platform.system().lower() == "windows":
@@ -324,11 +335,11 @@ class PackageResourceMadness(unittest.TestCase):
             self.assertEqual(str(path_out), expected_relpath)
 
         # path_relative.path_relative_package_dir None --> "configs"
-        paths = (path_json_bad,)
+        paths_2 = (path_json_bad,)
         #    Want 1 parent folders
-        for mixed_path in paths:
+        for mixed_path_2 in paths_2:
             path_out = pr.path_relative(
-                mixed_path,
+                mixed_path_2,
                 path_relative_package_dir=None,
                 parent_count=1,
             )
@@ -339,9 +350,9 @@ class PackageResourceMadness(unittest.TestCase):
             self.assertEqual(str(path_out), expected_relpath)
 
         # Want 2 parent folders
-        for mixed_path in paths:
+        for mixed_path_2 in paths_2:
             path_out = pr.path_relative(
-                mixed_path,
+                mixed_path_2,
                 path_relative_package_dir=None,
                 parent_count=2,
             )
@@ -352,9 +363,9 @@ class PackageResourceMadness(unittest.TestCase):
             self.assertEqual(str(path_out), expected_relpath)
 
         # Want 3 parent folders, there is only two
-        for mixed_path in paths:
+        for mixed_path_2 in paths_2:
             path_out = pr.path_relative(
-                mixed_path,
+                mixed_path_2,
                 path_relative_package_dir=None,
                 parent_count=3,
             )
@@ -365,9 +376,9 @@ class PackageResourceMadness(unittest.TestCase):
             self.assertEqual(str(path_out), expected_relpath)
 
         # Want 3 parent folders, there is only two. parent_count means want all
-        for mixed_path in paths:
+        for mixed_path_2 in paths_2:
             path_out = pr.path_relative(
-                mixed_path,
+                mixed_path_2,
                 path_relative_package_dir=None,
                 parent_count=None,
             )
@@ -378,19 +389,19 @@ class PackageResourceMadness(unittest.TestCase):
             self.assertEqual(str(path_out), expected_relpath)
 
         # Want 0 parent folders
-        for mixed_path in paths:
+        for mixed_path_2 in paths_2:
             path_out = pr.path_relative(
-                mixed_path,
+                mixed_path_2,
                 path_relative_package_dir=None,
                 parent_count=0,
             )
             self.assertEqual(str(path_out), "digital_tox_default.ini")
 
         # non-existing parent
-        for mixed_path in paths:
+        for mixed_path_2 in paths_2:
             with self.assertRaises(LookupError):
                 path_out = pr.path_relative(
-                    mixed_path,
+                    mixed_path_2,
                     path_relative_package_dir="not-a-parent",
                     parent_count=0,
                 )
@@ -398,11 +409,22 @@ class PackageResourceMadness(unittest.TestCase):
     def test_filter_by_suffix(self) -> None:
         """Test filter_by_suffix function"""
         # None
-        cb_file_suffix = partial(filter_by_suffix, None)
+        cb_file_suffix = partial(
+            filter_by_suffix,
+            None,  # type: ignore[arg-type]
+        )
         self.assertFalse(cb_file_suffix(".txt"))
-        self.assertFalse(cb_file_suffix((".txt", ".rst", ".md")))
+        self.assertFalse(
+            cb_file_suffix(
+                (".txt", ".rst", ".md"),  # type: ignore[arg-type]
+            )
+        )
         self.assertTrue(cb_file_suffix(""))
-        self.assertTrue(cb_file_suffix(None))
+        self.assertTrue(
+            cb_file_suffix(
+                None,  # type: ignore[arg-type]
+            )
+        )
 
         # tuple
         tuple_expected = (".txt", ".rst", ".md")
@@ -411,7 +433,11 @@ class PackageResourceMadness(unittest.TestCase):
         self.assertTrue(cb_file_suffix(".rst"))
         self.assertTrue(cb_file_suffix(".md"))
         self.assertFalse(cb_file_suffix(""))
-        self.assertFalse(cb_file_suffix(None))
+        self.assertFalse(
+            cb_file_suffix(
+                None,  # type: ignore[arg-type]
+            )
+        )
         self.assertFalse(cb_file_suffix(".html"))
 
     def test_resource_extract(self) -> None:
@@ -428,9 +454,13 @@ class PackageResourceMadness(unittest.TestCase):
         """
         pr = PackageResource(self.package_dest_c, self.fallback_package_base_folder)
         pr2 = PackageResource(self.package_dest_c, "bad_idea")
-        pr_bad = PackageResource(
-            "zadfdzaf98769876dsfzdfdzfadz43f", self.fallback_package_base_folder
-        )
+
+        # fail early
+        with self.assertRaises(PackageNotFoundError):
+            PackageResource(
+                "zadfdzaf98769876dsfzdfdzfadz43f",
+                self.fallback_package_base_folder,
+            )
 
         package_dest_c = self.package_dest_c
         cb_file_stem = partial(filter_by_file_stem, "mp_1_asz")
@@ -459,59 +489,59 @@ class PackageResourceMadness(unittest.TestCase):
                     as_user=True,
                 )
                 self.assertIsInstance(gen_paths, Generator)
-                paths = list(gen_paths)  # runs generator
-                files_count = len(paths)
+                paths_0 = list(gen_paths)  # runs generator
+                files_count = len(paths_0)
                 self.assertEqual(files_count, 1)
-                for path_f in paths:
-                    self.assertTrue(issubclass(type(path_f), PurePath))
-                    self.assertTrue(path_f.exists() and path_f.is_file())
+                for path_f_0 in paths_0:
+                    self.assertTrue(issubclass(type(path_f_0), PurePath))
+                    self.assertTrue(path_f_0.exists() and path_f_0.is_file())
                     # adulterize file, by changing file size
                     if overwrite:
-                        str_text = path_f.read_text()
+                        str_text = path_f_0.read_text()
                         str_text = f"{str_text} safdsad fsadfdsaf sad f af fdssaf"
-                        path_f.write_text(str_text)
+                        path_f_0.write_text(str_text)
 
         # path_dest unsupported type --> yield from ()
-        paths = (
+        paths_1 = (
             0.12345,
             "",
             "     ",
             None,
         )
-        for mixed_path in paths:
+        for mixed_path_1 in paths_1:
             gen_folder = pr.package_data_folders(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
             )
             gen_paths = pr.resource_extract(
                 gen_folder,
-                mixed_path,
+                mixed_path_1,  # type: ignore[arg-type]
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
                 is_overwrite=True,
                 as_user=True,
             )
             self.assertIsInstance(gen_paths, Generator)
-            paths = list(gen_paths)
-            files_count = len(paths)
+            paths_2 = list(gen_paths)
+            files_count = len(paths_2)
             self.assertEqual(files_count, 0)
 
         # unsupported type --> fallback --> local cache folder
         path_default = Path(_extract_folder(package_dest_c))
 
-        paths = (
+        paths_3 = (
             path_default,
             str(path_default),
         )
         path_f_last = None
-        for mixed_path in paths:
+        for mixed_path_3 in paths_3:
             generator_folder = pr.package_data_folders(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
             )
             for path_f in pr.resource_extract(
                 generator_folder,
-                mixed_path,
+                mixed_path_3,
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
                 is_overwrite=True,
@@ -530,8 +560,11 @@ class PackageResourceMadness(unittest.TestCase):
                 path_f_last.unlink()
 
         # generator_folder created with non-existing package
+        """
+        from logging_strict.tech_niques import captureLogs
+
         path_f_last = None
-        for mixed_path in paths:
+        for mixed_path_3 in paths_3:
             generator_folder = pr_bad.package_data_folders(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
@@ -540,7 +573,7 @@ class PackageResourceMadness(unittest.TestCase):
             with captureLogs("", level="INFO"):
                 for path_f in pr_bad.resource_extract(
                     generator_folder,
-                    mixed_path,
+                    mixed_path_3,
                     cb_suffix=cb_file_suffix,
                     cb_file_stem=cb_file_stem,
                     is_overwrite=True,
@@ -551,12 +584,13 @@ class PackageResourceMadness(unittest.TestCase):
                 else:
                     # No paths cuz empty generator
                     self.assertTrue(True)
+        """
 
         query_start_dir = "folder0"
         cb_file_stem = partial(filter_by_file_stem, "mp_1_shared")
         cb_file_suffix = partial(filter_by_suffix, ".worker.logging.config.yaml")
         with tempfile.TemporaryDirectory() as fp:
-            for mixed_path in paths:
+            for mixed_path_3 in paths_3:
                 gen_folder = pr2.package_data_folders(
                     cb_suffix=cb_file_suffix,
                     cb_file_stem=cb_file_stem,
@@ -581,8 +615,8 @@ class PackageResourceMadness(unittest.TestCase):
                     as_user=True,
                 )
                 self.assertIsInstance(gen_paths, Generator)
-                paths = list(gen_paths)  # Run generator
-                files_count = len(paths)
+                paths_4 = list(gen_paths)  # Run generator
+                files_count = len(paths_4)
                 self.assertEqual(files_count, 2)
 
     @unittest.skipUnless(platform.system() == "Linux", "requires Linux")
@@ -609,7 +643,7 @@ class PackageResourceMadness(unittest.TestCase):
 
         path_last_f = None
         # 2nd iteration, so have a chance to overwrite existing file
-        for num in range(0, 2):
+        for _ in range(0, 2):
             generator_folder = pr.package_data_folders(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
@@ -626,11 +660,10 @@ class PackageResourceMadness(unittest.TestCase):
                 self.assertTrue(path_f.exists() and path_f.is_file())
                 self.assertTrue(path_f.parent, path_dest)
 
-                """ Change file size
+                """Change file size
 
-                    Will be immediately removing file, ok to
-                    comprimise json format. Overt ur eyes,
-                    if this is painful to watch
+                Will be immediately removing file, ok to comprimise
+                json format. Overt ur eyes, if this is painful to watch
                 """
                 str_text = path_f.read_text()
                 str_text = f"{str_text} asdfdsfaf adfaf dsf adsf"
@@ -647,7 +680,7 @@ class PackageResourceMadness(unittest.TestCase):
             with suppress(Exception):
                 path_dest.rmdir()
 
-    def test_cache_extract(self):
+    def test_cache_extract(self) -> None:
         """Extract package resource to user cache folder"""
         pr = PackageResource(self.package_dest_c, self.fallback_package_base_folder)
         pr2 = PackageResource(self.package_dest_c, "bad_idea")
@@ -716,12 +749,9 @@ class PackageResourceMadness(unittest.TestCase):
                 self.assertTrue(data_files[0].exists())
                 self.assertTrue(data_files[0].is_file())
 
-    def test_package_data_folders(self):
+    def test_package_data_folders(self) -> None:
         """Test PackageResource.package_data_folders"""
-        pr = PackageResource(self.package_dest_c, self.fallback_package_base_folder)
-        cb_file_stem = partial(filter_by_file_stem, "mp_1_asz")
-        cb_file_suffix = partial(filter_by_suffix, ".worker.logging.config.yaml")
-
+        # package name must be provided --> TypeError
         app_names = (
             None,
             "",
@@ -729,26 +759,27 @@ class PackageResourceMadness(unittest.TestCase):
             0.12345,
         )
         for app_name in app_names:
-            gen = pr.package_data_folders(
-                cb_suffix=cb_file_suffix,
-                cb_file_stem=cb_file_stem,
-            )
-            folders = list(gen)
-            folder_count = len(folders)
-            self.assertNotEqual(folder_count, 0)
-            del gen
+            with self.assertRaises(PackageNotFoundError):
+                PackageResource(
+                    app_name,  # type: ignore[arg-type]  # pyright: ignore[reportArgumentType]  # fmt: skip
+                    self.fallback_package_base_folder,
+                )
 
-        paths = (
+        pr = PackageResource(self.package_dest_c, self.fallback_package_base_folder)
+        cb_file_stem = partial(filter_by_file_stem, "mp_1_asz")
+        cb_file_suffix = partial(filter_by_suffix, ".worker.logging.config.yaml")
+
+        paths_0 = (
             None,
             "",
             Path("data"),
             0.12345,
         )
-        for mixed_path in paths:
+        for mixed_path_0 in paths_0:
             gen = pr.package_data_folders(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
-                path_relative_package_dir=mixed_path,
+                path_relative_package_dir=mixed_path_0,  # type: ignore[arg-type]
             )
             folders = list(gen)
             folder_count = len(folders)
@@ -758,15 +789,14 @@ class PackageResourceMadness(unittest.TestCase):
         # Adjust root folder -- str and relative Path
         cb_file_stem = partial(filter_by_file_stem, "mp_1_asz")
         cb_file_suffix = partial(filter_by_suffix, ".worker.logging.config.yaml")
-        paths = (
+        for mixed_path_1 in (
             "configs",
             Path("configs"),
-        )
-        for mixed_path in paths:
+        ):
             generator_folder = pr.package_data_folders(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
-                path_relative_package_dir=mixed_path,
+                path_relative_package_dir=mixed_path_1,
             )
             # Exhausts generator
             is_generator_empty = len(list(generator_folder)) == 0
@@ -781,18 +811,23 @@ class PackageResourceMadness(unittest.TestCase):
             functions log a warning and yield from an empty Iterator.
             In laymen terms, will yield nothing
         """
-        pr2 = PackageResource(
-            "adsfasdfdsafijdfiuhdsfihfdsgfg", self.fallback_package_base_folder
-        )
-        for mixed_path in paths:
+        with self.assertRaises(PackageNotFoundError):
+            PackageResource(
+                "adsfasdfdsafijdfiuhdsfihfdsgfg",
+                self.fallback_package_base_folder,
+            )
+        """
+        for mixed_path_1 in paths_1:
             with self.assertRaises(ImportError):
                 generator_folder = pr2.package_data_folders(
                     cb_suffix=cb_file_suffix,
                     cb_file_stem=cb_file_stem,
-                    path_relative_package_dir=mixed_path,
+                    path_relative_package_dir=mixed_path_1,
                 )
                 # Run generator
                 list(generator_folder)
+        """
+        pass
 
     def test_is_package_exists(self) -> None:
         """Test module function is_package_exists"""
@@ -810,61 +845,67 @@ class PackageResourceMadness(unittest.TestCase):
         This applies, as well, to logging code within the generator
         """
         pr = PackageResource(self.package_dest_c, self.fallback_package_base_folder)
-        pr2 = PackageResource(
-            "dsafdsafdsffdsdsa876d7f68745dfdsfy5rydsaf6r76f585dsaf",
-            self.fallback_package_base_folder,
-        )
+
+        with self.assertRaises(PackageNotFoundError):
+            PackageResource(
+                "dsafdsafdsffdsdsa876d7f68745dfdsfy5rydsaf6r76f585dsaf",
+                self.fallback_package_base_folder,
+            )
+
         cb_file_stem = partial(filter_by_file_stem, "mp_1_asz")
         cb_file_suffix = partial(filter_by_suffix, ".worker.logging.config.yaml")
-        paths = (
+
+        """
+        paths_0 = (
             pr.package_data_folder_start,
             Path(pr.package_data_folder_start),
         )
         # package doesn't exist in virtual environment
         self.assertFalse(is_package_exists(pr2.package))
-
         # Does not execute the generator. No Exception yet
-        for start_dir in paths:
+        for start_dir_0 in paths_0:
             gen = pr2.package_data_folders(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
-                path_relative_package_dir=start_dir,
+                path_relative_package_dir=start_dir_0,
             )
 
             with self.assertRaises(ImportError):
                 list(gen)  # Run the generator
+        """
 
         # nonexistent fallback to all package data folders
         # absolute path is ignored
         # :command:`openssl rand -hex 8`
-        paths = [
+        paths_1 = [
             ("c8766a76e71756a47", 1),
             (Path("c8766a76e71756a47"), 1),
         ]
         if not platform.system().lower() == "windows":
-            paths.append(("/etc/fstab", 1))
-            paths.append((Path("/etc/fstab"), 1))
+            paths_1.extend((("/etc/fstab", 1), (Path("/etc/fstab"), 1)))
+            self.assertEqual(len(paths_1), 4)
 
-        for start_dir, expected_count in paths:
+        for start_dir_1, expected_count_1 in paths_1:
             gen = pr.package_data_folders(
                 cb_suffix=cb_file_suffix,
                 cb_file_stem=cb_file_stem,
-                path_relative_package_dir=start_dir,
+                path_relative_package_dir=cast("Path | str | None", start_dir_1),
             )
             folders = list(gen)
             folder_count = len(folders)
-            self.assertEqual(folder_count, expected_count)
+            self.assertEqual(folder_count, expected_count_1)
 
-    def test_walk_tree_folders(self):
+    def test_walk_tree_folders(self) -> None:
         """What if no folders found?"""
         pr = PackageResource(self.package_dest_c, self.fallback_package_base_folder)
         self.assertTrue(is_package_exists(pr.package))
         trav_folder = _get_package_data_folder(f"{pr.package}.bad_idea.folder0")
         self.assertIsNotNone(trav_folder)
-        gen = walk_tree_folders(trav_folder)
-        folders = list(gen)
-        folder_count = len(folders)
-        self.assertEqual(folder_count, 0)
+        if trav_folder is not None:
+            gen = walk_tree_folders(trav_folder)
+            folders = list(gen)
+            folder_count = len(folders)
+            self.assertEqual(folder_count, 0)
 
 
 class PreviouslyUnitPath(unittest.TestCase):
@@ -874,26 +915,30 @@ class PreviouslyUnitPath(unittest.TestCase):
         """Test module function msg_stem"""
         # None
         with self.assertRaises(ValueError):
-            msg_stem(None)
+            msg_stem(
+                None,  # type: ignore[arg-type]
+            )
         # empty string
         with self.assertRaises(ValueError):
             msg_stem("")
-        paths = (
+        paths_0 = (
             Path("dsafdsaf.tar.gz"),
             "dsafdsaf.tar.gz",
             Path("dsafdsaf.tar"),
             "dsafdsaf.tar",
         )
-        for mixed_path in paths:
-            ret = msg_stem(mixed_path)
-            self.assertIsInstance(ret, str)
-            self.assertEqual(ret, "dsafdsaf")
+        for mixed_path_0 in paths_0:
+            ret_0 = msg_stem(
+                mixed_path_0,  # type: ignore[arg-type]
+            )
+            self.assertIsInstance(ret_0, str)
+            self.assertEqual(ret_0, "dsafdsaf")
 
         # No suffix
-        mixed_path = "dsafdsaf"
-        ret = msg_stem(mixed_path)
-        self.assertIsInstance(ret, str)
-        self.assertEqual(ret, "dsafdsaf")
+        mixed_path_1 = "dsafdsaf"
+        ret_1 = msg_stem(mixed_path_1)
+        self.assertIsInstance(ret_1, str)
+        self.assertEqual(ret_1, "dsafdsaf")
 
 
 class PackageData(unittest.TestCase):
@@ -908,7 +953,7 @@ class PackageData(unittest.TestCase):
             convert_to_path: tuple[str, ...]
             is_none_expected: bool
             suffix: Sequence[str] | str | None
-            is_extract: bool
+            is_extract: bool | None
 
         testdata = (
             (
@@ -967,16 +1012,22 @@ class PackageData(unittest.TestCase):
                 False,  # extract
                 True,  # file does not exist in package
             ),
+            (
+                "dafsadfadsfsdfdsafasdfd897dfdsfsafdsafsadfasfdsafsaf",
+                "textual_1_asz",
+                ".toml",  # nonexistent suffix
+                ("configs",),  # nonexistent parent folder
+                False,  # extract
+                True,  # file does not exist in package
+            ),
         )
         for t_data in testdata:
-            (
-                package_name,
-                module_name,
-                suffix,
-                convert_to_path,
-                is_extract,
-                is_none_expected,
-            ) = t_data
+            package_name = t_data[0]
+            module_name = t_data[1]
+            suffix = t_data[2]
+            convert_to_path = t_data[3]
+            is_extract = t_data[4]
+            is_none_expected = t_data[5]
 
             contents = get_package_data(
                 package_name,
@@ -995,7 +1046,7 @@ class PackageData(unittest.TestCase):
 class SanitizePackageName(unittest.TestCase):
     """Sanitizes package name."""
 
-    def test_to_package_case(self):
+    def test_to_package_case(self) -> None:
         """Sanitize package name to a valid dotted path
 
         The ultimate test is
@@ -1036,6 +1087,7 @@ if __name__ == "__main__":  # pragma: no cover
        -k PackageResource.test_resource_extract --locals --verbose
 
     With coverage
+
     .. code-block:: shell
 
        coverage run --data-file=".coverage-combine-11" \

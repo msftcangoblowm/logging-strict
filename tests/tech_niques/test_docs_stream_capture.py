@@ -15,7 +15,7 @@ from logging_strict.tech_niques import CaptureOutput
 class PlayCaptureTheStreams(unittest.TestCase):
     """Context manager to capture streams stdout and stderr"""
 
-    def test_worker_capture_streams(self):
+    def test_worker_capture_streams(self) -> None:
         """Capturing streams context manager. Used within multiprocess Worker"""
         msg_0 = "Hello"
         msg_1 = "World!"
