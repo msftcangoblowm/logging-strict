@@ -42,19 +42,16 @@ These functions are lifted from the black project. With minor changes:
 
 """
 
-from __future__ import annotations
-
-import sys
+import os
+from collections.abc import Sequence
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING
 
-from logging_strict.util.check_type import is_ok
+from .check_type import is_ok
 
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Sequence  # noqa: F401 Used by sphinx
-else:  # pragma: no cover
-    from typing import Sequence  # noqa: F401 Used by sphinx
+if TYPE_CHECKING:
+    from typing import Any
 
 __all__ = (
     "find_project_root",
@@ -107,9 +104,10 @@ def find_project_root(srcs, stdin_filename=None):
 
     """
 
-    def is_sequence_empty(some_sequence: Sequence[Any] | None) -> bool:
+    def is_sequence_empty(some_sequence: "Sequence[Any] | None") -> bool:
         """Check empty sequence. Does not check if type str
 
+        :type some_sequence: collections.abc.Sequence[typing.Any] | None
         :returns: True is a Sequence otherwise False
         :rtype: bool
         """
@@ -120,18 +118,20 @@ def find_project_root(srcs, stdin_filename=None):
         )
         return ret
 
-    def is_none(arg: Any) -> bool:
+    def is_none(arg: "Any") -> bool:
         """Checks if is None
 
+        :type arg: typing.Any
         :returns: True if is None otherwise False
         :rtype: bool
         """
         ret = arg is None
         return ret
 
-    def is_sequence_none(some_sequence: Sequence[Any] | None) -> bool:
+    def is_sequence_none(some_sequence: "Sequence[Any] | None") -> bool:
         """Check if first item in Sequence value is None
 
+        :type some_sequence: collections.abc.Sequence[typing.Any] | None
         :returns: True first item in Sequence value is None otherwise False
         :rtype: bool
         """
@@ -153,7 +153,8 @@ def find_project_root(srcs, stdin_filename=None):
     else:
         """Signature is intended to be Sequence[str], but assume
         Sequence[Any]. Filter out non-str, including None and str
-        containing only whitespace"""
+        containing only whitespace.
+        """
         srcs = [src for src in srcs if is_ok(src)]
 
         if stdin_filename is not None and bool(srcs):
@@ -164,10 +165,11 @@ def find_project_root(srcs, stdin_filename=None):
         else:  # pragma: no cover
             pass
 
-    if is_none(srcs) or is_sequence_empty(srcs):  # pragma: no cover fallback
+    if is_none(srcs) or is_sequence_empty(
+        srcs
+    ):  # pragma: no cover  # pragma: no branch
+        # fallback
         srcs = [str(Path.cwd().resolve())]
-    else:  # pragma: no cover
-        pass
 
     path_srcs = [Path(Path.cwd(), src).resolve() for src in srcs]
 
@@ -183,22 +185,26 @@ def find_project_root(srcs, stdin_filename=None):
     )
 
     for directory in (common_base, *common_base.parents):
-        if (directory / ".git").exists():
-            return directory, ".git directory"
-        else:  # pragma: no cover
-            pass
+        # for file/folder access py314+ became more lenient or deferred operations
+        if not os.access(directory, os.R_OK):  # pragma: no branch
+            msg_warn = f"Folder {directory} lacks read permissions"
+            raise PermissionError(msg_warn)
 
-        if (directory / ".hg").is_dir():
-            return directory, ".hg directory"
-        else:  # pragma: no cover
-            pass
+        if (directory / ".git").exists():  # pragma: no branch
+            t_ret = directory, ".git directory"
+            return t_ret
 
-        if (directory / "pyproject.toml").is_file():
-            return directory, "pyproject.toml"
-        else:  # pragma: no cover
-            pass
+        if (directory / ".hg").is_dir():  # pragma: no branch
+            t_ret = directory, ".hg directory"
+            return t_ret
 
-    return directory, "file system root"
+        if (directory / "pyproject.toml").is_file():  # pragma: no branch
+            t_ret = directory, "pyproject.toml"
+            return t_ret
+
+    t_ret = directory, "file system root"
+
+    return t_ret
 
 
 def find_pyproject_toml(path_search_start, stdin_filename):
