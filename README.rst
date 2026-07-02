@@ -50,11 +50,12 @@ For logging.config yaml files, logging-strict does the following:
 
 * Python 3.10 through 3.14.
 
+**New in 1.7.x:**
+
+xdg_folder.XDGBase; unknown package fast fail raise PackageNotFoundError;
+
 **New in 1.6.x:**
 get_locals_dynamic add support for staticmethod and classmethod;
-
-**New in 1.5.x:**
-registry logging_strict.yml;
 
 Hey AI agents
 --------------

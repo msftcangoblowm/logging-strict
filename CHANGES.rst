@@ -214,29 +214,39 @@ Changelog
 
    - strictyaml.scalar.Time does not exist. So field asTime can't be supported
    - strictyaml has no automated tests
-   - strictyaml has no typing hint stubs. ignore_missing_imports
 
    - ci/kit.yml in sdist Set output tag will be branch name, not tag name see ci/release.yml
 
    Commit items for NEXT VERSION
    ..............................
 
-   - ci: disable dependency-review workflow
-   - fix(pep518_read): py314 PermissionError lenient or delayed
-   - fix(xdg_folder): appauthor property setter normalize author name
-   - fix(package_resource): unknown package fast fail raise PackageNotFoundError
-   - refactor(xdg_folder): property accessors for instance attributes
-   - refactor(xdg_folder): base class XDGBase
-   - chore: add stubtest allowlist
-   - chore: drop py39 support
-   - docs: use py313+ avoid ruamel.yaml clib package
-   - docs(context_locals): fix doctest for get_locals_dynamic
-   - chore: bump versions
-   - fix: click py39 uses 8.1.7 py310+ latest
-   - feat(package_resource): add module level function get_package_data
-   - refactor: in conditional expression use bool instead of len
-
 .. scriv-start-here
+
+.. _changes_1-7-0:
+
+Version 1.7.0 — 2026-07-02
+---------------------------
+
+- ci: disable dependency-review workflow
+- fix(pep518_read): py314 PermissionError lenient or delayed
+- fix(xdg_folder): appauthor property setter normalize author name
+- fix(package_resource): unknown package fast fail raise PackageNotFoundError
+- refactor(xdg_folder): property accessors for instance attributes
+- refactor(xdg_folder): base class XDGBase
+- chore: add stubtest allowlist
+- chore: drop py39 support
+
+.. _changes_1-6-1:
+
+Version 1.6.1 — 2025-05-19
+---------------------------
+
+- docs: use py313+ avoid ruamel.yaml clib package
+- docs(context_locals): fix doctest for get_locals_dynamic
+- chore: bump versions
+- fix: click py39 uses 8.1.7 py310+ latest
+- feat(package_resource): add module level function get_package_data
+- refactor: in conditional expression use bool instead of len
 
 .. _changes_1-6-0-post2:
 

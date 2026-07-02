@@ -50,7 +50,7 @@ For logging.config yaml files, logging-strict does the following:
 
 The latest version is |project_name| |release|.  It is supported on:
 
-- py39 - py313
+- py310 - py314
 - CPython and pypy
 - MacOS Windows and Linux
 
