@@ -28,7 +28,10 @@ logging output, including it along with the worker output.
 
 import threading
 from functools import partial
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+    cast,
+)
 
 import strictyaml as s
 
@@ -55,8 +58,6 @@ from .util.check_type import (
 )
 from .util.package_resource import (
     PackageResource,
-    PartStem,
-    PartSuffix,
     _to_package_case,
     filter_by_file_stem,
     filter_by_suffix,
@@ -64,7 +65,10 @@ from .util.package_resource import (
 from .util.xdg_folder import _get_path_config
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import (
+        Callable,
+        Iterator,
+    )
 
 try:
     from importlib.resources.abc import Traversable  # py312+
@@ -483,8 +487,8 @@ class LoggingConfigYaml(LoggingYamlType):
 
         """
         if TYPE_CHECKING:
-            cb_suffix: PartSuffix
-            cb_file_stem: PartStem
+            cb_suffix: Callable[[str], bool]
+            cb_file_stem: Callable[[str], bool]
             gen: Iterator[Traversable]
 
         if is_ok(path_relative_package_dir):
@@ -497,19 +501,31 @@ class LoggingConfigYaml(LoggingYamlType):
             self.file_stem
         except LoggingStrictGenreRequired:
             # Will result in too broad of a search
-            cb_file_stem = cb_true
+            cb_file_stem = cast(
+                "Callable[[str], bool]",
+                cb_true,
+            )
             file_stem = None
         else:
-            cb_file_stem = partial(filter_by_file_stem, self.file_stem)
+            cb_file_stem = cast(
+                "Callable[[str], bool]",
+                partial(filter_by_file_stem, self.file_stem),
+            )
             file_stem = self.file_stem
 
         try:
             self.file_suffix
         except LoggingStrictProcessCategoryRequired:
-            cb_suffix = cb_true
+            cb_suffix = cast(
+                "Callable[[str], bool]",
+                cb_true,
+            )
             file_name = "??.??" if file_stem is None else f"{file_stem}.??"
         else:
-            cb_suffix = partial(filter_by_suffix, self.file_suffix)
+            cb_suffix = cast(
+                "Callable[[str], bool]",
+                partial(filter_by_suffix, self.file_suffix),
+            )
             file_suffix = self.file_suffix
             file_name = f"??.{file_suffix}" if file_stem is None else self.file_name
 
@@ -974,7 +990,7 @@ def setup_worker_other(
 
 
 class LoggingState:
-    """Singleton to hold the current logging state. To know whether or
+    """Thread safe Singleton to hold the current logging state. To know whether or
     not, run by app or from cli.
 
     logging is redirected to:
@@ -985,7 +1001,7 @@ class LoggingState:
 
     Knowing the logging mode (or state), first step towards restoring logging mode.
 
-    Class variables
+    **Class variables**
 
     :cvar _instance: Default None. Holds Singleton instance
     :type _instance: logging_strict.logging_api.LoggingState | None
@@ -995,9 +1011,6 @@ class LoggingState:
     .. seealso::
 
        See :py:mod:`textual.logging`
-
-       Thread safe Singleton
-       `[blog post] <https://medium.com/analytics-vidhya/how-to-create-a-thread-safe-singleton-class-in-python-822e1170a7f6>`_
 
     """
 

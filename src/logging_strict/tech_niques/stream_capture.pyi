@@ -1,15 +1,26 @@
+import io
 import sys
 from types import TracebackType
-from typing import TextIO
-
-from typing_extensions import Self
+from typing import (
+    Self,
+    TextIO,
+)
 
 __all__ = ("CaptureOutput",)
 
 class CaptureOutput:
-    __slots__ = ("_stdout_output", "_stderr_output", "_stdout", "_stderr")
+    __slots__ = (
+        "_stdout_buf",
+        "_stderr_buf",
+        "_stdout_output",
+        "_stderr_output",
+        "_stdout",
+        "_stderr",
+    )
     _stdout: TextIO
     _stderr: TextIO
+    _stdout_buf: io.StringIO
+    _stderr_buf: io.StringIO
     _stdout_output: str
     _stderr_output: str
 

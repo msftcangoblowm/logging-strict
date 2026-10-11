@@ -19,7 +19,10 @@ from pathlib import (
     Path,
     PurePath,
 )
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+    cast,
+)
 
 from ..constants import g_app_name
 
@@ -69,7 +72,7 @@ def is_user_admin():  # pragma: no cover
 
         # WARNING: requires Windows XP SP2 or higher!
         try:
-            int_ret = ctypes.windll.shell32.IsUserAnAdmin()
+            int_ret = ctypes.windll.shell32.IsUserAnAdmin()  # pyright: ignore[reportAttributeAccessIssue]  # fmt: skip
             # 1 --> True; 0 --> False
             ret = bool(int_ret)
         except Exception:
@@ -326,6 +329,7 @@ class IsRoot:
             session_user_name: str
             session_uid: int
             session_gid: int
+            abspath_file: Path
 
         if (
             path_file is not None
@@ -333,13 +337,13 @@ class IsRoot:
             and bool(path_file)
             and path_file != "."
         ):
-            path_file = Path(path_file)
+            abspath_file = Path(path_file)
         elif issubclass(type(path_file), PurePath):
-            pass
+            abspath_file = cast("Path", path_file)
         else:
             return None
 
-        if not path_file.exists() or not path_file.is_file():
+        if not abspath_file.exists() or not abspath_file.is_file():  # pragma: no branch
             return None
 
         if is_as_user is None:
@@ -350,14 +354,18 @@ class IsRoot:
             pass
 
         if (
-            g_is_root and is_as_user is True and platform.system().lower() != "windows"
+            g_is_root
+            and is_as_user is True
+            and platform.system().lower() != "windows"
+            and getpwnam is not None
         ):  # pragma: no branch
             # https://stackoverflow.com/questions/8086412/howto-determine-file-owner-on-windows-using-python-without-pywin32
             session_user_name = get_logname()
-            session_uid = getpwnam(session_user_name)[2]
-            session_gid = getpwnam(session_user_name)[3]
+            t_ret = getpwnam(session_user_name)
+            session_uid = t_ret[2]
+            session_gid = t_ret[3]
             shutil.chown(
-                path_file,
+                abspath_file,
                 user=session_uid,
                 group=session_gid,
             )

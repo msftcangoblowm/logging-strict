@@ -73,25 +73,25 @@ class FuncWrapper:
 
 def _func(param_a: str, param_b: int | None = 10) -> str: ...
 
-class MockFunction(Protocol[_P, _R[_T]]):  # type: ignore[misc]
+class MockFunction(Protocol[_P, _T]):
     func: Callable[_P, _T]
     full_name: str
 
     def __init__(self, func: Callable[_P, _T]) -> None: ...
     def __call__(  # type: ignore[misc]  # missing self non-static method
-        mock_instance: MagicMock,
+        mock_instance: MagicMock,  # pyright: ignore[reportSelfClsParameterName]
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> _R[_T]: ...
 
-class MockMethod(Protocol[_P, _R[_T]]):  # type: ignore[misc]
+class MockMethod(Protocol[_P, _T]):
     cls: builtins.type
     func: Callable[_P, _T]
 
     def __init__(self, cls: builtins.type, func: Callable[_P, _T]) -> None: ...
     def __call__(  # type: ignore[misc]  # missing self non-static method
-        mock_instance: MagicMock,
+        mock_instance: MagicMock,  # pyright: ignore[reportSelfClsParameterName]
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,

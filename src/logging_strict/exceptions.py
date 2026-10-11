@@ -29,11 +29,13 @@ Usage
 
 """
 
+# isort: off
 try:
-    from importlib_metadata import PackageNotFoundError
+    from importlib_metadata import PackageNotFoundError  # pyright: ignore[reportMissingImports]  # fmt: skip
 except ImportError:  # pragma: no cover
     # What CPython provides likely very dated
     from importlib.metadata import PackageNotFoundError
+# isort: on
 
 __all__ = (
     "LoggingStrictError",

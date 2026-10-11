@@ -1,0 +1,56 @@
+# Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0
+# For details: https://github.com/nedbat/coveragepy/blob/master/NOTICE.txt
+# https://github.com/pyscaffold/pyscaffold/blob/master/src/pyscaffold/templates/github_ci_workflow.template
+# https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts#passing-data-between-jobs-in-a-workflow
+
+name: "Quality -- mypy"
+
+on:
+  push:
+    branches:
+      - master
+      - msftcangoblowm/*
+  pull_request:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{ github.ref_type }}-
+    ${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  mypy:
+    name: "Check typing -- mypy"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Check out the repo"
+        uses: actions/checkout@v7.0.1
+
+      - name: "Install Python"
+        uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.11" # Minimum of PYVERSIONS
+          # cache: pip
+          # cache-dependency-path: 'requirements/*.lock'
+
+      - name: "Install dependencies"
+        run: |
+          # Runs on 3.10, but hashes supported by pip-tools is
+          # not supported by setuptools. So don't expect hashes
+          python -m pip install -r requirements/tox.lock
+
+      - name: "Tox mypy"
+        run: |
+          python -m tox -e mypy

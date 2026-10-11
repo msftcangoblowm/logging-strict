@@ -64,13 +64,10 @@ Local cache folder: :code:`$HOME/.cache/[package name]`
 .. code-block:: python
 
     from typing import TYPE_CHECKING
-    from collections.abc import Iterator
     from functools import partial
-    from pathlib import PurePath
+
     from logging_strict.util.package_resource import filter_by_suffix
     from logging_strict.util.package_resource import filter_by_file_stem
-    from logging_strict.util.package_resource import PartSuffix
-    from logging_strict.util.package_resource import PartStem
     from logging_strict.util.package_resource import package_data_folders
     from logging_strict.util.package_resource import cache_extract
 
@@ -80,6 +77,12 @@ Local cache folder: :code:`$HOME/.cache/[package name]`
         from importlib.abc import Traversable  # py39+
 
     if TYPE_CHECKING:
+        from collections.abc import Iterator
+        from pathlib import PurePath
+
+        from logging_strict.util.package_resource import PartSuffix
+        from logging_strict.util.package_resource import PartStem
+
         data_folder_path: str
         cb_file_stem: PartStem
         cb_file_suffix: PartSuffix
@@ -88,6 +91,7 @@ Local cache folder: :code:`$HOME/.cache/[package name]`
 
     data_folder_path = "data/currency"
     cb_file_stem = partial(filter_by_file_stem, "crypto_btc_default")
+    # suffix can be a str | tuple[str, ...]
     cb_file_suffix = partial(filter_by_suffix, ".bitcoin")
     generator_folders = package_data_folders(
         cb_suffix=cb_file_suffix,
@@ -148,7 +152,6 @@ from pathlib import (
 )
 from typing import (
     TYPE_CHECKING,
-    Any,
     Protocol,
     cast,
     runtime_checkable,
@@ -163,10 +166,10 @@ from .check_type import (
 from .util_root import IsRoot
 from .xdg_folder import DestFolderUser
 
+# isort: off
 try:
-    import importlib_resources
-    from importlib_resources.abc import Traversable
-
+    import importlib_resources  # pyright: ignore[reportMissingImports]
+    from importlib_resources.abc import Traversable  # pyright: ignore[reportMissingImports]  # fmt: skip
     is_got_traversable = True
 except ImportError:  # pragma: no cover
     # What CPython provides likely very dated
@@ -181,6 +184,11 @@ if not is_got_traversable:  # pragma: no branch # pragma: no cover
     except ImportError:  # pragma: no cover
         # py39+
         from importlib.abc import Traversable
+# isort: on
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+    from typing import Any
 
 __all__ = (
     "PackageResource",
@@ -199,9 +207,6 @@ g_module = f"{g_app_name}.util.package_resource"
 
 #: logging.Logger: module level logger
 _LOGGER = logging.getLogger(g_module)
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 
 def msg_stem(file_name):
@@ -246,37 +251,51 @@ def msg_stem(file_name):
     if TYPE_CHECKING:
         msg_warn: str
         ret: "str | None"
-        path_name: Path
-        name_path: str
+        mixedpath_f_name: Path
+        str_f: str
         lst_suffixes: list[str]
         suffix_all: str
 
     msg_warn = "No file name empty string or None. Both are not allowed"
 
-    if file_name is not None and issubclass(type(file_name), PurePath):
-        path_name = file_name
-        name_path = file_name.name
-    elif is_ok(file_name):
-        path_name = Path(file_name)
-        name_path = Path(file_name).name
+    optstr_indicator = None
+    if file_name is None:
+        # None
+        pass
     else:
-        path_name = None
-        name_path = None
+        if issubclass(type(file_name), PurePath):
+            mixedpath_f_name = file_name
 
-    if name_path is not None:
-        lst_suffixes = path_name.suffixes
+            str_f = file_name.name
+
+            # is None indicator
+            optstr_indicator = file_name.name
+        elif is_ok(file_name):
+            mixedpath_f_name = Path(file_name)
+
+            str_f = Path(file_name).name
+
+            # is None indicator
+            optstr_indicator = Path(file_name).name
+        else:
+            # unsupported type
+            pass
+
+    if optstr_indicator is not None:
+        lst_suffixes = mixedpath_f_name.suffixes  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
         if not bool(lst_suffixes):
-            ret = name_path
+            ret = str_f  # pyright: ignore[reportPossiblyUnboundVariable]
         else:
             suffix_all = "".join(lst_suffixes)
-            ret = name_path[: -len(suffix_all)]
+            ret = str_f[: -len(suffix_all)]  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
     else:
         ret = None
 
     if ret is None:  # pragma: no branch
         raise ValueError(msg_warn)
 
-    return cast(str, ret)
+    str_ret = cast(str, ret)
+    return str_ret
 
 
 # https://stackoverflow.com/a/66664521
@@ -316,7 +335,7 @@ class PartSuffix(Protocol):
     """
 
     def __call__(
-        fakeSelf,
+        fakeSelf,  # pyright: ignore[reportSelfClsParameterName]
         expected_suffix,
         test_suffix,
     ):  # pragma: no cover
@@ -358,7 +377,7 @@ class PartStem(Protocol):
     """
 
     def __call__(
-        fakeSelf,
+        fakeSelf,  # pyright: ignore[reportSelfClsParameterName]
         file_expected,
         test_file_stem,
     ):  # pragma: no cover
@@ -399,7 +418,10 @@ def match_file(y, /, *, cb_suffix=None, cb_file_stem=None):
         is_filter_file_stem: bool
 
     ret = False
-    if isinstance(y, Traversable) and y.is_file():  # pragma: no branch
+    if (
+        isinstance(y, Traversable)  # pyright: ignore[reportPossiblyUnboundVariable]
+        and y.is_file()
+    ):  # pragma: no branch
         # file_name_pkg = traversable_file.name
         # Check suffix
         suffixes = Path(y.name).suffixes
@@ -443,14 +465,14 @@ def check_folder(x, cb_suffix=None, cb_file_stem=None):
     if TYPE_CHECKING:
         is_found_target_file: bool
         is_match: bool
-        y: Traversable
+        y: Traversable  # pyright: ignore[reportPossiblyUnboundVariable]
 
-    if isinstance(x, Traversable):  # pragma: no branch
+    if isinstance(x, Traversable):  # pragma: no branch  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
         is_found_target_file = False
 
-        for y in x.iterdir():
+        for y in x.iterdir():  # pyright: ignore[reportPossiblyUnboundVariable]
             is_match = match_file(
-                y,
+                y,  # pyright: ignore[reportPossiblyUnboundVariable]
                 cb_suffix=cb_suffix,
                 cb_file_stem=cb_file_stem,
             )
@@ -498,7 +520,7 @@ def filter_by_suffix(expected_suffix, test_suffix):
         is_found: bool
         suffix: str
 
-    def is_empty(val: Any) -> bool:
+    def is_empty(val: "Any") -> bool:
         """None or empty str
 
         :param val: Value to check
@@ -508,7 +530,7 @@ def filter_by_suffix(expected_suffix, test_suffix):
         """
         return val is None or (isinstance(val, str) and not bool(val))
 
-    def is_not_empty(val: Any) -> bool:
+    def is_not_empty(val: "Any") -> bool:
         """Not None and non-empty str
 
         :param val: Value to check
@@ -564,21 +586,17 @@ def filter_by_file_stem(expected_file_name, test_file_name):
 
     ``cb_file_stem`` is used extensively within this module
 
-    :param expected_file_name:
-
-       file name or stem. Are search for this
-
+    :param expected_file_name: file name or stem. Are search for this
     :type expected_file_name: str
     :param test_file_name: The file name suffix testing against
     :type test_file_name: str
-    :returns: ``True`` if same otherwise ``False``
+    :returns: True if same otherwise False
     :rtype: bool
 
     .. note:: This is the simpliest case
 
        For more complex cases write a lambda or function and
-        use :py:func:`functools.partial` to create a callback
-
+       use :py:func:`functools.partial` to create a callback
 
     """
     if TYPE_CHECKING:
@@ -623,15 +641,15 @@ def walk_tree_folders(traversable_root):
 
     """
     if TYPE_CHECKING:
-        traversable_x: Traversable
+        traversable_x: Traversable  # pyright: ignore[reportPossiblyUnboundVariable]
 
     ignores = ("__pycache__",)
 
-    for traversable_x in traversable_root.iterdir():
-        if traversable_x.is_dir():  # pragma: no branch
-            if traversable_x.name not in ignores:  # pragma: no branch
-                yield traversable_x
-                yield from walk_tree_folders(traversable_x)
+    for traversable_x in traversable_root.iterdir():  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+        if traversable_x.is_dir():  # pragma: no branch  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+            if traversable_x.name not in ignores:  # pragma: no branch  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+                yield traversable_x  # pyright: ignore[reportPossiblyUnboundVariable]
+                yield from walk_tree_folders(traversable_x)  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
 
 
 def is_package_exists(package_name):
@@ -712,7 +730,8 @@ def _get_package_data_folder(dotted_path):
     """
     dotted_path_valid = _to_package_case(dotted_path)
     try:
-        trav_ret = importlib_resources.files(anchor=dotted_path_valid)
+        # anchor py312+, package py311- so pass as positional
+        trav_ret = importlib_resources.files(dotted_path_valid)
     except ModuleNotFoundError:
         # There is no such package or data folder
         trav_ret = None
@@ -929,7 +948,7 @@ class PackageResource:
             elif path_relative_package_dir is not None and issubclass(
                 type(path_relative_package_dir), PurePath
             ):
-                path_relative_to = path_relative_package_dir
+                path_relative_to = cast("Path", path_relative_package_dir)
             else:
                 # unsupported type
                 if self.package_data_folder_start is not None:
@@ -1057,7 +1076,7 @@ class PackageResource:
         if TYPE_CHECKING:
             path_relative_to: Path
             d_files: dict[str, tuple[str, ...]]
-            base_folder_generator: Iterator[Traversable]
+            base_folder_generator: Iterator[Traversable]  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
             parents: list[str]
             file_name_pkg: str
             stem: str
@@ -1080,7 +1099,7 @@ class PackageResource:
                 # Any str will work
                 path_relative_to = Path(path_relative_package_dir)
             elif issubclass(type(path_relative_package_dir), PurePath):
-                path_relative_to = path_relative_package_dir
+                path_relative_to = cast("Path", path_relative_package_dir)
             else:
                 # Unsupported type --> Fallback folder
                 if self.package_data_folder_start is not None:
@@ -1122,7 +1141,7 @@ class PackageResource:
 
         parents = []
         for traversable_dir in base_folder_generator:
-            for traversable_x in traversable_dir.iterdir():
+            for traversable_x in traversable_dir.iterdir():  # pyright: ignore[reportOptionalMemberAccess]  # fmt: skip
                 if not traversable_x.is_file():  # pragma: no cover
                     continue
                 else:
@@ -1222,11 +1241,11 @@ class PackageResource:
         :rtype: collections.abc.Iterator[importlib.resources.abc.Traversable]
         """
         if TYPE_CHECKING:
-            base_token: str
-            path_adjusted: Path
+            optbase_token: str | None
+            optpath_adjusted: Path | None
             parts: Sequence[str]
             traversable_data_dir: "Traversable | None"
-            traversable_x: Traversable
+            traversable_x: Traversable  # pyright: ignore[reportPossiblyUnboundVariable]
 
         # package installed check occurs in PackageResource.package setter
         """
@@ -1247,34 +1266,37 @@ class PackageResource:
             path_relative_package_dir = self.package_data_folder_start
 
         # Determine base token
+        optbase_token = None
+        optpath_adjusted = None
         if is_ok(path_relative_package_dir):
             with suppress(Exception):
                 path_orig = Path(path_relative_package_dir)
                 if not path_orig.is_absolute():
                     base_token = Path(path_relative_package_dir).parts[0]
-                    path_adjusted = path_orig.relative_to(base_token)
+                    optpath_adjusted = path_orig.relative_to(base_token)
+                    optbase_token = base_token
                 else:
                     # Do not assume ``data/``. Absolute path is ignored
-                    base_token = None
-                    path_adjusted = None
+                    pass
         elif (
             path_relative_package_dir is not None
             and issubclass(type(path_relative_package_dir), PurePath)
             and not path_relative_package_dir.is_absolute()
         ):
             base_token = path_relative_package_dir.parts[0]
-            path_adjusted = path_relative_package_dir.relative_to(base_token)
+            optpath_adjusted = path_relative_package_dir.relative_to(base_token)
+            optbase_token = base_token
         else:
             # Do not assume data/
-            base_token = None
-            path_adjusted = None
+            pass
 
         """At this point know for certain package in virtual environment.
         Start folder, either exists or it doesn't. Adjust if it exists"""
-        if base_token is not None:
+        if optbase_token is not None:
             # Data folder *might* exist in package
+            str_base_token = optbase_token
             traversable_data_dir = _get_package_data_folder(
-                f"{self.package}.{base_token}",
+                f"{self.package}.{str_base_token}",
             )
             is_use_fallback = traversable_data_dir is None
         else:  # pragma: no cover
@@ -1285,34 +1307,36 @@ class PackageResource:
             traversable_data_dir = _get_package_data_folder(self.package)
 
         # Impossible --> traversable_data_dir is None
-        if path_adjusted is None:  # pragma: no cover Is package base folder
+        if optpath_adjusted is None:  # pragma: no cover
+            # Is package base folder
             pass
         else:
+            path_adjusted = optpath_adjusted
             parts = path_adjusted.parts
             if bool(parts):  # pragma: no branch
-                traversable_data_dir.joinpath(*parts)
+                traversable_data_dir.joinpath(*parts)  # pyright: ignore[reportPossiblyUnboundVariable,reportOptionalMemberAccess]  # fmt: skip
 
         # Check the root folder
         #    root is ``data``. root relative to ``data`` is ````
         if bool(
             list(
                 check_folder(
-                    traversable_data_dir,
+                    traversable_data_dir,  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
                     cb_suffix=cb_suffix,
                     cb_file_stem=cb_file_stem,
                 )
             )
         ):  # pragma: no branch
             yield from check_folder(
-                traversable_data_dir,
+                traversable_data_dir,  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
                 cb_suffix=cb_suffix,
                 cb_file_stem=cb_file_stem,
             )
 
         # Within traversable_root_dir, yield all other folders
-        for traversable_x in walk_tree_folders(traversable_data_dir):
+        for traversable_x in walk_tree_folders(traversable_data_dir):  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
             yield from check_folder(
-                traversable_x,
+                traversable_x,  # pyright: ignore[reportPossiblyUnboundVariable]
                 cb_suffix=cb_suffix,
                 cb_file_stem=cb_file_stem,
             )
@@ -1391,8 +1415,8 @@ class PackageResource:
 
         """
         if TYPE_CHECKING:
-            traversable_dir: Traversable
-            traversable_x: Traversable
+            traversable_dir: Traversable  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+            traversable_x: Traversable  # pyright: ignore[reportPossiblyUnboundVariable]
             file_name_pkg: str
             suffix: str
             is_filter_suffix: bool
@@ -1436,18 +1460,16 @@ class PackageResource:
         # Check acl writable permissions. Is dest folder tree writable?
         pass
 
-        for traversable_dir in base_folder_generator:
-            if traversable_dir.is_dir():  # pragma: no cover  # pragma: no branch
-                dir_current_name = traversable_dir.name
+        for traversable_dir in base_folder_generator:  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+            if traversable_dir.is_dir():  # pragma: no cover  # pragma: no branch  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+                dir_current_name = traversable_dir.name  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
 
-            for traversable_x in traversable_dir.iterdir():
-                if traversable_x.is_file():  # pragma: no branch
+            for traversable_x in traversable_dir.iterdir():  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+                if traversable_x.is_file():  # pragma: no branch  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
                     if is_module_debug:  # pragma: no cover  # pragma: no branch
-                        print(
-                            f"dir {dir_current_name} file {traversable_x.name}",
-                            file=sys.stderr,
-                        )
-                    file_name_pkg = traversable_x.name
+                        msg_warn = f"dir {dir_current_name} file {traversable_x.name}"  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+                        print(msg_warn, file=sys.stderr)
+                    file_name_pkg = traversable_x.name  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
                     stem = msg_stem(file_name_pkg)
                     suffixes = Path(file_name_pkg).suffixes
                     suffix = "".join(suffixes)
@@ -1455,7 +1477,7 @@ class PackageResource:
                     is_filter_file_stem = cb_file_stem is None or cb_file_stem(stem)
                     if is_filter_suffix and is_filter_file_stem:  # pragma: no branch
                         # extract
-                        with importlib_resources.as_file(traversable_x) as path_entry:
+                        with importlib_resources.as_file(traversable_x) as path_entry:  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
                             """Get relative (to start dir) parent
                             folders (of package data file), so can extract, preserving
                             folder tree
@@ -1619,17 +1641,9 @@ class PackageResource:
                                     f"{path_dest_file}"
                                 )
                                 _LOGGER.warning(msg_warn)
-                            except OSError:  # pragma: no cover logs warning
-                                # Problem copying file stats
-                                msg_warn = (
-                                    "During resource extract, "
-                                    "problem copying file stats "
-                                    f"{path_dest_file}"
-                                )
-                                _LOGGER.warning(msg_warn)
-                            except PermissionError:  # pragma: no cover logs warning
+                            except PermissionError:  # pragma: no cover
                                 """Insufficient permissions. Cannot copy
-                                file or chmod
+                                file or chmod. Log warning
                                 """
                                 msg_warn = (
                                     "During resource extract, "
@@ -1638,12 +1652,17 @@ class PackageResource:
                                     f"{path_dest_file}"
                                 )
                                 _LOGGER.warning(msg_warn)
+                            except OSError:  # pragma: no cover logs warning
+                                # Problem copying file stats
+                                msg_warn = (
+                                    "During resource extract, problem copying "
+                                    f"file stats {path_dest_file}"
+                                )
+                                _LOGGER.warning(msg_warn)
                             else:
                                 if is_module_debug:  # pragma: no cover  # pragma: no branch  # fmt: skip
-                                    print(
-                                        f"yielding {path_dest_file}",
-                                        file=sys.stderr,
-                                    )
+                                    msg_warn = f"yielding {path_dest_file}"
+                                    print(msg_warn, file=sys.stderr)
                                 yield path_dest_file
 
     def cache_extract(
@@ -1800,14 +1819,15 @@ def get_package_data(
             # Do not want to extract model from package, just get it's absolute Path
             path_parents = list(gen)
             if bool(path_parents):
-                path_dir = path_parents[0]
+                path_dir = cast("Path", path_parents[0])
                 path_f = path_dir.joinpath(module_file_name)
+                optpath_f = path_f
             else:
-                path_f = None
+                optpath_f = None
         else:
             if platform.system().lower() == "linux":  # pragma: no cover
                 # inaccessible to other users (cold boot attack); automagically removed
-                path_dest_dir = Path("/run").joinpath("user", f"{os.geteuid()!s}")
+                path_dest_dir = Path("/run").joinpath("user", str(os.geteuid()))
             else:  # pragma: no cover
                 # within pytest|tox the temp folder will be different
                 # **********************************************************************
@@ -1821,13 +1841,14 @@ def get_package_data(
             )
             paths = list(gen_paths)
             if bool(paths):
-                path_f = paths[0]
+                optpath_f = paths[0]
             else:
-                path_f = None
+                optpath_f = None
 
-        if path_f is None:
+        if optpath_f is None:
             ret = ""
         else:
-            ret = path_f.read_text()
+            abspath_f = optpath_f
+            ret = abspath_f.read_text()
 
     return ret

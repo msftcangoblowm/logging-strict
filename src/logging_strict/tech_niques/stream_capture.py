@@ -1,14 +1,12 @@
 """
 .. moduleauthor:: Dave Faulkmore <https://mastodon.social/@msftcangoblowme>
 
-..
-
 Context manager to capture streams stdout/stderr
 
 Intuitive interface. Use within :code:`with` block
 
-:py:class:`multiprocessing.pool.Pool` workers have to capture
-both streams and logging output
+:py:class:`multiprocessing.pool.Pool` workers have to capture both streams and
+logging output
 
 .. py:data:: __all__
    :type: tuple[str]
@@ -29,14 +27,31 @@ class CaptureOutput:
     :py:data:`sys.stderr` streams
 
     .. py:attribute:: __slots__
-       :type: tuple[str, str, str, str]
-       :value: ("_stdout_output", "_stderr_output", "_stdout", "_stderr")
+       :type: tuple[str, ...]
+       :value: ("_stdout_buf", "_stderr_buf", "_stdout_output", "_stderr_output", \
+                "_stdout", "_stderr")
 
        Reduce class memory footprint
 
     """
 
-    __slots__ = ("_stdout_output", "_stderr_output", "_stdout", "_stderr")
+    __slots__ = (
+        "_stdout_buf",
+        "_stderr_buf",
+        "_stdout_output",
+        "_stderr_output",
+        "_stdout",
+        "_stderr",
+    )
+
+    def __init__(self):
+        """Constructor"""
+        self._stdout = sys.stdout
+        self._stderr = sys.stderr
+        self._stdout_output = ""
+        self._stderr_output = ""
+        self._stdout_buf = io.StringIO()
+        self._stderr_buf = io.StringIO()
 
     def __enter__(self):
         """:pep:`343` with statement Context manager. For capturing
@@ -60,14 +75,8 @@ class CaptureOutput:
            :pep:`20` Rule #1 Beautiful is better than ugly
 
         """
-        self._stdout_output = ""
-        self._stderr_output = ""
-
-        self._stdout = sys.stdout
-        sys.stdout = io.StringIO()
-
-        self._stderr = sys.stderr
-        sys.stderr = io.StringIO()
+        sys.stdout = self._stdout_buf
+        sys.stderr = self._stderr_buf
 
         return self
 
@@ -81,10 +90,9 @@ class CaptureOutput:
         :param exc_tb: Exception traceback if an Exception occurred
         :type exc_tb: types.TracebackType | None
         """
-        self._stdout_output = sys.stdout.getvalue()
+        self._stdout_output = self._stdout_buf.getvalue()
+        self._stderr_output = self._stderr_buf.getvalue()
         sys.stdout = self._stdout
-
-        self._stderr_output = sys.stderr.getvalue()
         sys.stderr = self._stderr
 
     @property

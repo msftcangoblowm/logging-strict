@@ -69,8 +69,13 @@ Move the tag past post commits
 
 """
 
+import os
+import traceback
 import types
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+    cast,
+)
 
 if TYPE_CHECKING:
     from packaging.version import (
@@ -201,10 +206,14 @@ def sanitize_tag(ver):
     # Problematic
     # '0.1.dev0.d20240213'. Untagged version. Try remove from last period
     # 0.1.1.candidate1dev1+g4b33a80.d20240129
+    msg = None
     try:
         v = Version(str_remaining_whole)
-    except InvalidVersion:
+    except InvalidVersion as e:
         is_problem = True
+        sep = os.linesep
+        tb_str = sep.join(traceback.format_exception(e))
+        msg = f"Semantic version is invalid.{sep}{tb_str}"
     else:
         is_problem = False
 
@@ -216,21 +225,30 @@ def sanitize_tag(ver):
             v = Version(ver_try)
         except InvalidVersion:
             is_still_issue = True
-        else:  # pragma: no cover Do nothing
+        else:  # pragma: no cover
+            # Do nothing
             is_still_issue = False
-    else:  # pragma: no cover Do nothing
+    else:  # pragma: no cover
+        # Do nothing
         is_still_issue = False
 
-    if is_still_issue:
+    if is_still_issue and msg:  # pragma: no branch
+        # str_remaining_whole has not changed. So must want to raise previous Exception
+        # without "from e"
+        str_msg = msg
+        raise ValueError(str_msg)
+
+        # with "from e"
+        """
         try:
             v = Version(str_remaining_whole)
         except InvalidVersion as e:
-            msg = f"Version contains invalid token. {e}"
-            raise ValueError(msg) from e
-    else:  # pragma: no cover Do nothing
+            msg_1 = f"Version contains invalid token. {e}"
+            raise ValueError(msg_1) from e
+        """
         pass
 
-    ret = str(v)
+    ret = str(v)  # pyright: ignore[reportPossiblyUnboundVariable]
 
     # Strip epoch and local, if exists
     epoch, ret = _strip_epoch(ret)
@@ -255,20 +273,18 @@ def readthedocs_url(package_name, ver_="latest"):
     :rtype: str
     """
     # app-name --> package_name
-    if "_" in package_name:
+    if "_" in package_name:  # pragma: no branch
         package_name = package_name.replace("_", "-")
-    else:  # pragma: no cover
-        pass
 
-    if ver_ is None or (ver_ is not None and not isinstance(ver_, str)):
-        ver_ = "latest"
-    else:  # pragma: no cover
-        pass
+    if ver_ is None or not isinstance(ver_, str):  # pragma: no branch
+        ver_0 = "latest"
+    else:
+        ver_0 = ver_
 
-    if ver_ != "latest":
-        ver = sanitize_tag(ver_)
+    if ver_0 != "latest":
+        ver = sanitize_tag(ver_0)
     else:  # pragma: no cover
-        ver = ver_
+        ver = ver_0
 
     ret = f"https://{package_name}.readthedocs.io/en/{ver}"
 
@@ -299,10 +315,10 @@ def get_version(ver, is_use_final=False):
 
     :rtype: tuple[tuple[int, int, int, str, int], int]
     """
-    if is_use_final is None or not isinstance(is_use_final, bool):
-        is_use_final = False
-    else:  # pragma: no cover
-        pass
+    if is_use_final is None or not isinstance(is_use_final, bool):  # pragma: no branch
+        bool_is_use_final = False
+    else:
+        bool_is_use_final = is_use_final
 
     # epoch and locals ignored
     _v = Version(ver)
@@ -310,7 +326,7 @@ def get_version(ver, is_use_final=False):
 
     if not _v.is_prerelease and not _v.is_postrelease:
         # ``final`` means intend to bump version. Not actually valid
-        releaselevel = "" if not is_use_final else "final"
+        releaselevel = "" if not bool_is_use_final else "final"
         serial = 0
         _dev = 0
     elif _v.is_prerelease and not _v.is_postrelease:
@@ -321,14 +337,13 @@ def get_version(ver, is_use_final=False):
             releaselevel = ""  # alpha??
         else:
             # alpha beta, candidate, a, b, or rc
-            t_pre = _v.pre
+            assert _v.pre is not None
+            t_pre = cast("tuple[str, int]", _v.pre)
             short = t_pre[0]
             serial = t_pre[1]
             for long_, short_ in _map_release.items():
-                if short_ == short:
+                if short_ == short:  # pragma: no branch
                     releaselevel = long_
-                else:  # pragma: no cover continue
-                    pass
     elif not _v.is_prerelease and _v.is_postrelease:
         releaselevel = "post"
         serial = _v.post
@@ -338,4 +353,11 @@ def get_version(ver, is_use_final=False):
     else:  # pragma: no cover
         pass
 
-    return (_v.major, _v.minor, _v.micro, releaselevel, serial), _dev
+    t_ret = (
+        _v.major,
+        _v.minor,
+        _v.micro,
+        releaselevel,  # pyright: ignore[reportPossiblyUnboundVariable]
+        serial,  # pyright: ignore[reportPossiblyUnboundVariable]
+    )
+    return t_ret, _dev

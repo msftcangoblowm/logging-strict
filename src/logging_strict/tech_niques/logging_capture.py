@@ -202,32 +202,35 @@ else:  # pragma: no cover
     # test_logging_capture imports getLevelNamesMapping
     getLevelNamesMapping = logging.getLevelNamesMapping
 
-if sys.version_info < (3, 12):  # pragma: no cover py312 feature
+if sys.version_info < (3, 12):  # pragma: no cover
+    # py312 feature
     # Backport: logging.getHandlerByName and logging.getHandlerNames
-    def getHandlerByName(name: str) -> type[logging.Handler]:
-        """
-        Get a handler with the specified *name*, or None if there isn't one with
+    def getHandlerByName(name: str) -> "type[logging.Handler]":
+        """Get a handler with the specified *name*, or None if there isn't one with
         that name.
-        """
-        return logging._handlers.get(name)
 
-    logging.getHandlerByName = getHandlerByName
+        :rtype: type[logging.Handler]
+        """
+        return logging._handlers.get(name)  # pyright: ignore[reportAttributeAccessIssue]  # fmt: skip
+
+    logging.getHandlerByName = getHandlerByName  # pyright: ignore[reportAttributeAccessIssue]  # fmt: skip
 
     def getHandlerNames() -> frozenset[str]:
         """
         Return all known handler names as an immutable set.
+        :rtype: frozenset[str]
         """
-        result = set(logging._handlers.keys())
+        result = set(logging._handlers.keys())  # pyright: ignore[reportAttributeAccessIssue]  # fmt: skip
         return frozenset(result)
 
-    logging.getHandlerNames = getHandlerNames
+    logging.getHandlerNames = getHandlerNames  # pyright: ignore[reportAttributeAccessIssue]  # fmt: skip
 
-    def getChildren(self) -> set[logging.Logger]:
+    def getChildren(self) -> "set[logging.Logger]":
         """Logger.getChildren method added in py312. Hopefully helpful
         in diagnosing issues affecting loggers and their handlers
         """
 
-        def _hierlevel(logger):
+        def _hierlevel(logger: "logging.Logger") -> int:
             """From logger root child hierarchy level
 
             :param logger: logger instance. Counts periods plus 1
@@ -236,11 +239,13 @@ if sys.version_info < (3, 12):  # pragma: no cover py312 feature
             :rtype: int
             """
             if logger is logger.manager.root:
-                return 0
-            return 1 + logger.name.count(".")
+                ret = 0
+            else:
+                ret = 1 + logger.name.count(".")
+            return ret
 
         d = self.manager.loggerDict
-        logging._acquireLock()
+        logging._acquireLock()  # pyright: ignore[reportAttributeAccessIssue]
         try:
             # exclude PlaceHolders - the last check is to ensure that lower-level
             # descendants aren't returned - if there are placeholders, a logger's
@@ -250,12 +255,12 @@ if sys.version_info < (3, 12):  # pragma: no cover py312 feature
                 for item in d.values()
                 if isinstance(item, logging.Logger)
                 and item.parent is self
-                and _hierlevel(item) == 1 + _hierlevel(item.parent)
+                and _hierlevel(item) == 1 + _hierlevel(item.parent)  # pyright: ignore[reportArgumentType]  # fmt: skip
             )
         finally:
-            logging._releaseLock()
+            logging._releaseLock()  # pyright: ignore[reportAttributeAccessIssue]
 
-    logging.Logger.getChildren = getChildren
+    logging.Logger.getChildren = getChildren  # pyright: ignore[reportAttributeAccessIssue]  # fmt: skip
 
 else:  # pragma: no cover
     getHandlerByName = logging.getHandlerByName
@@ -332,7 +337,7 @@ def _normalize_level(level):
         elif isinstance(level, str):
             if level in map(str, logging.getLevelNamesMapping().values()):
                 level_name = logging.getLevelName(int(level))
-            elif level in logging.getLevelNamesMapping().keys():
+            elif level in logging.getLevelNamesMapping():
                 level_name = level
             else:  # pragma: no cover
                 raise ValueError(msg_valueerror_str)
@@ -480,7 +485,7 @@ class _LoggingWatcher:
         :returns: A logging handler func
         :rtype: type[logging.Handler]
         """
-        return logging.getHandlerByName(name)
+        return logging.getHandlerByName(name)  # pyright: ignore[reportAttributeAccessIssue]  # fmt: skip
 
     def getHandlerNames(self):
         """Return all known handler names as an immutable set
@@ -488,7 +493,7 @@ class _LoggingWatcher:
         :returns: Handler function names
         :rtype: frozenset[str]
         """
-        return logging.getHandlerNames()
+        return logging.getHandlerNames()  # pyright: ignore[reportAttributeAccessIssue]  # fmt: skip
 
     def getLevelNo(self, level_name):
         """Get Logging level number, given a logging level name
@@ -499,7 +504,7 @@ class _LoggingWatcher:
         :rtype: int | None
         """
         mapping = logging.getLevelNamesMapping()
-        if level_name in mapping.keys():
+        if level_name in mapping:
             ret = mapping[level_name]
         else:
             ret = None
@@ -540,12 +545,12 @@ class _LoggerStoredState:
     :ivar propagate: True to propagate logging errors
     :vartype propagate: bool
     :ivar handlers: logging handlers
-    :vartype handlers: list[type[logging.Handler]]
+    :vartype handlers: list[logging.Handler]
     """
 
     level_name: str = attrs.field(kw_only=False)
     propagate: bool = attrs.field(kw_only=False)
-    handlers: list[type[logging.Handler]] = attrs.field(
+    handlers: list[logging.Handler] = attrs.field(
         kw_only=False,
         factory=list,
         validator=attrs.validators.deep_iterable(
@@ -646,13 +651,14 @@ def captureLogs(
         # let unexpected exceptions pass through
         raise
     finally:
-        # __exit__
-        # ############
-        #    Restore state
-        _logger.handlers = logger_stored_state.handlers
-        _logger.propagate = logger_stored_state.propagate
-        _logger.setLevel(logger_stored_state.level_name)
-        del logger_stored_state
+        # __exit__ run for Exceptions too!
+        if "logger_stored_state" in locals():  # pragma: no branch
+            #    Restore state
+            _logger.handlers = logger_stored_state.handlers  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+            _logger.propagate = logger_stored_state.propagate  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+            _logger.setLevel(logger_stored_state.level_name)  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
+            # del logger_stored_state
+            pass
 
 
 @contextlib.contextmanager
@@ -694,10 +700,10 @@ def captureLogsMany(
     # Normalize loggers
     _loggers = [_normalize_logger(logger) for logger in loggers]
 
+    save_state = []
+    ret = []
     try:
         # __enter__
-        save_state = []
-        ret = []
         for idx, _logger in enumerate(_loggers):
             # Get desired level for this logger
             _level = _levels[idx]
@@ -737,4 +743,5 @@ def captureLogsMany(
             _logger.handlers = logger_stored_state.handlers
             _logger.propagate = logger_stored_state.propagate
             _logger.setLevel(logger_stored_state.level_name)
-        del logger_stored_state, _logger, save_state, ret
+        # del logger_stored_state, _logger, save_state, ret
+        pass

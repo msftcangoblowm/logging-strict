@@ -78,17 +78,23 @@ def check_type_path(module_path, *, msg_context=None):
 
 
 def is_not_ok(test):
-    """Check not ``None``, not a str, or an empty str
+    """Check not ``None``, not a str, or an empty str.
+
+    Logically equivalent to :code:`if not is_ok(x)`.
+    From 3.13+, to get proper type narrowing:
+
+    - use ``TypeIs[str]`` on :py:func:`~logging_strict.util.check_type.is_ok`
+    - write :code:`if not is_ok(x):`
 
     :param test: variable to test
     :type test: typing.Any | None
     :returns: ``True`` if either: ``None``, not a str, or an empty str
     :rtype: bool
     """
-    is_str = test is not None and isinstance(test, str)
-    if is_str:
+    if test is not None and isinstance(test, str):
         # is_really_empty
-        ret = not bool(test.strip())
+        str_test = test
+        ret = not bool(str_test.strip())
     else:
         # None or not a str
         ret = True

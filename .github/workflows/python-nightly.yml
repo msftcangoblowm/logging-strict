@@ -57,7 +57,7 @@ jobs:
 
     steps:
       - name: "Check out the repo"
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
 
       - name: "Install ${{ matrix.python-version }} with deadsnakes"
         uses: deadsnakes/action@ef54298f4881dc40a8a4e9b367f91578fdbe12a1
@@ -66,7 +66,7 @@ jobs:
           python-version: "${{ matrix.python-version }}"
 
       - name: "Install ${{ matrix.python-version }} with setup-python"
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v7.0.0
         if: "startsWith(matrix.python-version, 'pypy-')"
         with:
           python-version: "${{ matrix.python-version }}"

@@ -4,7 +4,7 @@ attrs==24.2.0
     # via -r requirements/prod.in
 importlib-metadata==8.7.0
     # via -r requirements/prod.in
-importlib-resources==6.5.2
+importlib-resources==6.5.2; python_version<"3.14"
     # via -r requirements/prod.in
 python-dateutil==2.9.0.post0
     # via

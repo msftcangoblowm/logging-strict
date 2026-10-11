@@ -1,18 +1,13 @@
-import sys
 import threading
 from pathlib import Path
 from typing import (
     Any,
     ClassVar,
+    Self,
 )
 
 from .constants import LoggingConfigCategory
 from .logging_yaml_abc import LoggingYamlType
-
-if sys.version_info >= (3, 11):
-    from typing import Self
-else:
-    from typing_extensions import Self
 
 __all__ = (
     "LoggingConfigYaml",

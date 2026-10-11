@@ -1,7 +1,7 @@
 * Release checklist
 
 - Run twice
-  $ make pre-commit
+  $ make show=1 pre-commit
 - Remove old branches
   $ git branch
   $ git branch -D [branch name]

@@ -202,7 +202,7 @@ def find_project_root(srcs, stdin_filename=None):
             t_ret = directory, "pyproject.toml"
             return t_ret
 
-    t_ret = directory, "file system root"
+    t_ret = directory, "file system root"  # pyright: ignore[reportPossiblyUnboundVariable]  # fmt: skip
 
     return t_ret
 
@@ -225,10 +225,12 @@ def find_pyproject_toml(path_search_start, stdin_filename):
     try:
         path_project_root, _ = find_project_root(path_search_start, stdin_filename)
     except PermissionError:
-        return None
+        ret = None
     else:
         path_pyproject_toml = path_project_root / "pyproject.toml"
         if path_pyproject_toml.is_file():
-            return str(path_pyproject_toml)
+            ret = str(path_pyproject_toml)
         else:
-            return None
+            ret = None
+
+        return ret

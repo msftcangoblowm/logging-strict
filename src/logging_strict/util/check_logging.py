@@ -67,7 +67,7 @@ def str2int(level=None):
     :rtype: int | bool
     """
     try:
-        int_ret = int(level)
+        int_ret = int(level)  # pyright: ignore[reportArgumentType]
     except Exception:
         ret = False
     else:  # pragma: no cover
@@ -172,6 +172,7 @@ def check_level(level):
     :returns: ``True`` level can be normalized otherwise ``False``
     :rtype: bool
     """
+    ret = False
     if is_assume_root(level):
         """Guess referring to root logger. Avoid making a disasterous
         assumption with horrible side effects"""
@@ -180,7 +181,7 @@ def check_level(level):
         if isinstance(level, logging.Logger):
             ret = True
         elif isinstance(level, str):
-            if level in logging.getLevelNamesMapping().keys():
+            if level in logging.getLevelNamesMapping():
                 # "INFO"
                 ret = True
             elif level in map(str, logging.getLevelNamesMapping().values()):

@@ -124,7 +124,7 @@ oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooah!
 
 .. seealso::
 
-   `Credit <https://stackoverflow.com/a/56469201>`_
+   `Credit <https://stackoverflow.com/questions/53223246/local-variable-for-unit-testing-in-python-to-verify-functionality-of-test-functi/56469201>`_
 
 
 **Module private variables**
@@ -179,13 +179,16 @@ class FuncWrapper:
     :ivar func: the function to wrap
     :vartype func: (types.FunctionType | types.MethodType | types.BuiltinFunctionType | types.BuiltinMethodType | types.WrapperDescriptorType | types.MethodWrapperType | types.MethodDescriptorType | types.ClassMethodDescriptorType)
 
+    .. py:attribute:: _name
+       :type: str
+
+       function's name
+
     .. seealso::
 
-       Source code source
-       https://gist.github.com/jwcompdev/65da6a59a6bcb44864de77b8a29baeed
+       `Source code gist <https://gist.github.com/jwcompdev/65da6a59a6bcb44864de77b8a29baeed>`_
 
-       Conversation source
-       https://stackoverflow.com/a/25959545
+       `defining class of unbound method <https://stackoverflow.com/questions/3589311/get-defining-class-of-unbound-method-object-in-python-3/25959545>`_
 
     """
 
@@ -421,7 +424,7 @@ class MockFunction:
         self.full_name = fw.full_name
 
     def __call__(  # type: ignore[misc]  # missing self non-static method
-        mock_instance,
+        mock_instance,  # pyright: ignore[reportSelfClsParameterName]
         /,
         *args,
         **kwargs,
@@ -500,7 +503,7 @@ class MockMethod:
         self.func = func
 
     def __call__(  # type: ignore[misc]  # missing self non-static method
-        mock_instance,
+        mock_instance,  # pyright: ignore[reportSelfClsParameterName]
         /,
         *args,
         **kwargs,

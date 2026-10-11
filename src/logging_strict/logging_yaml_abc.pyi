@@ -1,9 +1,12 @@
 import abc
+from abc import ABC
 from collections.abc import Iterator
 from pathlib import Path
 from typing import (
     Any,
+    ClassVar,
     Final,
+    Self,
 )
 
 __all__ = (
@@ -33,12 +36,27 @@ def after_as_str_update_package_name(
     target_logger_name: str | None = ...,
 ) -> str: ...
 
-class LoggingYamlType(abc.ABC):
+class LoggingYamlType(ABC):
+    suffixes: ClassVar[str]
+
+    # Template method pattern. These dependencies provided by subclasses
+    @property
+    @abc.abstractmethod
+    def category(self) -> str | None: ...
+    @property
+    @abc.abstractmethod
+    def genre(self) -> str | None: ...
+    @property
+    @abc.abstractmethod
+    def flavor(self) -> str | None: ...
+    @property
+    @abc.abstractmethod
+    def version(self) -> str | None: ...
     @staticmethod
     def get_version(val: Any) -> str: ...
     @classmethod
     def pattern(
-        cls,
+        cls: type[Self],
         category: str | None = None,
         genre: str | None = None,
         flavor: str | None = None,

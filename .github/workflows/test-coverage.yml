@@ -43,11 +43,11 @@ jobs:
         os:
           - ubuntu
         python-version:
-          - "3.10"
+          - "3.11"
       fail-fast: false
     steps:
       - name: "Check out the repo"
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
         with:
           # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
           fetch-depth: 0
@@ -58,7 +58,7 @@ jobs:
         run: |
           echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: "${{ matrix.python-version }}"
           # cache: pip
@@ -86,9 +86,10 @@ jobs:
           python -m coverage combine
           coverage xml -q --fail-under=98
       - name: "Upload to Codecov"
-        uses: codecov/codecov-action@v7
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: codecov/codecov-action@v7.1.1
         with:
-          name: unittest-py3.10
+          name: unittest-py3.11
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: msftcangoblowm/logging-strict
           os: linux

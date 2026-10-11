@@ -8,6 +8,16 @@ Changelog
    Feature request
    .................
 
+   - [ci]: pyright when fails shows errors count like types-strictyaml does
+
+   - [docs]: doctest --> Sphinx literal include
+
+     package ``pytest-doctestplus`` so the pytest rst files are actually
+     RestructedText. Run with pytest separate from the unittest testsuite.
+
+     in-code doctests are conjecture, not proof. Proof is highly prized,
+     conjecture is not.
+
    - [feat] PackageResource gather folders that contain data files.
 
      If package_data_folder_start is not provided. Traverse package
@@ -121,6 +131,7 @@ Changelog
              return sorted(list(hints))
 
    - [fix] in walk_tree_folders. Keep all folder references. Need access to
+
      - parent folder
      - parent parent folder
 
@@ -219,6 +230,14 @@ Changelog
 
    Commit items for NEXT VERSION
    ..............................
+
+   - fix: black#5214 fix landed in 26.10.0
+   - fix: drop py310
+   - chore: pyright pass
+   - refactor: py314+ drops requirement importlib-resources
+   - docs: critical insights for AI agents to understand logging-strict in AGENTS.md
+   - ci(test-coverage.yml): for PRs do not run codecov
+   - ci: bump gha versions
 
 .. scriv-start-here
 

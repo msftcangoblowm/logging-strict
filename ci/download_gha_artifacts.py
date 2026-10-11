@@ -98,11 +98,14 @@ def all_items(url, key):
         response = get_session().get(url)
         response.raise_for_status()
         data = response.json()
-        if isinstance(data, dict) and (msg := data.get("message")):
-            raise RuntimeError(f"URL {url!r} failed: {msg}")
+        if isinstance(data, dict) and (msg := data.get("message")):  # pragma: no branch
+            msg_warn = f"URL {url!r} failed: {msg}"
+            raise RuntimeError(msg_warn)
         yield from data.get(key, ())
         try:
-            url = response.links.get("next").get("url")
+            d_opt = response.links.get("next")
+            if d_opt is not None:  # pragma: no branch
+                url = d_opt.get("url")
         except AttributeError:
             url = None
 

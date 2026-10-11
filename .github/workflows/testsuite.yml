@@ -49,24 +49,24 @@ jobs:
           # Available versions:
           # https://github.com/actions/python-versions/blob/main/versions-manifest.json
           # https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#available-versions-of-python-and-pypy
-          - "3.10"
           - "3.11"
           - "3.12"
           - "3.13"
           - "3.14"
+          # - "3.15"
           - "pypy-3.10"
       fail-fast: false
 
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
         with:
           repository: '${{ github.repository }}'
           # fetch all branches and tags instead of only fetching the ref/SHA that triggered the workflow
           fetch-depth: 0
 
       - name: Setup Python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: "${{ matrix.python-version }}"
           allow-prereleases: true
@@ -137,6 +137,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
-        uses: re-actors/alls-green@2765efec08f0fd63e83ad900f5fd75646be69ff6
+        uses: re-actors/alls-green@e68df088d4e9ee6bc36b8ea7deacf96161902d2a
         with:
           jobs: ${{ toJSON(needs) }}

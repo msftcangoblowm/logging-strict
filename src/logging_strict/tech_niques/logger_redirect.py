@@ -19,7 +19,7 @@ import sys
 __all__ = ("LoggerRedirector",)
 
 
-class LoggerRedirector:  # pragma: no cover
+class LoggerRedirector:
     """:mod:`unittest` redirects :code:`sys.stdout` and
     :code:`sys.stderr`. Keep a reference to the real streams so we can
     later be reverted. Logging goes to the wrong IO streams. Upon
@@ -89,12 +89,12 @@ class LoggerRedirector:  # pragma: no cover
 
     .. seealso::
 
-       `LoggerRedirector source <https://stackoverflow.com/a/69202374>`_
+       `LoggerRedirector source <https://stackoverflow.com/questions/69200881/how-to-get-python-unittest-to-show-log-messages-only-on-failed-tests/69202374>`_
 
        `LoggerRedirector author <https://stackoverflow.com/users/6248563/satyen-a>`_
 
        In unittests, showing log messages
-       `on failure <https://stackoverflow.com/q/69200881>`_
+       `on failure <https://stackoverflow.com/questions/69200881/how-to-get-python-unittest-to-show-log-messages-only-on-failed-tests>`_
 
 
     """
@@ -104,7 +104,7 @@ class LoggerRedirector:  # pragma: no cover
 
     @staticmethod
     def all_loggers():  # pragma: no cover
-        """Get loggers
+        """Get loggers.
 
         :returns: space separated tests (method name(s))
         :rtype: Sequence[logging.Logger]
@@ -132,14 +132,14 @@ class LoggerRedirector:  # pragma: no cover
         """
         if (not fake_stdout or fake_stdout is cls._real_stdout) and (
             not fake_stderr or fake_stderr is cls._real_stderr
-        ):
+        ):  # pragma: no branch
             return
         for logger in cls.all_loggers():
-            for handler in logger.handlers:
-                if hasattr(handler, "stream"):
-                    if handler.stream is cls._real_stdout:
+            for handler in logger.handlers:  # pragma: no branch
+                if isinstance(handler, logging.StreamHandler):  # pragma: no branch
+                    if handler.stream is cls._real_stdout:  # pragma: no branch
                         handler.setStream(fake_stdout)
-                    if handler.stream is cls._real_stderr:
+                    if handler.stream is cls._real_stderr:  # pragma: no branch
                         handler.setStream(fake_stderr)
 
     @classmethod
@@ -160,12 +160,12 @@ class LoggerRedirector:  # pragma: no cover
         """
         if (not fake_stdout or fake_stdout is cls._real_stdout) and (
             not fake_stderr or fake_stderr is cls._real_stderr
-        ):
+        ):  # pragma: no branch
             return
-        for logger in cls.all_loggers():
+        for logger in cls.all_loggers():  # pragma: no branch
             for handler in logger.handlers:
-                if hasattr(handler, "stream"):
-                    if handler.stream is fake_stdout:
+                if isinstance(handler, logging.StreamHandler):  # pragma: no branch
+                    if handler.stream is fake_stdout:  # pragma: no branch
                         handler.setStream(cls._real_stdout)
-                    if handler.stream is fake_stderr:
+                    if handler.stream is fake_stderr:  # pragma: no branch
                         handler.setStream(cls._real_stderr)

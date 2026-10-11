@@ -5,20 +5,7 @@
    :type: tuple[str]
    :value: ("MyLogger",)
 
-   Module exports
-
-.. py:data:: g_package_second_party
-   :type: str
-   :value: "asz"
-
-   Hardcoded package name. Doing this is obsolete, but in context of testing is ok.
-
 """
-
-from __future__ import annotations
-
-import sys
-from pathlib import Path
 
 from .logging_yaml_abc import (
     VERSION_FALLBACK,
@@ -26,80 +13,135 @@ from .logging_yaml_abc import (
     LoggingYamlType,
 )
 
-if sys.version_info >= (3, 9):  # pragma: no cover
-    from collections.abc import Callable
-else:  # pragma: no cover
-    from typing import Callable
-
 __all__ = ("MyLogger",)
 
+#: str: Hardcoded package name. Doing this is obsolete, but in context of testing is ok.
 g_package_second_party = "asz"
 
 
 def file_stem(
-    genre: str | None = "mp",
-    version: str | None = VERSION_FALLBACK,
-    flavor: str | None = g_package_second_party,
-) -> str:
-    """Test implementation of file_stem."""
+    genre="mp",
+    version=VERSION_FALLBACK,
+    flavor=g_package_second_party,
+):
+    """Test implementation of file_stem.
+
+    :type genre: str | None
+    :type version: str | None
+    :type flavor: str | None
+    :rtype: str
+    """
     return f"{genre}_{version}_{flavor}"
 
 
 def file_name(
-    category: str | None = "worker",
-    genre: str | None = "mp",
-    version: str | None = VERSION_FALLBACK,
-    flavor: str | None = g_package_second_party,
-) -> str:
-    """Test implementation of file_name."""
+    category="worker",
+    genre="mp",
+    version=VERSION_FALLBACK,
+    flavor=g_package_second_party,
+):
+    """Test implementation of file_name.
+
+    :type category: str | None
+    :type genre: str | None
+    :type version: str | None
+    :type flavor: str | None
+    :rtype: str
+    """
     stem = file_stem(genre=genre, version=version, flavor=flavor)
 
-    return f"{stem}.{category}{YAML_LOGGING_CONFIG_SUFFIX}"
+    ret = f"{stem}.{category}{YAML_LOGGING_CONFIG_SUFFIX}"
+    return ret
 
 
 class MyLogger(LoggingYamlType):
     """A basic implementation
 
-    .. py:attribute:: suffixes
-       :type: str
-       :value: ".my_logger"
-
-       Nonsense logging YAML config file suffixes
-
+    :vartype package_name: str
+    :vartype func: collections.abc.Callable[[str], pathlib.Path]
     """
 
+    #: typing.ClassVar[str]: Nonsense logging YAML config file suffixes
     suffixes = ".my_logger"
 
-    def __init__(self, package_name: str, func: Callable[[str], Path]) -> None:
+    def __init__(self, package_name, func):
         """Mock class constructor"""
         super().__init__()
         self._package = package_name
         self.func = func
 
     @property
-    def file_stem(self) -> str:
-        """Test implementation of property file_stem."""
-        return file_stem()
+    def file_stem(self):
+        """Test implementation of property file_stem.
+
+        :rtype: str
+        """
+        ret = file_stem()
+        return ret
 
     @property
-    def file_name(self) -> str:
-        """Test implementation of property file_name."""
-        return file_name()
+    def file_name(self):
+        """Test implementation of property file_name.
+
+        :rtype: str
+        """
+        ret = file_name()
+        return ret
 
     @property
-    def package(self) -> str:
+    def package(self):
         """Test implementation of property package. Subfolder relative
-        path to where package resources are extracted."""
+        path to where package resources are extracted.
+
+        :rtype: str
+        """
         return self._package
 
     @property
-    def dest_folder(self) -> Path:  # pragma: no cover
-        """Package resource destination folder Path"""
-        return self.func(self.package)
+    def dest_folder(self):  # pragma: no cover
+        """Package resource destination folder Path
+        :rtype: pathlib.Path
+        """
+        ret = self.func(self.package)
+        return ret
 
-    def extract(
-        self,
-        path_relative_package_dir: Path | str | None = "",
-    ) -> str:  # pragma: no cover
-        """Nonsense package resource extract implementation."""
-        return f"relativepath/{self.file_name}"
+    @property
+    def version(self):  # pragma: no cover
+        """Required by ABC
+
+        :rtype: str | None
+        """
+        return None
+
+    @property
+    def genre(self):  # pragma: no cover
+        """Required by ABC
+
+        :rtype: str | None
+        """
+        return None
+
+    @property
+    def flavor(self):  # pragma: no cover
+        """Required by ABC
+
+        :rtype: str | None
+        """
+        return None
+
+    @property
+    def category(self):  # pragma: no cover
+        """Required by ABC
+
+        :rtype: str | None
+        """
+        return None
+
+    def extract(self, path_relative_package_dir=""):  # pragma: no cover
+        """Nonsense package resource extract implementation.
+
+        :type path_relative_package_dir: pathlib.Path | str | None
+        :rtype: str
+        """
+        ret = f"relativepath/{self.file_name}"
+        return ret

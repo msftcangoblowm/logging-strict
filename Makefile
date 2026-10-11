@@ -125,9 +125,15 @@ diff_upgrade:			## Summarize the last `make upgrade`
 
 #run all pre-commit checks
 .PHONY: pre-commit
+pre-commit: private target_tty = $(if $(show),1,0)
 pre-commit:				## Run checks found in .pre-commit-config.yaml
 ifeq ($(is_venv),1)
-	-@PRE_COMMIT_COLOR=never pre-commit run --all-files > /tmp/out.txt
+	@out=$$(PRE_COMMIT_COLOR=never SKIP=pyright pre-commit run --all-files ||:)
+	if [[ $(target_tty) -eq 1 ]]; then
+	echo "$$out" | tee /tmp/out.txt
+	else
+	echo "$$out" > /tmp/out.txt
+	fi
 endif
 
 #--strict is on
@@ -225,10 +231,19 @@ install-force: install	## Force install even if exact same version
 # make [v=1] check
 .PHONY: check
 check: private verbose_text = $(if $(v),"--verbose")
+check: private target_tty = $(if $(show),1,0)
 check:					## Run tests, generate coverage reports -- make [v=1] check
 ifeq ($(is_venv),1)
 	-@$(VENV_BIN_PYTHON) -m coverage erase
+	if [[ $(target_tty) -eq 1 ]]; then
 	$(VENV_BIN_PYTHON) -m coverage run --parallel --omit="*.txt" -m unittest discover -t. -s tests -p "test_*.py" $(verbose_text) --locals
+	else
+	$(VENV_BIN_PYTHON) -m coverage run --parallel --omit="*.txt" -m unittest discover -t. -s tests -p "test_*.py" $(verbose_text) --locals > /tmp/out_tests.err
+	fi
 	$(VENV_BIN_PYTHON) -m coverage combine
+	if [[ $(target_tty) -eq 1 ]]; then
 	$(VENV_BIN_PYTHON) -m coverage report --fail-under=98
+	else
+	$(VENV_BIN_PYTHON) -m coverage report --fail-under=98 > /tmp/out.report
+	fi
 endif

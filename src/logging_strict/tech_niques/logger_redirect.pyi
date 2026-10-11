@@ -1,14 +1,17 @@
 import logging
 from collections.abc import Sequence
-from typing import TextIO
+from typing import (
+    ClassVar,
+    TextIO,
+)
 
 __all__ = ("LoggerRedirector",)
 
 # non-async unittest streams redirector
 
 class LoggerRedirector:
-    _real_stdout: TextIO
-    _real_stderr: TextIO
+    _real_stdout: ClassVar[TextIO]
+    _real_stderr: ClassVar[TextIO]
 
     @staticmethod
     def all_loggers() -> Sequence[logging.Logger]: ...

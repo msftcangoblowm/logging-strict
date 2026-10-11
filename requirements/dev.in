@@ -8,7 +8,8 @@
 -c pins-cffi.in
 -c prod.unlock
 
-black
+# resolves black#5214
+black>=26.10.0
 blackdoc
 isort
 flake8

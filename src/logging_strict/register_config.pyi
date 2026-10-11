@@ -1,5 +1,8 @@
 from collections.abc import Sequence
-from pathlib import Path
+from pathlib import (
+    Path,
+    PurePath,
+)
 from typing import (
     Any,
     Final,
@@ -14,10 +17,10 @@ CONFIG_SUFFIX: Final[str]
 REGEX_REL_PATH: Final[str]
 test_yaml: Final[str]
 
-_category_values: s.scalar.Enum
-_item_map: s.compound.MapCombined
-_file_map: s.compound.Map
-_schema: s.compound.Seq
+_category_values: s.Enum
+_item_map: s.MapCombined
+_file_map: s.Map
+_schema: s.Seq
 
 class ExtractorLoggingConfig:
     __slots__ = (
@@ -40,7 +43,7 @@ class ExtractorLoggingConfig:
     def __init__(
         self,
         package_name: str,
-        path_alternative_dest_folder: Path | None = None,
+        path_alternative_dest_folder: PurePath | str | None = None,
         is_test_file: bool | None = False,
     ) -> None: ...
     def __repr__(self) -> str: ...

@@ -49,7 +49,6 @@ import email.policy
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import importlib_metadata as metadata
 from appdirs import (
     AppDirs,
     user_cache_dir,
@@ -60,6 +59,11 @@ from .check_type import (
     is_not_ok,
     is_ok,
 )
+
+try:
+    import importlib_metadata as metadata  # pyright: ignore[reportMissingImports]
+except (ImportError, ModuleNotFoundError):  # pragma: no cover
+    from importlib import metadata
 
 if TYPE_CHECKING:
     from collections.abc import Callable

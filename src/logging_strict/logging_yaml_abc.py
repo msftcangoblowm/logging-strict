@@ -15,8 +15,13 @@ ensure validation passes!
 
 import abc
 import logging.config
+from abc import ABC
 from pathlib import PurePath
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+    ClassVar,
+    cast,
+)
 
 import strictyaml as s
 
@@ -28,9 +33,6 @@ from .util.check_type import (
 )
 from .util.package_resource import _to_package_case
 from .util.xdg_folder import _get_path_config
-
-if TYPE_CHECKING:
-    from typing import Any
 
 __all__ = (
     "LoggingYamlType",
@@ -88,7 +90,7 @@ def _update_logger_package_name(
 def setup_logging_yaml(path_yaml, package_name=None):
     """Loads :py:mod:`logging.config` configuration.
 
-    Can pass in a path or a the YAML str
+    Can pass in a path or a YAML str
 
     :param path_yaml: :py:mod:`logging.config` YAML file path
     :type path_yaml: typing.Any
@@ -104,8 +106,7 @@ def setup_logging_yaml(path_yaml, package_name=None):
 
     """
     if TYPE_CHECKING:
-        yaml_config: s.YAML
-        d_config: dict[str, Any]
+        from typing import Any
 
     if path_yaml is None:
         str_yaml = None
@@ -124,17 +125,18 @@ def setup_logging_yaml(path_yaml, package_name=None):
             str_yaml = None
 
     if is_ok(str_yaml):  # pragma: no branch
-        yaml_config = validate_yaml_dirty(str_yaml)
-        # QA Tester is responsible to test the logging.config yaml file
+        # QA Tester is responsible to test the logging.config yaml file.
         # A broken yaml config file will crash the app here
-        d_config = yaml_config.data
+        # may raise s.YAMLValidationError
+        yaml_config = validate_yaml_dirty(str_yaml)
+        d_config = cast("dict[str, Any]", yaml_config.data)
 
         # Rename logger from PACKAGE_NAME_SRC --> package_name
         _update_logger_package_name(d_config, package_name=package_name)
 
         logging.config.dictConfig(d_config)  # test: defang
 
-    # During testing, return needed to get locals
+    # During testing, ret variable required by get_locals_dynamic
     return None
 
 
@@ -203,9 +205,14 @@ def after_as_str_update_package_name(
     :returns: yaml str after adjustments
     :rtype: str
     """
-    if is_ok(logger_package_name):
+    if TYPE_CHECKING:
+        from typing import Any
+
+    ret = str_yaml
+    if is_ok(logger_package_name):  # pragma: no branch
+        # may raise YAMLValidationError
         yaml_config = validate_yaml_dirty(str_yaml)
-        d_config = yaml_config.data
+        d_config = cast("dict[str, Any]", yaml_config.data)
         _update_logger_package_name(
             d_config,
             package_name=_to_package_case(logger_package_name),
@@ -214,14 +221,50 @@ def after_as_str_update_package_name(
         # convert dict --> yaml str
         text_yaml = s.YAML(d_config).text
         ret = str(text_yaml)
-    else:
-        ret = str_yaml
 
     return ret
 
 
-class LoggingYamlType(abc.ABC):
+class LoggingYamlType(ABC):
     """ABC for LoggingYaml implementations"""
+
+    suffixes: ClassVar[str]  # must be here, in the .py
+
+    @property
+    @abc.abstractmethod
+    def category(self) -> str | None:
+        """Template method pattern. These dependencies provided by subclasses
+
+        :rtype: str | None
+        """
+        ...
+
+    @property
+    @abc.abstractmethod
+    def genre(self) -> str | None:
+        """Template method pattern. These dependencies provided by subclasses
+
+        :rtype: str | None
+        """
+        ...
+
+    @property
+    @abc.abstractmethod
+    def flavor(self) -> str | None:
+        """Template method pattern. These dependencies provided by subclasses
+
+        :rtype: str | None
+        """
+        ...
+
+    @property
+    @abc.abstractmethod
+    def version(self) -> str | None:
+        """Template method pattern. These dependencies provided by subclasses
+
+        :rtype: str | None
+        """
+        ...
 
     @staticmethod
     def get_version(val):
@@ -303,27 +346,33 @@ class LoggingYamlType(abc.ABC):
         """
         # None --> fallback. Not able to know what is the latest version
         str_version = LoggingYamlType.get_version(version)
+        # pyright complains too much, so ...
+        str_suffixes = cast(str, cls.suffixes)
 
         if is_ok(category):
-            file_suffixes = f".{category}{cls.suffixes}"
+            str_category = category
+            file_suffixes = f".{str_category}{str_suffixes}"
         else:
             """empty str, unsupported type, or None, or str with only
             whitespace would be stopped by
             type[logging_strict.logging_yaml_abc.LoggingYamlType]
             constructor producing a ValueError
             """
-            file_suffixes = f".*{cls.suffixes}"
+            file_suffixes = f".*{str_suffixes}"
 
-        if is_not_ok(genre):
-            if is_not_ok(flavor):
-                file_stem = f"*_{str_version}_*"
+        if is_ok(genre):
+            str_genre = genre
+            if is_ok(flavor):
+                str_flavor = flavor
+                file_stem = f"{str_genre}_{str_version}_{str_flavor}"
             else:
-                file_stem = f"*_{str_version}_{flavor}"
+                file_stem = f"{str_genre}_{str_version}_*"
         else:
-            if is_not_ok(flavor):
-                file_stem = f"{genre}_{str_version}_*"
+            if is_ok(flavor):
+                str_flavor = flavor
+                file_stem = f"*_{str_version}_{str_flavor}"
             else:
-                file_stem = f"{genre}_{str_version}_{flavor}"
+                file_stem = f"*_{str_version}_*"
 
         ret = f"{file_stem}{file_suffixes}"
 

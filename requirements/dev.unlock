@@ -1,6 +1,6 @@
 appdirs
 attrs
-black
+black>=26.10.0
 blackdoc
 cffi>=1.17.1
 coverage

@@ -1,6 +1,9 @@
 from collections.abc import Callable
 from pathlib import Path
-from typing import Final
+from typing import (
+    ClassVar,
+    Final,
+)
 
 from .logging_yaml_abc import LoggingYamlType
 
@@ -21,7 +24,9 @@ def file_name(
 ) -> str: ...
 
 class MyLogger(LoggingYamlType):
-    suffixes: str = ".my_logger"
+    suffixes: ClassVar[str] = ".my_logger"
+    _package: str
+    func: Callable[[str], Path]
 
     def __init__(self, package_name: str, func: Callable[[str], Path]) -> None: ...
     @property
@@ -36,3 +41,13 @@ class MyLogger(LoggingYamlType):
         self,
         path_relative_package_dir: Path | str | None = "",
     ) -> str: ...
+
+    # Only to satisfy ABC
+    @property
+    def version(self) -> str | None: ...
+    @property
+    def genre(self) -> str | None: ...
+    @property
+    def flavor(self) -> str | None: ...
+    @property
+    def category(self) -> str | None: ...

@@ -68,7 +68,7 @@ class _LoggerStoredState:
 
     level_name: str
     propagate: bool
-    handlers: list[type[logging.Handler]] = ...
+    handlers: list[logging.Handler] = ...
     __attrs_own_setattr__: ClassVar[bool] = True
 
 @contextlib.contextmanager

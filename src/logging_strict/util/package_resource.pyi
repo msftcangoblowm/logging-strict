@@ -56,7 +56,7 @@ def walk_tree_folders(
 @runtime_checkable
 class PartSuffix(Protocol):
     def __call__(
-        fakeSelf,
+        fakeSelf,  # pyright: ignore[reportSelfClsParameterName]
         expected_suffix: str | tuple[str, ...],
         test_suffix: str,
     ) -> bool: ...
@@ -64,7 +64,7 @@ class PartSuffix(Protocol):
 @runtime_checkable
 class PartStem(Protocol):
     def __call__(
-        fakeSelf,
+        fakeSelf,  # pyright: ignore[reportSelfClsParameterName]
         file_expected: str,
         test_file_stem: str,
     ) -> bool: ...

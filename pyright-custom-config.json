@@ -1,0 +1,5 @@
+{
+    "venvPath": ".tox",
+    "venv": "pyright",
+    "include": ["src/logging_strict"]
+}

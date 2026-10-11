@@ -961,8 +961,8 @@ class PackageData(unittest.TestCase):
                 "mp_1_asz",
                 (".worker", ".logging", ".config", ".yaml"),  # suffix Sequence[str]
                 ("configs",),
-                False,
-                False,
+                False,  # no extract
+                False,  # data file is in package
             ),
             (
                 g_app_name,
@@ -970,14 +970,14 @@ class PackageData(unittest.TestCase):
                 (".app", ".logging", ".config", ".yaml"),  # suffix Sequence[str]
                 ("configs",),
                 True,
-                False,
+                False,  # data file is in package
             ),
             (
                 g_app_name,
                 "textual_1_asz",
                 ".py",  # wrong suffix; suffix str
                 ("configs",),
-                None,  # None --> False
+                None,  # None --> False; no extract
                 True,  # file does not exist in package
             ),
             (
@@ -1001,7 +1001,7 @@ class PackageData(unittest.TestCase):
                 "textual_1_asz",
                 "",  # no suffix --> .csv
                 ("configs",),  # nonexistent parent folder
-                False,  # extract
+                False,  # no extract
                 True,  # file does not exist in package
             ),
             (
@@ -1009,7 +1009,7 @@ class PackageData(unittest.TestCase):
                 "textual_1_asz",
                 ".toml",  # nonexistent suffix
                 (),  # nonexistent parent folder
-                False,  # extract
+                False,  # no extract
                 True,  # file does not exist in package
             ),
             (
@@ -1017,10 +1017,11 @@ class PackageData(unittest.TestCase):
                 "textual_1_asz",
                 ".toml",  # nonexistent suffix
                 ("configs",),  # nonexistent parent folder
-                False,  # extract
+                False,  # no extract
                 True,  # file does not exist in package
             ),
         )
+        # for t_data in (testdata[0],):
         for t_data in testdata:
             package_name = t_data[0]
             module_name = t_data[1]

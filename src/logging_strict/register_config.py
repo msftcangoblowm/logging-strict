@@ -46,7 +46,7 @@ Workflow
 
 .. seealso::
 
-   `regex for relative path <https://stackoverflow.com/a/11383064>`_
+   `regex for relative path <https://stackoverflow.com/q/11382919>`_
    `tool to test regex <https://regex101.com/>`
 
 Given a yaml str, what does strictyaml sees?
@@ -87,7 +87,10 @@ from pathlib import (
     Path,
     PurePath,
 )
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+    cast,
+)
 from unittest.mock import patch
 
 import strictyaml as s
@@ -111,6 +114,9 @@ from .util.package_resource import (
     filter_by_suffix,
 )
 from .util.xdg_folder import DestFolderUser
+
+if TYPE_CHECKING:
+    from typing import Any
 
 # _logger = logging.getLogger(f"{g_app_name}.register_config")
 
@@ -169,7 +175,7 @@ class ExtractorLoggingConfig:
        Having this feature baked in, would eleviate the need to use
        unittest.mock.patch and know what to patch
 
-    :vartype path_alternative_dest_folder: pathlib.Path | None
+    :vartype path_alternative_dest_folder: pathlib.Path | pathlib.PurePath | None
     :ivar is_test_file: Default False. True if want to search for test files
     :vartype is_test_file: bool | None
 
@@ -208,30 +214,25 @@ class ExtractorLoggingConfig:
             # When checking path, :code:`Path(None)` causes error
             is_set_to_xdg = True
         else:
-            is_path = issubclass(type(path_alternative_dest_folder), PurePath)
-            is_str = is_ok(path_alternative_dest_folder)
-            if not is_path and not is_str:
-                # unsupported type
-                is_set_to_xdg = True
+            if (
+                isinstance(path_alternative_dest_folder, (PurePath, Path))
+                and Path(path_alternative_dest_folder).is_absolute()
+                and Path(path_alternative_dest_folder).is_dir()
+            ):
+                self._patch_extract_folder = True
+                self._path_extraction_dir = Path(path_alternative_dest_folder)
+                is_set_to_xdg = False
+            elif (
+                is_ok(path_alternative_dest_folder)
+                and Path(path_alternative_dest_folder).is_absolute()
+                and Path(path_alternative_dest_folder).is_dir()
+            ):
+                self._patch_extract_folder = True
+                self._path_extraction_dir = Path(path_alternative_dest_folder)
+                is_set_to_xdg = False
             else:
-                if (
-                    is_path
-                    and path_alternative_dest_folder.is_absolute()
-                    and path_alternative_dest_folder.is_dir()
-                ):
-                    self._patch_extract_folder = True
-                    self._path_extraction_dir = path_alternative_dest_folder
-                    is_set_to_xdg = False
-                elif (
-                    Path(path_alternative_dest_folder).is_absolute()
-                    and Path(path_alternative_dest_folder).is_dir()
-                ):
-                    self._patch_extract_folder = True
-                    self._path_extraction_dir = Path(path_alternative_dest_folder)
-                    is_set_to_xdg = False
-                else:
-                    # relative path is bad or not a folder
-                    is_set_to_xdg = True
+                # unsupported type or relative path is bad or not a folder
+                is_set_to_xdg = True
 
         if is_set_to_xdg:  # pragma: no branch
             self._patch_extract_folder = False
@@ -439,10 +440,11 @@ class ExtractorLoggingConfig:
             # Failed query. In package, no such data file
             self._registry = None
         else:
+            self._registry = None
             str_yaml_raw = path_f.read_text()
             # validate database against schema
             try:
-                yaml_config = validate_yaml_dirty(
+                optyaml_config = validate_yaml_dirty(
                     str_yaml_raw,
                     schema=_schema,
                 )
@@ -450,7 +452,11 @@ class ExtractorLoggingConfig:
                 raise
             else:
                 # when patched, this method didn't end at the :code:`raise`
-                self._registry = yaml_config.data
+                if optyaml_config is not None and isinstance(
+                    optyaml_config, s.YAML
+                ):  # pragma: no branch
+                    yaml_config = optyaml_config
+                    self._registry = cast("dict[Any, Any]", yaml_config.data)
 
     def query_db(
         self,

@@ -23,7 +23,7 @@ keywords = [
     "logging.config",
 ]
 readme = "README.rst"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
   "Environment :: Console",
   "Development Status :: 4 - Beta",
@@ -112,7 +112,7 @@ ignore_missing_imports = true
 
 [tool.pyright]
 typeCheckingMode = "strict"
-pythonVersion = "3.10"
+pythonVersion = "3.11"
 venvPath = "."
 venv = ".venv"  # venv folder path
 include = ["tests"]
@@ -175,6 +175,7 @@ doctest_test_doctest_blocks = "Yes please!"
 external_toc_exclude_missing = true  # sphinx_external_toc_strict
 myst_enable_extensions = ["colon_fence", "html_image"]  # myst-parser
 linkcheck_ignore = [
+    'https?://stackoverflow\.com/.*',
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/asyncio/base_events.py#L1894",  # asyncio.base_events._run_once
     "https://github.com/csachs/pyproject-flake8/blob/16b9dd4d2f19dcf0bfb3a3110f98227627cd67fe/pflake8/__init__.py#L86",  # pyproject_flake8 FixFilenames.apply
     "https://github.com/PyCQA/flake8/blob/fb9a02aaf77b56fcad4320971e7edca0cea93489/src/flake8/options/config.py#L56",  # flake8.options.config.load_config
@@ -182,7 +183,6 @@ linkcheck_ignore = [
     "https://github.com/psf/black/blob/e11eaf2f44d3db5713fb99bdec966ba974b60c8c/src/black/files.py#L46",  # block.files.find_project_root
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L193",  # unittest.case._BaseTestCaseContext
     "https://github.com/python/cpython/blob/db6f297d448ce46e58a5b90239a4779553333198/Lib/unittest/case.py#L816",  # unittest.case.assertLogs
-    "https://stackoverflow.com/a/69994813",  # redirect
     "https://github.com/crdoconnor/strictyaml/blob/dfd93f9740ebd5e7150029bc3d89ea102bcddf00/strictyaml/representation.py#L48",  # strictyaml.YAML
     "https://github.com/psf/black/blob/ea66d40dd7f1eaa20256e6fccaf6d7b853ccc541/src/black/files.py#L57",  # black.files.find_project_root
 ]
@@ -200,7 +200,7 @@ exclude_patterns = [
 "https://stackoverflow.com/a/75276342" = "https://stackoverflow.com/questions/75263023/how-can-i-use-pythons-concurrent-futures-to-queue-tasks-across-multiple-process/75276342#75276342"
 "https://stackoverflow.com/q/69200881" = "https://stackoverflow.com/questions/69200881/how-to-get-python-unittest-to-show-log-messages-only-on-failed-tests"
 "https://stackoverflow.com/q/66727458" = "https://stackoverflow.com/questions/66727458/warnings-filterwarningsignore-doesnt-ignore-logging-warning"
-"https://stackoverflow.com/a/11383064" = "https://stackoverflow.com/questions/11382919/relative-path-regular-expression/11383064#11383064"
+"https://stackoverflow.com/a/11383064" = "https://stackoverflow.com/questions/11382919/relative-path-regular-expression"
 "https://stackoverflow.com/a/25959545" = "https://stackoverflow.com/questions/3589311/get-defining-class-of-unbound-method-object-in-python-3/25959545#25959545"
 
 [tool.black]

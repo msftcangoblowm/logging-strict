@@ -17,6 +17,7 @@ import sys
 import textwrap
 from contextlib import redirect_stderr
 from pathlib import Path
+from typing import cast
 
 from strictyaml import YAMLValidationError
 
@@ -217,15 +218,15 @@ which error occurred.
     # file_count = len(files_)
     path_dir = d_args["dir"]  # start path
 
-    if "package" not in keys:
-        str_package = None
+    if "package" in keys:
+        str_package = cast(str, d_args["package"])
     else:
-        str_package = d_args["package"]
+        sys.exit(6)
 
-    if "package_data_folder_start" not in keys:
-        start_dir = None
+    if "package_data_folder_start" in keys:
+        start_dir = cast(str, d_args["package_data_folder_start"])
     else:
-        start_dir = d_args["package_data_folder_start"]
+        sys.exit(7)
 
     # LoggingConfigCategory.UI.value
     if "category" not in keys:
@@ -310,18 +311,21 @@ def main() -> None:
         try:
             validate_yaml_dirty(yaml_snippet)
         except YAMLValidationError as exc:
+            errs = []
             count_fail = count_fail + 1
             exc_text = exc.context
             problem = exc.problem
             string_mark_problem_mark = exc.problem_mark
             str_problem_mark = str(string_mark_problem_mark)
-            t_err = (
-                f"file: {file_last}",
-                exc_text,
-                problem,
-                str_problem_mark,
-            )
-            errors.append("\n".join(list(t_err)))
+            errs.append(f"file: {file_last}")
+            if exc_text is not None:  # pragma: no branch
+                errs.append(exc_text)
+            if problem is not None:  # pragma: no branch
+                errs.append(problem)
+            if str_problem_mark is not None:  # pragma: no branch
+                errs.append(str_problem_mark)
+
+            errors.append("\n".join(errs))
         else:
             count_succeed = count_succeed + 1
         if is_fail_fast and bool(errors):
