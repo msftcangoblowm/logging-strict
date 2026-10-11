@@ -231,15 +231,20 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - fix: black#5214 fix landed in 26.10.0
-   - fix: drop py310 pypy3.10
-   - chore: pyright pass
-   - refactor: py314+ drops requirement importlib-resources
-   - docs: critical insights for AI agents to understand logging-strict in AGENTS.md
-   - ci(test-coverage.yml): for PRs do not run codecov
-   - ci: bump gha versions
-
 .. scriv-start-here
+
+.. _changes_1-7-1:
+
+Version 1.7.1 — 2026-10-11
+---------------------------
+
+- fix: black#5214 fix landed in 26.10.0
+- fix: drop py310 pypy3.10
+- chore: pyright pass
+- refactor: py314+ drops requirement importlib-resources
+- docs: critical insights for AI agents to understand logging-strict in AGENTS.md
+- ci(test-coverage.yml): for PRs do not run codecov
+- ci: bump gha versions
 
 .. _changes_1-7-0:
 

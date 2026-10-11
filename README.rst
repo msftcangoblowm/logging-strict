@@ -53,6 +53,7 @@ For logging.config yaml files, logging-strict does the following:
 **New in 1.7.x:**
 
 xdg_folder.XDGBase; unknown package fast fail raise PackageNotFoundError;
+drop py310; pyright pass;
 
 **New in 1.6.x:**
 get_locals_dynamic add support for staticmethod and classmethod;
