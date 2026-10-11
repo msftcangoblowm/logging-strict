@@ -232,7 +232,7 @@ Changelog
    ..............................
 
    - fix: black#5214 fix landed in 26.10.0
-   - fix: drop py310
+   - fix: drop py310 pypy3.10
    - chore: pyright pass
    - refactor: py314+ drops requirement importlib-resources
    - docs: critical insights for AI agents to understand logging-strict in AGENTS.md
