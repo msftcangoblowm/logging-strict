@@ -225,6 +225,13 @@ Changelog
 
 .. scriv-start-here
 
+.. _changes_1-7-2.post0:
+
+Version 1.7.2.post0 — 2026-10-14
+---------------------------
+
+- ci(test-coverage): normal situation were not runnable
+
 .. _changes_1-7-2:
 
 Version 1.7.2 — 2026-10-14

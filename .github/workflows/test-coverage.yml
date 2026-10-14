@@ -86,10 +86,10 @@ jobs:
           python -m coverage combine
           coverage xml -q --fail-under=98
       - name: "Upload to Codecov"
-        if: github.event.pull_request.head.repo.full_name == github.repository
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         uses: codecov/codecov-action@v7.1.1
         with:
-          name: unittest-py3.11
+          name: unittest-py${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: msftcangoblowm/logging-strict
           os: linux
