@@ -48,7 +48,7 @@ For logging.config yaml files, logging-strict does the following:
 
 .. PYVERSIONS
 
-* Python 3.11 through 3.14.
+* Python 3.11 through 3.15
 
 **New in 1.7.x:**
 
@@ -87,6 +87,11 @@ example
 
 `get_locals code <https://logging-strict.readthedocs.io/en/stable/api/locals/scope_b_locals.html>`_
 example
+
+logging_strict.util.click_lazy_group
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`LazyGroup code <https://logging-strict.readthedocs.io/en/stable/code/util/click_lazy_group.html>`_
 
 Why?
 ------

@@ -40,6 +40,7 @@ subtrees:
       entries:
       - file: code/util/check_logging
       - file: code/util/check_type
+      - file: code/util/click_lazy_group
       - file: code/util/package_resource
       - file: code/util/pep518_read
       - file: code/util/util_root

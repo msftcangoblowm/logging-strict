@@ -53,7 +53,7 @@ repos:
     - id: mypy
       pass_filenames: false
       entry: mypy src/logging_strict/
-      additional_dependencies: [types-strictyaml, types-lxml, types-setuptools]
+      additional_dependencies: [types-strictyaml, types-lxml, types-setuptools, click]
 
   - repo: local
     hooks:

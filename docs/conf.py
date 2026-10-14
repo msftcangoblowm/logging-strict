@@ -171,13 +171,21 @@ intersphinx_mapping = {
         "https://github.com/nedbat/coveragepy",
         ("objects-coverage-source.inv", "objects-coverage-source.txt"),
     ),
+    "click": (
+        "https://click.palletsprojects.com/en/stable",
+        ("objects-click.inv", "objects-click.txt"),
+    ),
 }
 intersphinx_disabled_reftypes = ["std:doc"]
 
 extlinks = {
-    "pypi_org": (  # url to: aiologger
+    "pypi_org": (
         "https://pypi.org/project/%s",
         "%s",
+    ),
+    "github_repo": (
+        "https://github.com/%s",
+        "github %s",
     ),
 }
 

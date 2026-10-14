@@ -18,6 +18,7 @@ src/logging_strict/configs/__pycache__/
 src/logging_strict/tech_niques/__pycache__/
 src/logging_strict/util/__pycache__/
 tests/__pycache__/
+tests/cli/__pycache__/
 tests/tech_niques/__pycache__/
 
 ##@ mypy

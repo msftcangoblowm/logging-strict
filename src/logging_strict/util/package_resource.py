@@ -167,7 +167,7 @@ from .util_root import IsRoot
 from .xdg_folder import DestFolderUser
 
 # isort: off
-try:
+try:  # pragma: no cover
     import importlib_resources  # pyright: ignore[reportMissingImports]
     from importlib_resources.abc import Traversable  # pyright: ignore[reportMissingImports]  # fmt: skip
     is_got_traversable = True

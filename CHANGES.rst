@@ -10,14 +10,6 @@ Changelog
 
    - [ci]: pyright when fails shows errors count like types-strictyaml does
 
-   - [docs]: doctest --> Sphinx literal include
-
-     package ``pytest-doctestplus`` so the pytest rst files are actually
-     RestructedText. Run with pytest separate from the unittest testsuite.
-
-     in-code doctests are conjecture, not proof. Proof is highly prized,
-     conjecture is not.
-
    - [feat] PackageResource gather folders that contain data files.
 
      If package_data_folder_start is not provided. Traverse package
@@ -230,6 +222,9 @@ Changelog
 
    Commit items for NEXT VERSION
    ..............................
+
+   - feat: LazyGroup Defer subcommand imports until invocation
+   - docs(AGENTS.md): update so can find LazyGroup
 
 .. scriv-start-here
 
