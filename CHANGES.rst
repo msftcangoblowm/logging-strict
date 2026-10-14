@@ -223,10 +223,15 @@ Changelog
    Commit items for NEXT VERSION
    ..............................
 
-   - feat: LazyGroup Defer subcommand imports until invocation
-   - docs(AGENTS.md): update so can find LazyGroup
-
 .. scriv-start-here
+
+.. _changes_1-7-2:
+
+Version 1.7.2 — 2026-10-14
+---------------------------
+
+- feat: LazyGroup Defer subcommand imports until invocation
+- docs(AGENTS.md): update so can find LazyGroup
 
 .. _changes_1-7-1:
 
